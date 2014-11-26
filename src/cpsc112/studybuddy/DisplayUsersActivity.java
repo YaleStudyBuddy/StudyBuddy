@@ -41,10 +41,6 @@ public class DisplayUsersActivity extends Activity {
 		Intent intent = getIntent();
 		this.uID = intent.getStringExtra(LoginActivity.UID);
 		this.classFilter = intent.getStringExtra(DisplayClassesActivity.classFilter);
-
-//		textView = (TextView) findViewById(R.id.userList);
-//		textView.setMovementMethod(new ScrollingMovementMethod());
-//		textView.setTextSize(20);
 		
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setTitle("Loading");
@@ -78,78 +74,11 @@ public class DisplayUsersActivity extends Activity {
 			
 		});
 		
-		
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
 		listView = (ListView) findViewById(R.id.userList);
 		listView.setAdapter(adapter);
 		
 		loadingDialog.hide();
-		
-		
-//		rootRef.child("users").child(uID).addValueEventListener(new ValueEventListener(){
-//			public void onDataChange(DataSnapshot snapshot){
-//				courseFilter = snapshot.child("course").getValue().toString();
-//				textView.setText("Users in " + courseFilter + ":\n\n");
-//				
-//				rootRef.child("classes").child(courseFilter).addChildEventListener(new ChildEventListener() {
-//					public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
-//						if (!snapshot.getKey().equals(uID)){
-//							textView.append(snapshot.getValue().toString() + "\n");
-//						}
-//					}
-//					
-//					public void onChildChanged(DataSnapshot snapshot, String previousChildKey) {
-////						onChildAdded(snapshot, previousChildKey);
-//					}
-//					
-//					public void onChildRemoved(DataSnapshot snapshot) {
-////						onChildAdded(snapshot, null);
-//					}
-//					
-//					public void onChildMoved(DataSnapshot snapshot, String previousChildKey) {
-////						onChildAdded(snapshot, previousChildKey);
-//					}
-//					
-//					public void onCancelled(FirebaseError firebaseError){
-//						textView.setText("Could not retrieve other users =(");
-//					}
-//					
-//				});
-//				
-//				loadingDialog.hide();		
-//
-//			}
-//			
-//			public void onCancelled(FirebaseError firebaseError){
-//				
-//			}
-//		});
-	
-		
-		
-		
-//		rootRef.child("users").addValueEventListener(new ValueEventListener() {
-//			public void onDataChange(DataSnapshot snapshot){
-//				
-//				String courseFilter = snapshot.child(uID).child("course").getValue().toString();
-//				
-//				textView.setText("Others enrolled in " + courseFilter + ":\n\n");
-//				
-//				for (DataSnapshot user : snapshot.getChildren()){
-//					@SuppressWarnings("unchecked")
-//					Map<String, Object> userFields = (Map<String, Object>) user.getValue();
-//					if (!user.getKey().equals(uID) && userFields.get("course").equals(courseFilter)){
-//						textView.append(userFields.get("name").toString() + "\n");
-//					}
-//				}
-//	
-//			}
-//			
-//			public void onCancelled(FirebaseError firebaseError){
-//				
-//			}
-//			
-//		});
 	}
 
 	@Override
