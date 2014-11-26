@@ -1,5 +1,7 @@
 package cpsc112.studybuddy;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,6 +10,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.client.AuthData;
@@ -15,7 +19,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 public class DisplayUsersActivity extends Activity {
 	
@@ -23,7 +26,10 @@ public class DisplayUsersActivity extends Activity {
 	private AuthData authData;
 	private TextView textView;
 	private ProgressDialog loadingDialog;
-	public String uID, courseFilter;
+	public String uID, classFilter;
+	private ArrayList<String> users;
+	private ArrayAdapter<String> adapter;
+	private ListView listView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,79 +39,91 @@ public class DisplayUsersActivity extends Activity {
 		setContentView(R.layout.activity_display_users);
 
 		Intent intent = getIntent();
-		this.uID = intent.getStringExtra(CreateUserActivity.UID);
+		this.uID = intent.getStringExtra(LoginActivity.UID);
+		this.classFilter = intent.getStringExtra(DisplayClassesActivity.classFilter);
 
-		textView = (TextView) findViewById(R.id.userList);
-		textView.setMovementMethod(new ScrollingMovementMethod());
-		textView.setTextSize(20);
+//		textView = (TextView) findViewById(R.id.userList);
+//		textView.setMovementMethod(new ScrollingMovementMethod());
+//		textView.setTextSize(20);
 		
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setTitle("Loading");
 		loadingDialog.setMessage("Searching for other users");
 		loadingDialog.show();
+		
+		users = new ArrayList<String>();
 	
-		
-		
-		rootRef.child("users").child(uID).addValueEventListener(new ValueEventListener(){
-			public void onDataChange(DataSnapshot snapshot){
-				courseFilter = snapshot.child("course").getValue().toString();
-				textView.setText("Users in " + courseFilter + ":\n\n");
-				
-				rootRef.child("classes").child(courseFilter).addChildEventListener(new ChildEventListener() {
-					public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
-						if (!snapshot.getKey().equals(uID)){
-							textView.append(snapshot.getValue().toString() + "\n");
-						}
-					}
-					
-					public void onChildChanged(DataSnapshot snapshot, String previousChildKey) {
-//						onChildAdded(snapshot, previousChildKey);
-					}
-					
-					public void onChildRemoved(DataSnapshot snapshot) {
-//						onChildAdded(snapshot, null);
-					}
-					
-					public void onChildMoved(DataSnapshot snapshot, String previousChildKey) {
-//						onChildAdded(snapshot, previousChildKey);
-					}
-					
-					public void onCancelled(FirebaseError firebaseError){
-						textView.setText("Could not retrieve other users =(");
-					}
-					
-				});
-				
-				loadingDialog.hide();
-				
-//				rootRef.child("classes").child(courseFilter).addValueEventListener(new ValueEventListener() {
-//					public void onDataChange(DataSnapshot snapshot){
-//						
-//						textView.setText("Others in " + courseFilter + ":\n\n");
-//						
-//						for (DataSnapshot user : snapshot.getChildren()){
-//							if (!user.getKey().equals(uID)){
-//								textView.append(user.getValue().toString() + "\n");
-//							}
-//						}
-//						
-//						loadingDialog.hide();
-//			
-//					}
-//					
-//					public void onCancelled(FirebaseError firebaseError){
-//						
-//					}
-//					
-//				});
-				
-				
+		rootRef.child("classes").child(classFilter).addChildEventListener(new ChildEventListener() {
+			public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+				if (!snapshot.getKey().equals(uID)){
+					users.add(snapshot.getValue().toString());
+				}
+			}
+			
+			public void onChildChanged(DataSnapshot snapshot, String previousChildKey) {
+//				onChildAdded(snapshot, previousChildKey);
+			}
+			
+			public void onChildRemoved(DataSnapshot snapshot) {
+//				onChildAdded(snapshot, null);
+			}
+			
+			public void onChildMoved(DataSnapshot snapshot, String previousChildKey) {
+//				onChildAdded(snapshot, previousChildKey);
 			}
 			
 			public void onCancelled(FirebaseError firebaseError){
-				
+				textView.setText("Could not retrieve other users =(");
 			}
+			
 		});
+		
+		
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
+		listView = (ListView) findViewById(R.id.userList);
+		listView.setAdapter(adapter);
+		
+		loadingDialog.hide();
+		
+		
+//		rootRef.child("users").child(uID).addValueEventListener(new ValueEventListener(){
+//			public void onDataChange(DataSnapshot snapshot){
+//				courseFilter = snapshot.child("course").getValue().toString();
+//				textView.setText("Users in " + courseFilter + ":\n\n");
+//				
+//				rootRef.child("classes").child(courseFilter).addChildEventListener(new ChildEventListener() {
+//					public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+//						if (!snapshot.getKey().equals(uID)){
+//							textView.append(snapshot.getValue().toString() + "\n");
+//						}
+//					}
+//					
+//					public void onChildChanged(DataSnapshot snapshot, String previousChildKey) {
+////						onChildAdded(snapshot, previousChildKey);
+//					}
+//					
+//					public void onChildRemoved(DataSnapshot snapshot) {
+////						onChildAdded(snapshot, null);
+//					}
+//					
+//					public void onChildMoved(DataSnapshot snapshot, String previousChildKey) {
+////						onChildAdded(snapshot, previousChildKey);
+//					}
+//					
+//					public void onCancelled(FirebaseError firebaseError){
+//						textView.setText("Could not retrieve other users =(");
+//					}
+//					
+//				});
+//				
+//				loadingDialog.hide();		
+//
+//			}
+//			
+//			public void onCancelled(FirebaseError firebaseError){
+//				
+//			}
+//		});
 	
 		
 		

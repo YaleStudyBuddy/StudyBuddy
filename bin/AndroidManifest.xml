@@ -8,7 +8,7 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="21" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".CreateUserActivity"
-            android:label="@string/app_name" >
+            android:label="@string/create_user_title" >
         </activity>
         <activity
             android:name=".DisplayUsersActivity"
@@ -36,6 +36,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DisplayClassesActivity"
+            android:label="@string/display_classes_title" >
+        </activity>
     </application>
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

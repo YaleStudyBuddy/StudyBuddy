@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
 		}
 		
 		public void onAuthenticated(AuthData authData) {
-			Intent intent = new Intent(thisActivity, DisplayUsersActivity.class);
+			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
 			
 			intent.putExtra(UID, authData.getUid());
 			

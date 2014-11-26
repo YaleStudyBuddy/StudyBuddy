@@ -22,7 +22,6 @@ public class CreateUserActivity extends Activity {
 	private String email, password, name, course;
 	private Activity thisActivity = this;
 	private ProgressDialog createAccountDialog;
-	public final static String UID = "cpsc112.studybuddy.UID";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +62,12 @@ public class CreateUserActivity extends Activity {
 		EditText emailText = (EditText) findViewById(R.id.emailText);
 		EditText passwordText = (EditText) findViewById(R.id.passwordText);
 		EditText nameText = (EditText) findViewById(R.id.nameText);
-		EditText courseText = (EditText) findViewById(R.id.courseText);
+		EditText classText = (EditText) findViewById(R.id.classText);
 		
 		email = emailText.getText().toString();
 		password = passwordText.getText().toString();
 		name = nameText.getText().toString();
-		course = courseText.getText().toString();
+		course = classText.getText().toString();
 		
 		
 		rootRef.createUser(email, password, new ResultHandler(){
@@ -90,11 +89,11 @@ public class CreateUserActivity extends Activity {
 		public void onAuthenticated(AuthData authData) {
 			
 			Intent intent = new Intent(thisActivity, DisplayUsersActivity.class);
-			intent.putExtra(UID, authData.getUid());
+			intent.putExtra(LoginActivity.UID, authData.getUid());
 			
 			Map<String, String> newUser = new HashMap<String, String>();
 			newUser.put("name", name);
-			newUser.put("course", course);
+			newUser.put("courses", course);
 			rootRef.child("users").child(authData.getUid()).setValue(newUser);
 			
 			Map<String, Object> roster = new HashMap<String, Object>();
