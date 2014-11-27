@@ -11,10 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.firebase.client.AuthData;
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -22,34 +19,28 @@ import com.firebase.client.ValueEventListener;
 
 public class DisplayUsersActivity extends Activity {
 	
-	private Firebase rootRef;
-	private AuthData authData;
 	private ProgressDialog loadingDialog;
-	public String uID, classFilter;
 	private ArrayList<String> users;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 	private Activity thisActivity = this;
+	private String uID, courseFilter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
-		rootRef = new Firebase("https://scorching-heat-1838.firebaseio.com/");
 		setContentView(R.layout.activity_display_users);
 
 		Intent intent = getIntent();
-		this.uID = intent.getStringExtra(LoginActivity.UID);
-		this.classFilter = intent.getStringExtra(DisplayClassesActivity.classFilter);
+		this.uID = intent.getStringExtra(StudyBuddy.UID);
+		this.courseFilter = intent.getStringExtra(StudyBuddy.COURSE_FILTER);
 		
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setTitle("Loading");
 		loadingDialog.setMessage("Searching for other users");
-
 		
-
-		
-		rootRef.child("courses").child(classFilter).addValueEventListener(new ValueEventListener(){
+		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(new ValueEventListener(){
 			
 			public void onDataChange(DataSnapshot snapshot){
 				
@@ -92,6 +83,7 @@ public class DisplayUsersActivity extends Activity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
@@ -100,16 +92,7 @@ public class DisplayUsersActivity extends Activity {
 	}
 	
 	public void logoutUser (View view){
-		logout();
+		StudyBuddy.ROOT_REF.unauth();
 		startActivity(new Intent(this, LoginActivity.class));
 	}
-	
-    private void logout() {
-        if (this.authData != null) {
-            /* logout of Firebase */
-            rootRef.unauth();
-            /* Update authenticated user and show login buttons */
-//            setAuthenticatedUser(null);
-        }
-    }
 }

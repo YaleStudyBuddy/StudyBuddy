@@ -18,7 +18,6 @@ import com.firebase.client.Firebase.ResultHandler;
 import com.firebase.client.FirebaseError;
 
 public class CreateUserActivity extends Activity {
-	private Firebase rootRef;
 	private String email, password, name, course;
 	private Activity thisActivity = this;
 	private ProgressDialog createAccountDialog;
@@ -27,7 +26,6 @@ public class CreateUserActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
-		rootRef = new Firebase("https://scorching-heat-1838.firebaseio.com/");
 		setContentView(R.layout.activity_create_user);
 		
 		createAccountDialog = new ProgressDialog(this);
@@ -70,9 +68,9 @@ public class CreateUserActivity extends Activity {
 		course = classText.getText().toString();
 		
 		
-		rootRef.createUser(email, password, new ResultHandler(){
+		StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
 			public void onSuccess(){
-				rootRef.authWithPassword(email, password, new AuthResultHandler("password"));
+				StudyBuddy.ROOT_REF.authWithPassword(email, password, new AuthResultHandler("password"));
 			}
 			public void onError(FirebaseError firebaseError){
 				
@@ -81,28 +79,27 @@ public class CreateUserActivity extends Activity {
 	}
 	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
-//		private final String provider;
-		public AuthResultHandler(String provider) {
-//			this.provider = provider;
-		}
+
+		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
 			
+			createAccountDialog.hide();
+			
 			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
-			intent.putExtra(LoginActivity.UID, authData.getUid());
+			intent.putExtra(StudyBuddy.UID, authData.getUid());
+			intent.putExtra(StudyBuddy.USER_NAME, name);
 			
 			Map<String, Object> newUser = new HashMap<String, Object>();
 			newUser.put("name", name);
 			Map<String, Object> courses = new HashMap<String, Object>();
 			courses.put("0", course);
 			newUser.put("courses", courses);
-			rootRef.child("users").child(authData.getUid()).setValue(newUser);
+			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).setValue(newUser);
 			
 			newUser = new HashMap<String, Object>();
 			newUser.put(authData.getUid(), name);
-			rootRef.child("courses").child(course).updateChildren(newUser);
-			
-			createAccountDialog.hide();
+			StudyBuddy.ROOT_REF.child("courses").child(course).updateChildren(newUser);
 			
 			startActivity(intent);
 		}

@@ -1274,7 +1274,7 @@ containing a value of this type.
         public static final int course_label=0x7f0a001b;
         public static final int create_account_button=0x7f0a0016;
         public static final int create_account_text=0x7f0a0014;
-        public static final int create_user_title=0x7f0a0015;
+        public static final int create_account_title=0x7f0a0015;
         public static final int display_classes_title=0x7f0a001d;
         public static final int display_users_title=0x7f0a0020;
         public static final int email_hint=0x7f0a0010;

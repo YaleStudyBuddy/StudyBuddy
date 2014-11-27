@@ -17,15 +17,11 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".CreateUserActivity"
-            android:label="@string/create_user_title" >
+            android:label="@string/create_account_title" >
         </activity>
         <activity
             android:name=".DisplayUsersActivity"
-            android:label="@string/display_users_title"
-            android:parentActivityName=".CreateUserActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="cpsc112.studybuddy.CreateUserActivity" />
+            android:label="@string/display_users_title" >
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -41,10 +37,5 @@
             android:label="@string/display_classes_title" >
         </activity>
     </application>
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

@@ -11,37 +11,36 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.ValueEventListener;
+import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 
 public class LoginActivity extends Activity {
-//	private final Firebase rootRef = new Firebase("https://scorching-heat-1838.firebaseio.com/");
-	private Firebase rootRef;
 	private ProgressDialog mAuthProgressDialog;
-//	private AuthData authData;
 	private Activity thisActivity = this;
-	public final static String UID = "cpsc112.studybuddy.UID";
+	private String uID, name;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
-		rootRef = new Firebase("https://scorching-heat-1838.firebaseio.com/");
-		
+		setContentView(R.layout.activity_login);
+				
 		mAuthProgressDialog = new ProgressDialog(this);
-		mAuthProgressDialog.setTitle("Loading");
+		mAuthProgressDialog.setTitle("Please wait");
 		mAuthProgressDialog.setMessage("Authenticating with Firebase...");
 		mAuthProgressDialog.setCancelable(false);
-//		mAuthProgressDialog.show();
 		
-		rootRef.addAuthStateListener(new Firebase.AuthStateListener() {
+		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener() {
 			public void onAuthStateChanged(AuthData authData) {
-				mAuthProgressDialog.hide();
-//				setAuthenticatedUser(authData);
+//				mAuthProgressDialog.hide();
 			}
 		});
 		
-		setContentView(R.layout.activity_login);
+
 	}
 
 	@Override
@@ -64,46 +63,36 @@ public class LoginActivity extends Activity {
 	}
 	
 	public void loginUser(View view){
-
-		mAuthProgressDialog.setTitle("Attempting to login");
 		mAuthProgressDialog.show();
 		
 		EditText emailText = (EditText) findViewById(R.id.emailText);
 		EditText passwordText = (EditText) findViewById(R.id.passwordText);
 		
-		rootRef.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
+		StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
 	}
 	
 	public void createAccount(View view){
 		startActivity(new Intent(this, CreateUserActivity.class));
 	}
 	
-	
-//	public void setAuthenticatedUser(AuthData authData) {
-//		if (authData != null){
-////			String name = null;
-//			if (authData.getProvider().equals("password")) {
-////				name = authData.getUid();
-//			}
-//		}
-//	}
-	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
-		private final String provider;
-		
-		public AuthResultHandler(String provider) {
-			this.provider = provider;
-		}
+		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
-			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
-			
-			intent.putExtra(UID, authData.getUid());
-			
 			mAuthProgressDialog.hide();
-//			Log.i(TAG, provider + "auth successful");
-//			setAutheticatedUser(authData);
-			authData.getUid();
+			
+			uID = authData.getUid();
+			
+			StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+				public void onDataChange(DataSnapshot snapshot){
+					name = snapshot.getValue().toString();
+				}
+				public void onCancelled(FirebaseError firebaseError){}
+			});
+			
+			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
+			intent.putExtra(StudyBuddy.UID, uID);
+			intent.putExtra(StudyBuddy.USER_NAME, name);
 			
 			startActivity(intent);
 		}
