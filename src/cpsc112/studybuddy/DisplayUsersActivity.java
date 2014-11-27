@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,17 +18,18 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 public class DisplayUsersActivity extends Activity {
 	
 	private Firebase rootRef;
 	private AuthData authData;
-	private TextView textView;
 	private ProgressDialog loadingDialog;
 	public String uID, classFilter;
 	private ArrayList<String> users;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
+	private Activity thisActivity = this;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,40 +45,39 @@ public class DisplayUsersActivity extends Activity {
 		loadingDialog = new ProgressDialog(this);
 		loadingDialog.setTitle("Loading");
 		loadingDialog.setMessage("Searching for other users");
-		loadingDialog.show();
+
 		
-		users = new ArrayList<String>();
-	
-		rootRef.child("classes").child(classFilter).addChildEventListener(new ChildEventListener() {
-			public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
-				if (!snapshot.getKey().equals(uID)){
-					users.add(snapshot.getValue().toString());
+
+		
+		rootRef.child("classes").child(classFilter).addValueEventListener(new ValueEventListener(){
+			
+			public void onDataChange(DataSnapshot snapshot){
+				
+				loadingDialog.show();
+				
+				users = new ArrayList<String>();
+				Iterable<DataSnapshot> roster = snapshot.getChildren();
+				
+				for (DataSnapshot student : roster){
+					if (!student.getKey().equals(uID)){
+						users.add(student.getValue().toString());
+					}
 				}
-			}
-			
-			public void onChildChanged(DataSnapshot snapshot, String previousChildKey) {
-//				onChildAdded(snapshot, previousChildKey);
-			}
-			
-			public void onChildRemoved(DataSnapshot snapshot) {
-//				onChildAdded(snapshot, null);
-			}
-			
-			public void onChildMoved(DataSnapshot snapshot, String previousChildKey) {
-//				onChildAdded(snapshot, previousChildKey);
+				
+				adapter = new ArrayAdapter<String>(thisActivity, android.R.layout.simple_list_item_1, users);
+				listView = (ListView) findViewById(R.id.userList);
+				listView.setAdapter(adapter);
+				
+				loadingDialog.hide();
+				
 			}
 			
 			public void onCancelled(FirebaseError firebaseError){
-				textView.setText("Could not retrieve other users =(");
+				
 			}
-			
+
 		});
-		
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, users);
-		listView = (ListView) findViewById(R.id.userList);
-		listView.setAdapter(adapter);
-		
-		loadingDialog.hide();
+
 	}
 
 	@Override
