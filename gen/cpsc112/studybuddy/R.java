@@ -1101,8 +1101,8 @@ containing a value of this type.
         public static final int checkbox=0x7f05002d;
         public static final int classLabel=0x7f050044;
         public static final int classList=0x7f050046;
-        public static final int classText=0x7f050045;
         public static final int collapseActionView=0x7f05000d;
+        public static final int courseText=0x7f050045;
         public static final int createAccountButton=0x7f05003d;
         public static final int createAccountText=0x7f05004e;
         public static final int default_activity_button=0x7f050028;

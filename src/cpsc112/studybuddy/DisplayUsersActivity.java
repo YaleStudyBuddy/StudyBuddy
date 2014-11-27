@@ -49,7 +49,7 @@ public class DisplayUsersActivity extends Activity {
 		
 
 		
-		rootRef.child("classes").child(classFilter).addValueEventListener(new ValueEventListener(){
+		rootRef.child("courses").child(classFilter).addValueEventListener(new ValueEventListener(){
 			
 			public void onDataChange(DataSnapshot snapshot){
 				

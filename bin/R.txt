@@ -256,8 +256,8 @@ int id beginning 0x7f050011
 int id checkbox 0x7f05002d
 int id classLabel 0x7f050044
 int id classList 0x7f050046
-int id classText 0x7f050045
 int id collapseActionView 0x7f05000d
+int id courseText 0x7f050045
 int id createAccountButton 0x7f05003d
 int id createAccountText 0x7f05004e
 int id default_activity_button 0x7f050028

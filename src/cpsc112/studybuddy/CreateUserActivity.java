@@ -62,7 +62,7 @@ public class CreateUserActivity extends Activity {
 		EditText emailText = (EditText) findViewById(R.id.emailText);
 		EditText passwordText = (EditText) findViewById(R.id.passwordText);
 		EditText nameText = (EditText) findViewById(R.id.nameText);
-		EditText classText = (EditText) findViewById(R.id.classText);
+		EditText classText = (EditText) findViewById(R.id.courseText);
 		
 		email = emailText.getText().toString();
 		password = passwordText.getText().toString();
@@ -81,24 +81,26 @@ public class CreateUserActivity extends Activity {
 	}
 	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
-		private final String provider;
+//		private final String provider;
 		public AuthResultHandler(String provider) {
-			this.provider = provider;
+//			this.provider = provider;
 		}
 		
 		public void onAuthenticated(AuthData authData) {
 			
-			Intent intent = new Intent(thisActivity, DisplayUsersActivity.class);
+			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
 			intent.putExtra(LoginActivity.UID, authData.getUid());
 			
-			Map<String, String> newUser = new HashMap<String, String>();
+			Map<String, Object> newUser = new HashMap<String, Object>();
 			newUser.put("name", name);
-			newUser.put("courses", course);
+			Map<String, Object> courses = new HashMap<String, Object>();
+			courses.put("0", course);
+			newUser.put("courses", courses);
 			rootRef.child("users").child(authData.getUid()).setValue(newUser);
 			
-			Map<String, Object> roster = new HashMap<String, Object>();
-			roster.put(authData.getUid(), name);
-			rootRef.child("classes").child(course).updateChildren(roster);
+			newUser = new HashMap<String, Object>();
+			newUser.put(authData.getUid(), name);
+			rootRef.child("courses").child(course).updateChildren(newUser);
 			
 			createAccountDialog.hide();
 			
