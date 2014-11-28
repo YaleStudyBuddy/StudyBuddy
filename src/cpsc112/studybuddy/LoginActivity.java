@@ -11,9 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.ValueEventListener;
 import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 
@@ -79,18 +77,7 @@ public class LoginActivity extends Activity {
 		
 		public void onAuthenticated(AuthData authData) {
 			mAuthProgressDialog.hide();
-			
-			String uID = authData.getUid();
-			intent.putExtra(StudyBuddy.UID, uID);
-			
-			StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-				public void onDataChange(DataSnapshot snapshot){
-					String name = snapshot.getValue().toString();
-					intent.putExtra(StudyBuddy.USER_NAME, name);
-				}
-				public void onCancelled(FirebaseError firebaseError){}
-			});
-
+			intent.putExtra(StudyBuddy.UID, authData.getUid());
 			startActivity(intent);
 		}
 		

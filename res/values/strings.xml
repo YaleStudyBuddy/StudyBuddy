@@ -25,5 +25,6 @@
     
     <string name="display_users_title">Current Users</string>
     <string name="logout_button">Logout</string>
+    <string name="remove_course_button">Remove Course</string>
 
 </resources>

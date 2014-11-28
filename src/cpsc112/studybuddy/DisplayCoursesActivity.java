@@ -39,7 +39,13 @@ public class DisplayCoursesActivity extends Activity {
 		setContentView(R.layout.activity_display_courses);
 		
 		uID = getIntent().getStringExtra(StudyBuddy.UID);
-		name = getIntent().getStringExtra(StudyBuddy.USER_NAME);
+		
+		StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+			public void onDataChange(DataSnapshot snapshot){
+				name = snapshot.getValue().toString();
+			}
+			public void onCancelled(FirebaseError firebaseError){}
+		});
 		
 		intent = new Intent(this, DisplayUsersActivity.class);
 
@@ -67,7 +73,6 @@ public class DisplayCoursesActivity extends Activity {
 	
 	private OnItemClickListener courseClickHandler = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//			Intent intent = new Intent(thisActivity, DisplayUsersActivity.class);
 			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
 			intent.putExtra(StudyBuddy.UID, uID);
 			startActivity(intent);
@@ -103,7 +108,7 @@ public class DisplayCoursesActivity extends Activity {
 		
 		AlertDialog.Builder inputDialog = new AlertDialog.Builder(thisActivity);
 		inputDialog.setTitle("Add Course");
-		inputDialog.setMessage("Enter course number");
+		inputDialog.setMessage("Enter Course Number:");
 		final EditText inputText = new EditText(thisActivity);
 		inputDialog.setView(inputText);
 		

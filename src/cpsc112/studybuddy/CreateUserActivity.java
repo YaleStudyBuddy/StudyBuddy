@@ -85,11 +85,9 @@ public class CreateUserActivity extends Activity {
 		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
-			
 			createAccountDialog.hide();
-
+			
 			intent.putExtra(StudyBuddy.UID, authData.getUid());
-			intent.putExtra(StudyBuddy.USER_NAME, name);
 			
 			Map<String, Object> newUser = new HashMap<String, Object>();
 			newUser.put("name", name);
