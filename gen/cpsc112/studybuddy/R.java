@@ -1267,26 +1267,25 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000e;
-        public static final int add_course_button=0x7f0a001e;
+        public static final int add_course_button=0x7f0a001d;
         public static final int app_name=0x7f0a000d;
-        public static final int course_hint=0x7f0a001c;
-        public static final int course_label=0x7f0a001b;
-        public static final int create_account_button=0x7f0a0016;
-        public static final int create_account_text=0x7f0a0014;
-        public static final int create_account_title=0x7f0a0015;
-        public static final int display_courses_title=0x7f0a001d;
-        public static final int display_users_title=0x7f0a001f;
-        public static final int email_hint=0x7f0a0010;
-        public static final int email_label=0x7f0a0017;
-        public static final int login_button=0x7f0a0012;
-        public static final int login_text=0x7f0a0013;
-        public static final int logout_button=0x7f0a0020;
-        public static final int name_hint=0x7f0a001a;
-        public static final int name_label=0x7f0a0019;
-        public static final int password_hint=0x7f0a0011;
-        public static final int password_label=0x7f0a0018;
-        public static final int remove_course_button=0x7f0a0021;
-        public static final int title_activity_login=0x7f0a000f;
+        public static final int course_hint=0x7f0a001b;
+        public static final int course_label=0x7f0a001a;
+        public static final int create_account_button=0x7f0a0015;
+        public static final int create_account_text=0x7f0a0013;
+        public static final int create_account_title=0x7f0a0014;
+        public static final int display_courses_title=0x7f0a001c;
+        public static final int display_users_title=0x7f0a001e;
+        public static final int email_hint=0x7f0a000f;
+        public static final int email_label=0x7f0a0016;
+        public static final int login_button=0x7f0a0011;
+        public static final int login_text=0x7f0a0012;
+        public static final int logout_button=0x7f0a001f;
+        public static final int name_hint=0x7f0a0019;
+        public static final int name_label=0x7f0a0018;
+        public static final int password_hint=0x7f0a0010;
+        public static final int password_label=0x7f0a0017;
+        public static final int remove_course_button=0x7f0a0020;
     }
     public static final class style {
         /** 
