@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -91,7 +90,7 @@ public class DisplayUsersActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void logoutUser (View view){
+	public void logoutUser(MenuItem item){
 		StudyBuddy.ROOT_REF.unauth();
 		startActivity(new Intent(this, LoginActivity.class));
 	}

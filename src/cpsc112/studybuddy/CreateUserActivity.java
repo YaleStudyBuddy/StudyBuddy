@@ -19,14 +19,16 @@ import com.firebase.client.FirebaseError;
 
 public class CreateUserActivity extends Activity {
 	private String email, password, name, course;
-	private Activity thisActivity = this;
 	private ProgressDialog createAccountDialog;
+	private Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_create_user);
+		
+		intent = new Intent(this, DisplayCoursesActivity.class);
 		
 		createAccountDialog = new ProgressDialog(this);
 		createAccountDialog.setTitle("Loading");
@@ -85,8 +87,7 @@ public class CreateUserActivity extends Activity {
 		public void onAuthenticated(AuthData authData) {
 			
 			createAccountDialog.hide();
-			
-			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
+
 			intent.putExtra(StudyBuddy.UID, authData.getUid());
 			intent.putExtra(StudyBuddy.USER_NAME, name);
 			

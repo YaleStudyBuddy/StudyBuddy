@@ -19,8 +19,7 @@ import com.firebase.client.FirebaseError;
 
 public class LoginActivity extends Activity {
 	private ProgressDialog mAuthProgressDialog;
-	private Activity thisActivity = this;
-	private String uID, name;
+	private Intent intent;
 
 
 	@Override
@@ -28,6 +27,8 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_login);
+		
+		intent = new Intent(this, DisplayCoursesActivity.class);
 				
 		mAuthProgressDialog = new ProgressDialog(this);
 		mAuthProgressDialog.setTitle("Please wait");
@@ -39,8 +40,6 @@ public class LoginActivity extends Activity {
 //				mAuthProgressDialog.hide();
 			}
 		});
-		
-
 	}
 
 	@Override
@@ -81,19 +80,17 @@ public class LoginActivity extends Activity {
 		public void onAuthenticated(AuthData authData) {
 			mAuthProgressDialog.hide();
 			
-			uID = authData.getUid();
+			String uID = authData.getUid();
+			intent.putExtra(StudyBuddy.UID, uID);
 			
 			StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
 				public void onDataChange(DataSnapshot snapshot){
-					name = snapshot.getValue().toString();
+					String name = snapshot.getValue().toString();
+					intent.putExtra(StudyBuddy.USER_NAME, name);
 				}
 				public void onCancelled(FirebaseError firebaseError){}
 			});
-			
-			Intent intent = new Intent(thisActivity, DisplayClassesActivity.class);
-			intent.putExtra(StudyBuddy.UID, uID);
-			intent.putExtra(StudyBuddy.USER_NAME, name);
-			
+
 			startActivity(intent);
 		}
 		

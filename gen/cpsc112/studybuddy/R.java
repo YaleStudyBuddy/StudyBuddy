@@ -1091,12 +1091,12 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05004f;
+        public static final int action_settings=0x7f05004d;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int addClassButton=0x7f050047;
-        public static final int addClassText=0x7f050048;
+        public static final int add_course_button=0x7f05004e;
         public static final int always=0x7f05000b;
-        public static final int appNameView=0x7f05004b;
+        public static final int appNameView=0x7f050049;
         public static final int beginning=0x7f050011;
         public static final int checkbox=0x7f05002d;
         public static final int classLabel=0x7f050044;
@@ -1104,7 +1104,7 @@ containing a value of this type.
         public static final int collapseActionView=0x7f05000d;
         public static final int courseText=0x7f050045;
         public static final int createAccountButton=0x7f05003d;
-        public static final int createAccountText=0x7f05004e;
+        public static final int createAccountText=0x7f05004c;
         public static final int default_activity_button=0x7f050028;
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
@@ -1123,9 +1123,9 @@ containing a value of this type.
         public static final int linearLayout=0x7f05003c;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
-        public static final int loginButton=0x7f05004c;
-        public static final int loginText=0x7f05004d;
-        public static final int logoutButton=0x7f050049;
+        public static final int loginButton=0x7f05004a;
+        public static final int loginText=0x7f05004b;
+        public static final int logout_button=0x7f05004f;
         public static final int middle=0x7f050012;
         public static final int nameLabel=0x7f050042;
         public static final int nameText=0x7f050043;
@@ -1158,7 +1158,7 @@ containing a value of this type.
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
-        public static final int userList=0x7f05004a;
+        public static final int userList=0x7f050048;
         public static final int withText=0x7f05000c;
     }
     public static final class integer {
@@ -1212,14 +1212,14 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030016;
         public static final int abc_simple_decor=0x7f030017;
         public static final int activity_create_user=0x7f030018;
-        public static final int activity_display_classes=0x7f030019;
+        public static final int activity_display_courses=0x7f030019;
         public static final int activity_display_users=0x7f03001a;
         public static final int activity_login=0x7f03001b;
         public static final int support_simple_spinner_dropdown_item=0x7f03001c;
     }
     public static final class menu {
         public static final int create_user=0x7f0c0000;
-        public static final int display_classes=0x7f0c0001;
+        public static final int display_courses=0x7f0c0001;
         public static final int display_users=0x7f0c0002;
         public static final int login=0x7f0c0003;
     }
@@ -1265,37 +1265,25 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000e;
-        public static final int action_sign_in=0x7f0a0025;
-        public static final int action_sign_in_short=0x7f0a0026;
-        public static final int add_class_button=0x7f0a001f;
-        public static final int add_class_hint=0x7f0a001e;
+        public static final int add_course_button=0x7f0a001e;
         public static final int app_name=0x7f0a000d;
         public static final int course_hint=0x7f0a001c;
         public static final int course_label=0x7f0a001b;
         public static final int create_account_button=0x7f0a0016;
         public static final int create_account_text=0x7f0a0014;
         public static final int create_account_title=0x7f0a0015;
-        public static final int display_classes_title=0x7f0a001d;
-        public static final int display_users_title=0x7f0a0020;
+        public static final int display_courses_title=0x7f0a001d;
+        public static final int display_users_title=0x7f0a001f;
         public static final int email_hint=0x7f0a0010;
         public static final int email_label=0x7f0a0017;
-        public static final int error_field_required=0x7f0a002a;
-        public static final int error_incorrect_password=0x7f0a0029;
-        public static final int error_invalid_email=0x7f0a0027;
-        public static final int error_invalid_password=0x7f0a0028;
         public static final int login_button=0x7f0a0012;
         public static final int login_text=0x7f0a0013;
-        public static final int logout_button=0x7f0a0021;
+        public static final int logout_button=0x7f0a0020;
         public static final int name_hint=0x7f0a001a;
         public static final int name_label=0x7f0a0019;
         public static final int password_hint=0x7f0a0011;
         public static final int password_label=0x7f0a0018;
-        /**  Strings related to login 
-         */
-        public static final int prompt_email=0x7f0a0023;
-        public static final int prompt_password=0x7f0a0024;
         public static final int title_activity_login=0x7f0a000f;
-        public static final int title_activity_login2=0x7f0a0022;
     }
     public static final class style {
         /** 

@@ -20,9 +20,8 @@
     <string name="course_label">Course Number: </string>
     <string name="course_hint">e.g. CPSC112</string>
     
-    <string name="display_classes_title">My Classes</string>
-    <string name="add_class_hint">Course Number</string>
-    <string name="add_class_button">Add</string>
+    <string name="display_courses_title">My Courses</string>
+    <string name="add_course_button">Add</string>
     
     <string name="display_users_title">Current Users</string>
     <string name="logout_button">Logout</string>
