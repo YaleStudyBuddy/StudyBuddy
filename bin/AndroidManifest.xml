@@ -21,7 +21,8 @@
         </activity>
         <activity
             android:name=".DisplayUsersActivity"
-            android:label="@string/display_users_title" >
+            android:label="@string/display_users_title" 
+            android:parentActivityName=".DisplayCoursesActivity">
         </activity>
         <activity
             android:name=".LoginActivity"

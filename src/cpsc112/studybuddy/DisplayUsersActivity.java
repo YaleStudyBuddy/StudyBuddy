@@ -31,6 +31,8 @@ public class DisplayUsersActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_users);
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		uID = getIntent().getStringExtra(StudyBuddy.UID);
 		courseFilter = getIntent().getStringExtra(StudyBuddy.COURSE_FILTER);
@@ -88,16 +90,19 @@ public class DisplayUsersActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				return true;
+			default:
+				return false;
 		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	public void logoutUser(MenuItem item){
-		StudyBuddy.ROOT_REF.unauth();
-		startActivity(new Intent(this, LoginActivity.class));
+
+//		int id = item.getItemId();
+//		if (id == R.id.action_settings) {
+//			return true;
+//		}
+//		return super.onOptionsItemSelected(item);
 	}
 	
 	public void removeCourse(MenuItem item){

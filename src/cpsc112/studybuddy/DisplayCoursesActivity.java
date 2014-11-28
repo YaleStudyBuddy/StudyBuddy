@@ -101,7 +101,7 @@ public class DisplayCoursesActivity extends Activity {
 	
 	public void logoutUser(MenuItem item){
 		StudyBuddy.ROOT_REF.unauth();
-		startActivity(new Intent(this, LoginActivity.class));
+		finish();
 	}
 	
 	public void addCourse (MenuItem item){
