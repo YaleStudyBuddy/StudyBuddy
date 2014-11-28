@@ -11,10 +11,12 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.firebase.client.Firebase.AuthStateListener;
 
 public class DisplayUsersActivity extends Activity {
 	
@@ -31,6 +33,16 @@ public class DisplayUsersActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_users);
+		
+		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
+			public void onAuthStateChanged(AuthData authData){
+				if (authData != null){
+					
+				} else {
+					thisActivity.finish();
+				}
+			}
+		});
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -97,18 +109,9 @@ public class DisplayUsersActivity extends Activity {
 			default:
 				return false;
 		}
-
-//		int id = item.getItemId();
-//		if (id == R.id.action_settings) {
-//			return true;
-//		}
-//		return super.onOptionsItemSelected(item);
 	}
 	
-	public void removeCourse(MenuItem item){
-		
-//		Query query = StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").equalTo(courseFilter);
-		
+	public void removeCourse(MenuItem item){		
 		StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").addListenerForSingleValueEvent(new ValueEventListener(){
 			@SuppressWarnings("unchecked")
 			public void onDataChange(DataSnapshot snapshot){
@@ -136,5 +139,9 @@ public class DisplayUsersActivity extends Activity {
 		});
 		
 		finish();
+	}
+	
+	public void logoutUser(MenuItem item){
+		StudyBuddy.ROOT_REF.unauth();
 	}
 }

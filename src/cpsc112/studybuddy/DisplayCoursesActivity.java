@@ -18,8 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
@@ -37,6 +39,16 @@ public class DisplayCoursesActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_courses);
+		
+		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
+			public void onAuthStateChanged(AuthData authData){
+				if (authData != null){
+					
+				} else {
+					thisActivity.finish();
+				}
+			}
+		});
 		
 		uID = getIntent().getStringExtra(StudyBuddy.UID);
 		
@@ -101,7 +113,6 @@ public class DisplayCoursesActivity extends Activity {
 	
 	public void logoutUser(MenuItem item){
 		StudyBuddy.ROOT_REF.unauth();
-		finish();
 	}
 	
 	public void addCourse (MenuItem item){
