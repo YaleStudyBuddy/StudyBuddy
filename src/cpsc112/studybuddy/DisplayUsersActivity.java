@@ -1,12 +1,15 @@
 package cpsc112.studybuddy;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -19,8 +22,7 @@ import com.firebase.client.ValueEventListener;
 
 public class DisplayUsersActivity extends Activity {
 	
-	private ProgressDialog loadingDialog;
-	private ArrayList<String> users;
+	private ArrayList<String> userNames, userIDs;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 	private Activity thisActivity = this;
@@ -50,37 +52,32 @@ public class DisplayUsersActivity extends Activity {
 		
 		setTitle(courseFilter);
 		
-		loadingDialog = new ProgressDialog(this);
-		loadingDialog.setTitle("Loading");
-		loadingDialog.setMessage("Searching for other users");
+		listView = (ListView) findViewById(R.id.userList);
+		listView.setOnItemClickListener(userClickListener);
 		
 		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(new ValueEventListener(){
 			
 			public void onDataChange(DataSnapshot snapshot){
+
+				@SuppressWarnings("unchecked")
+				Map<String, Object> roster = (Map<String, Object>) snapshot;
 				
-				loadingDialog.show();
+				userNames = new ArrayList<String>();
+				userIDs = new ArrayList<String>();
 				
-				users = new ArrayList<String>();
-				Iterable<DataSnapshot> roster = snapshot.getChildren();
-				
-				for (DataSnapshot student : roster){
+				for (Map.Entry<String, Object> student : roster.entrySet()){
 					if (!student.getKey().equals(uID)){
-						users.add(student.getValue().toString());
+						userNames.add(student.getValue().toString());
+						userIDs.add(student.getKey().toString());
 					}
 				}
 				
-				adapter = new ArrayAdapter<String>(thisActivity, android.R.layout.simple_list_item_1, users);
-				listView = (ListView) findViewById(R.id.userList);
+				adapter = new ArrayAdapter<String>(thisActivity, android.R.layout.simple_list_item_1, userNames);
 				listView.setAdapter(adapter);
-				
-				loadingDialog.hide();
-				
 			}
 			
-			public void onCancelled(FirebaseError firebaseError){
-				
-			}
-
+			public void onCancelled(FirebaseError firebaseError){}
+			
 		});
 
 	}
@@ -140,4 +137,11 @@ public class DisplayUsersActivity extends Activity {
 	public void logoutUser(MenuItem item){
 		StudyBuddy.ROOT_REF.unauth();
 	}
+	
+	private OnItemClickListener userClickListener = new OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//			intent.putExtra(StudyBuddy.UID, userIDs.get(position));
+//			startActivity(intent);
+		}
+	};
 }

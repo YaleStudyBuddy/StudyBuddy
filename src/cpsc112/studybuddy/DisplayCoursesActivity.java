@@ -62,7 +62,7 @@ public class DisplayCoursesActivity extends Activity {
 		intent = new Intent(this, DisplayUsersActivity.class);
 
 		listView = (ListView) findViewById(R.id.classList);
-		listView.setOnItemClickListener(courseClickHandler);
+		listView.setOnItemClickListener(courseClickListener);
 		
 		StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").addValueEventListener(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
@@ -81,7 +81,7 @@ public class DisplayCoursesActivity extends Activity {
 		});
 	}
 	
-	private OnItemClickListener courseClickHandler = new OnItemClickListener() {
+	private OnItemClickListener courseClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
 			startActivity(intent);
