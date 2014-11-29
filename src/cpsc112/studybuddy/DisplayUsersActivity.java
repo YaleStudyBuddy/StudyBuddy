@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +13,9 @@ import android.widget.ListView;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.firebase.client.Firebase.AuthStateListener;
 
 public class DisplayUsersActivity extends Activity {
 	
@@ -25,7 +24,6 @@ public class DisplayUsersActivity extends Activity {
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 	private Activity thisActivity = this;
-	private Intent intent;
 	private String uID, courseFilter;
 	
 	@Override
@@ -34,10 +32,12 @@ public class DisplayUsersActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_users);
 		
+		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
+		
 		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
 			public void onAuthStateChanged(AuthData authData){
 				if (authData != null){
-					
+
 				} else {
 					thisActivity.finish();
 				}
@@ -46,11 +46,7 @@ public class DisplayUsersActivity extends Activity {
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		uID = getIntent().getStringExtra(StudyBuddy.UID);
 		courseFilter = getIntent().getStringExtra(StudyBuddy.COURSE_FILTER);
-	
-		intent = new Intent(this, DisplayCoursesActivity.class);
-		intent.putExtra(StudyBuddy.UID, uID);
 		
 		setTitle(courseFilter);
 		

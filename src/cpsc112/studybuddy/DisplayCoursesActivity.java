@@ -40,6 +40,8 @@ public class DisplayCoursesActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_courses);
 		
+		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
+		
 		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
 			public void onAuthStateChanged(AuthData authData){
 				if (authData != null){
@@ -49,8 +51,6 @@ public class DisplayCoursesActivity extends Activity {
 				}
 			}
 		});
-		
-		uID = getIntent().getStringExtra(StudyBuddy.UID);
 		
 		StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
@@ -77,16 +77,13 @@ public class DisplayCoursesActivity extends Activity {
 				listView.setAdapter(adapter);
 			}
 			
-			public void onCancelled(FirebaseError firebaseError){
-				
-			}
+			public void onCancelled(FirebaseError firebaseError){}
 		});
 	}
 	
 	private OnItemClickListener courseClickHandler = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
-			intent.putExtra(StudyBuddy.UID, uID);
 			startActivity(intent);
 		}
 	};

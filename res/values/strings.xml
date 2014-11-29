@@ -15,9 +15,7 @@
     <string name="email_label">Email: </string>
     <string name="password_label">Password: </string>
     <string name="name_label">Name: </string>
-    <string name="name_hint">e.g. John Smith</string>
-    <string name="course_label">Course Number: </string>
-    <string name="course_hint">e.g. CPSC112</string>
+    <string name="name_hint">name</string>
     
     <string name="display_courses_title">My Courses</string>
     <string name="add_course_button">Add</string>

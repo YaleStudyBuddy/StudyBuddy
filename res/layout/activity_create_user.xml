@@ -64,20 +64,6 @@
 
             <requestFocus />
         </EditText>
-
-        <TextView
-            android:id="@+id/classLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/course_label" />
-
-        <EditText
-            android:id="@+id/courseText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/course_hint" />
     </LinearLayout>
 
     <Button

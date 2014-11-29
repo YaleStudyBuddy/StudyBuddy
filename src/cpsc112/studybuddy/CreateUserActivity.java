@@ -18,8 +18,9 @@ import com.firebase.client.Firebase.ResultHandler;
 import com.firebase.client.FirebaseError;
 
 public class CreateUserActivity extends Activity {
-	private String email, password, name, course;
+	private String email, password, name;
 	private ProgressDialog createAccountDialog;
+	private Activity thisActivity = this;
 	private Intent intent;
 
 	@Override
@@ -62,12 +63,10 @@ public class CreateUserActivity extends Activity {
 		EditText emailText = (EditText) findViewById(R.id.emailText);
 		EditText passwordText = (EditText) findViewById(R.id.passwordText);
 		EditText nameText = (EditText) findViewById(R.id.nameText);
-		EditText classText = (EditText) findViewById(R.id.courseText);
 		
 		email = emailText.getText().toString();
 		password = passwordText.getText().toString();
 		name = nameText.getText().toString();
-		course = classText.getText().toString();
 		
 		
 		StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
@@ -75,7 +74,10 @@ public class CreateUserActivity extends Activity {
 				StudyBuddy.ROOT_REF.authWithPassword(email, password, new AuthResultHandler("password"));
 			}
 			public void onError(FirebaseError firebaseError){
-				
+				createAccountDialog.hide();
+				ProgressDialog errorDialog = new ProgressDialog(thisActivity);
+				errorDialog.setTitle("Error creating user");
+				errorDialog.setMessage(firebaseError.getDetails());
 			}
 		});
 	}
@@ -87,24 +89,19 @@ public class CreateUserActivity extends Activity {
 		public void onAuthenticated(AuthData authData) {
 			createAccountDialog.hide();
 			
-			intent.putExtra(StudyBuddy.UID, authData.getUid());
-			
 			Map<String, Object> newUser = new HashMap<String, Object>();
 			newUser.put("name", name);
-			Map<String, Object> courses = new HashMap<String, Object>();
-			courses.put("0", course);
-			newUser.put("courses", courses);
 			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).setValue(newUser);
-			
-			newUser = new HashMap<String, Object>();
-			newUser.put(authData.getUid(), name);
-			StudyBuddy.ROOT_REF.child("courses").child(course).updateChildren(newUser);
+			thisActivity.finish();
 			
 			startActivity(intent);
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {
-
+			createAccountDialog.hide();
+			ProgressDialog errorDialog = new ProgressDialog(thisActivity);
+			errorDialog.setTitle("Error authenticating user");
+			errorDialog.setMessage(firebaseError.getDetails());
 		}	
 	}
 	

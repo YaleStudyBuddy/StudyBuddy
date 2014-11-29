@@ -30,12 +30,12 @@ public class LoginActivity extends Activity {
 				
 		mAuthProgressDialog = new ProgressDialog(this);
 		mAuthProgressDialog.setTitle("Please wait");
-		mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+		mAuthProgressDialog.setMessage("Authenticating with server...");
 		mAuthProgressDialog.setCancelable(false);
 		
 		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener() {
 			public void onAuthStateChanged(AuthData authData) {
-//				mAuthProgressDialog.hide();
+				mAuthProgressDialog.hide();
 			}
 		});
 	}
@@ -77,7 +77,6 @@ public class LoginActivity extends Activity {
 		
 		public void onAuthenticated(AuthData authData) {
 			mAuthProgressDialog.hide();
-			intent.putExtra(StudyBuddy.UID, authData.getUid());
 			startActivity(intent);
 		}
 		
