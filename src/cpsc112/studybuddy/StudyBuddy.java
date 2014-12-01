@@ -1,6 +1,5 @@
 package cpsc112.studybuddy;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
 public class StudyBuddy {

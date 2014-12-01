@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 		
 		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
 		
-		menu = new String[]{"My Profile", "My Courses"};
+		menu = new String[]{"Home","My Profile", "My Courses"};
 		
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		dList = (ListView) findViewById(R.id.left_drawer);
@@ -60,9 +60,11 @@ public class MainActivity extends Activity {
 				
 				switch (position){
 					case 0:
-						thisActivity.setTitle(menu[position]);
 						break;
 					case 1:
+						thisActivity.setTitle(menu[position]);
+						break;
+					case 2:
 						thisActivity.setTitle(menu[position]);
 						fragment = new MyCoursesFragment();
 						fragment.setArguments(args);
@@ -90,10 +92,13 @@ public class MainActivity extends Activity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		switch (item.getItemId()){
+			case R.id.logout_button:
+				StudyBuddy.ROOT_REF.unauth();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
+		
 	}
 }

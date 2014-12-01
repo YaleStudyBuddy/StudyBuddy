@@ -55,7 +55,7 @@ public class DisplayUsersActivity extends Activity {
 		listView = (ListView) findViewById(R.id.userList);
 		listView.setOnItemClickListener(userClickListener);
 		
-		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(new ValueEventListener(){
+		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addListenerForSingleValueEvent(new ValueEventListener(){
 			
 			public void onDataChange(DataSnapshot snapshot){
 
@@ -99,12 +99,18 @@ public class DisplayUsersActivity extends Activity {
 			case android.R.id.home:
 				finish();
 				return true;
+			case R.id.remove_course:
+				removeCourse();
+				return true;
+			case R.id.logout_button:
+				StudyBuddy.ROOT_REF.unauth();
+				return true;
 			default:
-				return false;
+				return super.onOptionsItemSelected(item);
 		}
 	}
 	
-	public void removeCourse(MenuItem item){		
+	public void removeCourse(){		
 		StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").addListenerForSingleValueEvent(new ValueEventListener(){
 			@SuppressWarnings("unchecked")
 			public void onDataChange(DataSnapshot snapshot){
@@ -120,6 +126,7 @@ public class DisplayUsersActivity extends Activity {
 				
 				StudyBuddy.ROOT_REF.child("courses").child(courseFilter).child(uID).addListenerForSingleValueEvent(new ValueEventListener(){
 					public void onDataChange(DataSnapshot snapshot){
+						
 						snapshot.getRef().removeValue();
 					}
 					
@@ -132,10 +139,6 @@ public class DisplayUsersActivity extends Activity {
 		});
 		
 		finish();
-	}
-	
-	public void logoutUser(MenuItem item){
-		StudyBuddy.ROOT_REF.unauth();
 	}
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {

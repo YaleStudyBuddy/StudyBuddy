@@ -29,7 +29,7 @@ public class CreateUserActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_create_user);
 		
-		intent = new Intent(this, DisplayCoursesActivity.class);
+		intent = new Intent(this, MainActivity.class);
 		
 		createAccountDialog = new ProgressDialog(this);
 		createAccountDialog.setTitle("Loading");
@@ -49,9 +49,8 @@ public class CreateUserActivity extends Activity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		switch (item.getItemId()){
+		
 		}
 		return super.onOptionsItemSelected(item);
 	}

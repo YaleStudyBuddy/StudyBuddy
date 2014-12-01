@@ -6,14 +6,12 @@
         android:id="@+id/remove_course"
         android:orderInCategory="1"
         android:showAsAction="always"
-        android:onClick="removeCourse"
         android:icon="@drawable/ic_action_discard"
         android:title="@string/remove_course_button"/>
     <item
 		android:id="@+id/logout_button"
 		android:orderInCategory="101"
 		android:showAsAction="never"
-		android:onClick="logoutUser"
 		android:title="@string/logout_button"/>
 <!--     <item -->
 <!--         android:id="@+id/action_settings" -->

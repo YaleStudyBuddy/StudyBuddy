@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +37,14 @@ public class MyCoursesFragment extends Fragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
+		setHasOptionsMenu(true);
+		
 		parentActivity = getActivity().getApplicationContext();
 		
 		View view = inflater.inflate(R.layout.fragment_my_courses, container, false);
-		uID = new String("simplelogin:3");
+		
+		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
+//		uID = new String("simplelogin:3");
 		
 		StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
@@ -71,6 +77,22 @@ public class MyCoursesFragment extends Fragment {
 		return view;
 	}
 	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+		inflater.inflate(R.menu.fragment_my_courses, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()){
+			case R.id.add_course_button:
+				addCourse();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+	
 	private OnItemClickListener courseClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
@@ -78,12 +100,12 @@ public class MyCoursesFragment extends Fragment {
 		}
 	};
 	
-	public void addCourse (MenuItem item){
+	public void addCourse (){
 		
-		AlertDialog.Builder inputDialog = new AlertDialog.Builder(getActivity().getApplicationContext());
+		AlertDialog.Builder inputDialog = new AlertDialog.Builder(getActivity());
 		inputDialog.setTitle("Add Course");
 		inputDialog.setMessage("Enter Course Number:");
-		final EditText inputText = new EditText(parentActivity);
+		final EditText inputText = new EditText(getActivity());
 		inputDialog.setView(inputText);
 		
 		inputDialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -94,7 +116,7 @@ public class MyCoursesFragment extends Fragment {
 				roster.put(uID, name);
 				StudyBuddy.ROOT_REF.child("courses").child(course).updateChildren(roster);
 				
-				adapter = new ArrayAdapter<String>(parentActivity, R.layout.custom_list_item, courses);
+				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
 				listView.setAdapter(adapter);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
