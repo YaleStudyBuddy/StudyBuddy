@@ -60,7 +60,7 @@ public class DisplayUsersActivity extends Activity {
 			public void onDataChange(DataSnapshot snapshot){
 
 				@SuppressWarnings("unchecked")
-				Map<String, Object> roster = (Map<String, Object>) snapshot;
+				Map<String, Object> roster = (Map<String, Object>) snapshot.getValue();
 				
 				userNames = new ArrayList<String>();
 				userIDs = new ArrayList<String>();
