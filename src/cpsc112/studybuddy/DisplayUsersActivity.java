@@ -25,7 +25,7 @@ public class DisplayUsersActivity extends Activity {
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 	private Activity thisActivity = this;
-	private String uID, courseFilter;
+	private String courseFilter;
 	private RosterListener rosterListener = new RosterListener();
 	
 	@Override
@@ -33,14 +33,19 @@ public class DisplayUsersActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_users);
-		
-		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
-		
+
 		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
 			public void onAuthStateChanged(AuthData authData){
 				if (authData != null){
-
+					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
+					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+						public void onDataChange(DataSnapshot snapshot){
+							StudyBuddy.currentUName = snapshot.getValue().toString();
+						}
+						public void onCancelled(FirebaseError firebaseError){}
+					});
 				} else {
+					StudyBuddy.currentUName = null;
 					finish();
 				}
 			}
@@ -55,8 +60,7 @@ public class DisplayUsersActivity extends Activity {
 		listView = (ListView) findViewById(R.id.userList);
 		listView.setOnItemClickListener(userClickListener);
 		
-		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addListenerForSingleValueEvent(rosterListener);
-
+		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
 	}
 
 	@Override
@@ -88,7 +92,7 @@ public class DisplayUsersActivity extends Activity {
 	}
 	
 	public void removeCourse(){		
-		StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").addListenerForSingleValueEvent(new ValueEventListener(){
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addListenerForSingleValueEvent(new ValueEventListener(){
 
 			public void onDataChange(DataSnapshot snapshot){
 				Iterable<DataSnapshot> courseList = snapshot.getChildren();
@@ -100,9 +104,9 @@ public class DisplayUsersActivity extends Activity {
 					}
 				}
 				
-				StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").setValue(newCourseList);
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").setValue(newCourseList);
 				
-				StudyBuddy.ROOT_REF.child("courses").child(courseFilter).child(uID).addListenerForSingleValueEvent(new ValueEventListener(){
+				StudyBuddy.ROOT_REF.child("courses").child(courseFilter).child(StudyBuddy.currentUID).addListenerForSingleValueEvent(new ValueEventListener(){
 					public void onDataChange(DataSnapshot snapshot){
 						StudyBuddy.ROOT_REF.child("courses").child(courseFilter).removeEventListener(rosterListener);
 						snapshot.getRef().removeValue();
@@ -134,7 +138,7 @@ public class DisplayUsersActivity extends Activity {
 			userIDs = new ArrayList<String>();
 			
 			for (DataSnapshot student : roster){
-				if (!student.getKey().equals(uID)){
+				if (!student.getKey().equals(StudyBuddy.currentUID)){
 					userNames.add(student.getValue().toString());
 					userIDs.add(student.getKey().toString());
 				}

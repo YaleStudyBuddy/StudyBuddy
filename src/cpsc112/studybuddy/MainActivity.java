@@ -32,19 +32,18 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		Firebase.setAndroidContext(this);
 		
-		StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-			public void onDataChange(DataSnapshot snapshot){
-				StudyBuddy.currentUName = snapshot.getValue().toString();
-			}
-			public void onCancelled(FirebaseError firebaseError){}
-		});
-		
 		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
 			public void onAuthStateChanged(AuthData authData){
 				if (authData != null){
-					
+					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
+					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+						public void onDataChange(DataSnapshot snapshot){
+							StudyBuddy.currentUName = snapshot.getValue().toString();
+						}
+						public void onCancelled(FirebaseError firebaseError){}
+					});
 				} else {
+					StudyBuddy.currentUName = null;
 					finish();
 				}
 			}

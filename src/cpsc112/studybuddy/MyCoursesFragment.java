@@ -29,14 +29,11 @@ public class MyCoursesFragment extends Fragment {
 	private ArrayList<String> courses;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
-	private Intent intent;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
 		setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_my_courses, container, false);
-
-		intent = new Intent(getActivity(), DisplayUsersActivity.class);
 		
 		listView = (ListView) view.findViewById(R.id.course_list);
 		listView.setOnItemClickListener(courseClickListener);
@@ -78,6 +75,7 @@ public class MyCoursesFragment extends Fragment {
 	
 	private OnItemClickListener courseClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			Intent intent = new Intent(getActivity(), DisplayUsersActivity.class);			
 			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
 			startActivity(intent);
 		}
@@ -97,14 +95,14 @@ public class MyCoursesFragment extends Fragment {
 				String newCourse = inputText.getText().toString();
 				
 				Map<String, Object> roster = new HashMap<String, Object>();
-				roster.put(StudyBuddy.currentUID, StudyBuddy.currentUID);
+				roster.put(StudyBuddy.currentUID, StudyBuddy.currentUName);
 				StudyBuddy.ROOT_REF.child("courses").child(newCourse).updateChildren(roster);
 				
-				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
-				listView.setAdapter(adapter);
+//				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
+//				listView.setAdapter(adapter);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
-				courseMap.put("" + courses.size(), newCourse);
+				courseMap.put(Integer.toString(courses.size()), newCourse);
 				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").updateChildren(courseMap);
 			}
 		});
