@@ -14,16 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.firebase.client.Firebase.AuthStateListener;
 
 public class MainActivity extends Activity {
-	private String[] menu;
 	private DrawerLayout dLayout;
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
-	private Activity thisActivity = this;
-	private String uID;
+	private FragmentManager fragmentManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,41 +32,46 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		Firebase.setAndroidContext(this);
 		
+		StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+			public void onDataChange(DataSnapshot snapshot){
+				StudyBuddy.currentUName = snapshot.getValue().toString();
+			}
+			public void onCancelled(FirebaseError firebaseError){}
+		});
+		
 		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
 			public void onAuthStateChanged(AuthData authData){
 				if (authData != null){
 					
 				} else {
-					thisActivity.finish();
+					finish();
 				}
 			}
 		});
 		
-		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
-		
-		menu = new String[]{"Home","My Profile", "My Courses"};
-		
+		fragmentManager = getFragmentManager();
+
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		dList = (ListView) findViewById(R.id.left_drawer);
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu);
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, StudyBuddy.NAV_MENU);
 		dList.setAdapter(adapter);
 		dList.setSelector(android.R.color.holo_blue_dark);
 		dList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
 				dLayout.closeDrawers();
 				Bundle args = new Bundle();
-				args.putString(StudyBuddy.UID, uID);
 				Fragment fragment;
-				FragmentManager fragmentManager = getFragmentManager();
 				
 				switch (position){
 					case 0:
+						setTitle(getString(R.string.app_name));
 						break;
 					case 1:
-						thisActivity.setTitle(menu[position]);
+						setTitle(StudyBuddy.NAV_MENU[position]);
 						break;
 					case 2:
-						thisActivity.setTitle(menu[position]);
+						setTitle(StudyBuddy.NAV_MENU[position]);
 						fragment = new MyCoursesFragment();
 						fragment.setArguments(args);
 						fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -79,6 +85,7 @@ public class MainActivity extends Activity {
 		
 		
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

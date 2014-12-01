@@ -60,8 +60,8 @@ public class LoginActivity extends Activity {
 		
 		EditText emailText = (EditText) findViewById(R.id.emailText);
 		EditText passwordText = (EditText) findViewById(R.id.passwordText);
-		
-		StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
+//		StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
+		StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
 	}
 	
 	public void createAccount(View view){

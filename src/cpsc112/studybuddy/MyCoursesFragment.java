@@ -6,7 +6,6 @@ import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,39 +25,23 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-
 public class MyCoursesFragment extends Fragment {
 	private ArrayList<String> courses;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 	private Intent intent;
-	private Context parentActivity;
-	private String uID, name;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
 		setHasOptionsMenu(true);
-		
-		parentActivity = getActivity().getApplicationContext();
-		
 		View view = inflater.inflate(R.layout.fragment_my_courses, container, false);
-		
-		uID = StudyBuddy.ROOT_REF.getAuth().getUid();
-//		uID = new String("simplelogin:3");
-		
-		StudyBuddy.ROOT_REF.child("users").child(uID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-			public void onDataChange(DataSnapshot snapshot){
-				name = snapshot.getValue().toString();
-			}
-			public void onCancelled(FirebaseError firebaseError){}
-		});
 
-		intent = new Intent(parentActivity, DisplayUsersActivity.class);
+		intent = new Intent(getActivity(), DisplayUsersActivity.class);
 		
 		listView = (ListView) view.findViewById(R.id.course_list);
 		listView.setOnItemClickListener(courseClickListener);
 		
-		StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").addValueEventListener(new ValueEventListener(){
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
 				courses = new ArrayList<String>();
 				Iterable<DataSnapshot> courseList = snapshot.getChildren();
@@ -67,7 +50,7 @@ public class MyCoursesFragment extends Fragment {
 					courses.add(course.getValue().toString());
 				}
 				
-				adapter = new ArrayAdapter<String>(parentActivity, R.layout.custom_list_item, courses);
+				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
 				listView.setAdapter(adapter);
 			}
 			
@@ -110,18 +93,19 @@ public class MyCoursesFragment extends Fragment {
 		
 		inputDialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				String course = inputText.getText().toString();
+
+				String newCourse = inputText.getText().toString();
 				
 				Map<String, Object> roster = new HashMap<String, Object>();
-				roster.put(uID, name);
-				StudyBuddy.ROOT_REF.child("courses").child(course).updateChildren(roster);
+				roster.put(StudyBuddy.currentUID, StudyBuddy.currentUID);
+				StudyBuddy.ROOT_REF.child("courses").child(newCourse).updateChildren(roster);
 				
 				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
 				listView.setAdapter(adapter);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
-				courseMap.put("" + courses.size(), course);
-				StudyBuddy.ROOT_REF.child("users").child(uID).child("courses").updateChildren(courseMap);
+				courseMap.put("" + courses.size(), newCourse);
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").updateChildren(courseMap);
 			}
 		});
 		
