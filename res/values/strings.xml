@@ -3,23 +3,19 @@
 
     <string name="app_name">StudyBuddy</string>
     <string name="action_settings">Settings</string>
-    
     <string name="email_hint">email</string>
     <string name="password_hint">password</string>
     <string name="login_button">Login</string>
-    <string name="login_text">Login: </string>    
+    <string name="login_text">Login: </string>
     <string name="create_account_text">Don\'t have an account? Click here!</string>
-    
-    <string name="create_account_title">Create Account</string>    
+    <string name="create_account_title">Create Account</string>
     <string name="create_account_button">Create Account</string>
     <string name="email_label">Email: </string>
     <string name="password_label">Password: </string>
     <string name="name_label">Name: </string>
     <string name="name_hint">name</string>
-    
     <string name="display_courses_title">My Courses</string>
     <string name="add_course_button">Add</string>
-    
     <string name="display_users_title">Current Users</string>
     <string name="logout_button">Logout</string>
     <string name="remove_course_button">Remove Course</string>

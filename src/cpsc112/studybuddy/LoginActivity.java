@@ -26,7 +26,7 @@ public class LoginActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_login);
 		
-		intent = new Intent(this, DisplayCoursesActivity.class);
+		intent = new Intent(this, MainActivity.class);
 				
 		mAuthProgressDialog = new ProgressDialog(this);
 		mAuthProgressDialog.setTitle("Please wait");
