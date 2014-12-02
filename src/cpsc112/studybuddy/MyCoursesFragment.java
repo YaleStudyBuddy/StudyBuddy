@@ -48,7 +48,7 @@ public class MyCoursesFragment extends Fragment {
 					courses.add(course.getValue().toString());
 				}
 				
-				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
+				adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, courses);
 				listView.setAdapter(adapter);
 			}
 			
