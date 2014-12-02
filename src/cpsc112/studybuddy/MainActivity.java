@@ -1,7 +1,5 @@
 package cpsc112.studybuddy;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -16,14 +14,13 @@ public class MainActivity extends StudyBuddy {
 	private DrawerLayout dLayout;
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
-	private FragmentManager fragmentManager;
+	protected static MyCoursesFragment myCourses = new MyCoursesFragment();
+	protected static DisplayUsersFragment displayUsers = new DisplayUsersFragment();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		fragmentManager = getFragmentManager();
 
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		dList = (ListView) findViewById(R.id.left_drawer);
@@ -33,21 +30,18 @@ public class MainActivity extends StudyBuddy {
 		dList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
 				dLayout.closeDrawers();
-				Bundle args = new Bundle();
-				Fragment fragment;
 				
 				switch (position){
 					case 0:
+						getFragmentManager().beginTransaction().remove(myCourses).commit();
 						setTitle(getString(R.string.app_name));
 						break;
 					case 1:
+						getFragmentManager().beginTransaction().remove(myCourses).commit();
 						setTitle(StudyBuddy.NAV_MENU[position]);
 						break;
 					case 2:
-						setTitle(StudyBuddy.NAV_MENU[position]);
-						fragment = new MyCoursesFragment();
-						fragment.setArguments(args);
-						fragmentManager.beginTransaction().replace(R.id.main_content_frame, fragment).commit();
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myCourses).commit();
 						break;
 					default:
 						break;

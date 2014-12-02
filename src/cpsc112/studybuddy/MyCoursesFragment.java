@@ -7,7 +7,6 @@ import java.util.Map;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,8 +31,10 @@ public class MyCoursesFragment extends Fragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
-		setHasOptionsMenu(true);
 		View view = inflater.inflate(R.layout.fragment_my_courses, container, false);
+		setHasOptionsMenu(true);
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+		getActivity().setTitle(StudyBuddy.NAV_MENU[2]);
 		
 		listView = (ListView) view.findViewById(R.id.course_list);
 		listView.setOnItemClickListener(courseClickListener);
@@ -75,9 +76,10 @@ public class MyCoursesFragment extends Fragment {
 	
 	private OnItemClickListener courseClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Intent intent = new Intent(getActivity(), DisplayUsersFragment.class);			
-			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
-			startActivity(intent);
+			Bundle args = new Bundle();
+			args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
+			MainActivity.displayUsers.setArguments(args);
+			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.displayUsers).addToBackStack(null).commit();
 		}
 	};
 	

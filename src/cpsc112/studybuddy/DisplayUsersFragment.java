@@ -2,11 +2,14 @@ package cpsc112.studybuddy;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -16,55 +19,67 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class DisplayUsersFragment extends StudyBuddy {
+public class DisplayUsersFragment extends Fragment {
 	
 	private ArrayList<String> userNames, userIDs;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
-	private Activity thisActivity = this;
 	private String courseFilter;
-	private RosterListener rosterListener = new RosterListener();
+	private ValueEventListener rosterListener;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_display_users);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-		courseFilter = getIntent().getStringExtra(StudyBuddy.COURSE_FILTER);
+		View view = inflater.inflate(R.layout.fragment_display_users, container, false);
+		courseFilter = getArguments().getString(StudyBuddy.COURSE_FILTER);
+		setHasOptionsMenu(true);
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActivity().setTitle(courseFilter);
 		
-		setTitle(courseFilter);
-		
-		listView = (ListView) findViewById(R.id.userList);
+		listView = (ListView) view.findViewById(R.id.userList);
 		listView.setOnItemClickListener(userClickListener);
 		
+		rosterListener = new ValueEventListener(){
+			public void onDataChange(DataSnapshot snapshot){
+
+				Iterable<DataSnapshot> roster = snapshot.getChildren();
+				userNames = new ArrayList<String>();
+				userIDs = new ArrayList<String>();
+				
+				for (DataSnapshot student : roster){
+					if (!student.getKey().equals(StudyBuddy.currentUID)){
+						userNames.add(student.getValue().toString());
+						userIDs.add(student.getKey().toString());
+					}
+				}
+				
+				adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userNames);
+				listView.setAdapter(adapter);
+			}
+			
+			public void onCancelled(FirebaseError firebaseError){}
+		};
+		
 		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
+		
+		return view;
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.display_users, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+		inflater.inflate(R.menu.fragment_my_courses, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				getActivity().getFragmentManager().popBackStackImmediate();
 				return true;
 			case R.id.remove_course:
 				removeCourse();
 				return true;
-//			case R.id.logout_button:
-//				StudyBuddy.ROOT_REF.unauth();
-//				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -99,34 +114,13 @@ public class DisplayUsersFragment extends StudyBuddy {
 			public void onCancelled(FirebaseError firebaseError){}
 		});
 		
-		finish();
+		getActivity().getFragmentManager().popBackStackImmediate();
 	}
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//			intent.putExtra(StudyBuddy.UID, userIDs.get(position));
-//			startActivity(intent);
+
 		}
 	};
-	
-	private class RosterListener implements ValueEventListener{
-		public void onDataChange(DataSnapshot snapshot){
 
-			Iterable<DataSnapshot> roster = snapshot.getChildren();
-			userNames = new ArrayList<String>();
-			userIDs = new ArrayList<String>();
-			
-			for (DataSnapshot student : roster){
-				if (!student.getKey().equals(StudyBuddy.currentUID)){
-					userNames.add(student.getValue().toString());
-					userIDs.add(student.getKey().toString());
-				}
-			}
-			
-			adapter = new ArrayAdapter<String>(thisActivity, android.R.layout.simple_list_item_1, userNames);
-			listView.setAdapter(adapter);
-		}
-		
-		public void onCancelled(FirebaseError firebaseError){}
-	}
 }
