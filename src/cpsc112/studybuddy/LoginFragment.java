@@ -1,15 +1,17 @@
 package cpsc112.studybuddy;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.firebase.client.AuthData;
@@ -19,19 +21,14 @@ import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class LoginActivity extends Activity {
+public class LoginFragment extends Fragment implements OnClickListener{
 	private ProgressDialog mAuthProgressDialog;
-	private Intent intent;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Firebase.setAndroidContext(this);
-		setContentView(R.layout.activity_login);
-		
-		intent = new Intent(this, MainActivity.class);
-				
-		mAuthProgressDialog = new ProgressDialog(this);
+	
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
+		View view = inflater.inflate(R.layout.fragment_login, container, false);
+	
+		mAuthProgressDialog = new ProgressDialog(getActivity());
 		mAuthProgressDialog.setTitle("Please wait");
 		mAuthProgressDialog.setMessage("Authenticating with server...");
 		mAuthProgressDialog.setCancelable(false);
@@ -41,13 +38,16 @@ public class LoginActivity extends Activity {
 				mAuthProgressDialog.hide();
 			}
 		});
+		
+		view.findViewById(R.id.loginButton).setOnClickListener(this);
+		view.findViewById(R.id.createAccountText).setOnClickListener(this);
+//		
+		return view;
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.create_user, menu);
 	}
 
 	@Override
@@ -55,24 +55,29 @@ public class LoginActivity extends Activity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		switch (item.getItemId()){
+		
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void loginUser(View view){
-		mAuthProgressDialog.show();
+	public void onClick(View view){
+		switch(view.getId()){
+			case R.id.loginButton:
+				mAuthProgressDialog.show();
+				
+				@SuppressWarnings("unused")
+				EditText emailText = (EditText) view.findViewById(R.id.emailText);
+				@SuppressWarnings("unused")
+				EditText passwordText = (EditText) view.findViewById(R.id.passwordText);
+//				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
+				StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
+				break;
 		
-		EditText emailText = (EditText) findViewById(R.id.emailText);
-		EditText passwordText = (EditText) findViewById(R.id.passwordText);
-//		StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
-		StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
-	}
-	
-	public void createAccount(View view){
-		FragmentManager fragmentManager = getFragmentManager();
-		Bundle args = new Bundle();
-		Fragment fragment = new CreateUserFragment();
-		fragment.setArguments(args);
-		fragmentManager.beginTransaction().replace(R.id.login_content_frame, fragment).commit();
+			case R.id.createAccountText:
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.auth_content_frame, AuthActivity.createUser).addToBackStack(null).commit();
+				break;
+		}
 	}
 	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
@@ -88,21 +93,22 @@ public class LoginActivity extends Activity {
 				public void onCancelled(FirebaseError firebaseError){}
 			});
 			
-			startActivity(intent);
+			startActivity(new Intent(getActivity(), MainActivity.class));
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {
 			mAuthProgressDialog.hide();
 			showErrorDialog(firebaseError.toString());
 		}	
+		
+	    private void showErrorDialog(String message) {
+	        new AlertDialog.Builder(getActivity())
+	                .setTitle("Error")
+	                .setMessage(message)
+	                .setPositiveButton(android.R.string.ok, null)
+	                .setIcon(android.R.drawable.ic_dialog_alert)
+	                .show();
+	    }
 	}
-
-    private void showErrorDialog(String message) {
-        new AlertDialog.Builder(this)
-                .setTitle("Error")
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
+	
 }

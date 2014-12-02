@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
@@ -21,27 +21,21 @@ import com.firebase.client.Firebase;
 import com.firebase.client.Firebase.ResultHandler;
 import com.firebase.client.FirebaseError;
 
-public class CreateUserFragment extends Fragment
-{
+public class CreateUserFragment extends Fragment implements OnClickListener{
 	private String email, password;
 	private ProgressDialog createAccountDialog;
-//	private Activity thisActivity = this;
-	private Intent intent;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		View view = inflater.inflate(R.layout.fragment_create_user, container, false);
 		
-//		super.onCreate(savedInstanceState);
-//		Firebase.setAndroidContext(this);
-//		setContentView(R.layout.activity_create_user);
-		
-		intent = new Intent(getActivity(), MainActivity.class);
-		
 		createAccountDialog = new ProgressDialog(getActivity());
 		createAccountDialog.setTitle("Loading");
 		createAccountDialog.setMessage("Creating new user account, please wait...");
 		createAccountDialog.setCancelable(false);
+		
+		view.findViewById(R.id.createAccountButton).setOnClickListener(this);
+		view.findViewById(R.id.cancelButton).setOnClickListener(this);
 		
 		return view;
 	}
@@ -62,29 +56,38 @@ public class CreateUserFragment extends Fragment
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void createAccount(View view){
-		
-		createAccountDialog.show();
-		
-		EditText emailText = (EditText) view.findViewById(R.id.emailText);
-		EditText passwordText = (EditText) view.findViewById(R.id.passwordText);
-		EditText nameText = (EditText) view.findViewById(R.id.nameText);
-		
-		email = emailText.getText().toString();
-		password = passwordText.getText().toString();
-		StudyBuddy.currentUName = nameText.getText().toString();
-		StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
-			public void onSuccess(){
-				StudyBuddy.ROOT_REF.authWithPassword(email, password, new AuthResultHandler("password"));
-			}
-			public void onError(FirebaseError firebaseError){
-				createAccountDialog.hide();
-				ProgressDialog errorDialog = new ProgressDialog(getActivity());
-				errorDialog.setTitle("Error creating user");
-				errorDialog.setMessage(firebaseError.getDetails());
-			}
-		});
+	public void onClick(View view){
+		switch(view.getId()){
+			case R.id.createAccountButton:
+				createAccountDialog.show();
+				
+				EditText emailText = (EditText) getView().findViewById(R.id.emailText);
+				EditText passwordText = (EditText) getView().findViewById(R.id.passwordText);
+				EditText nameText = (EditText) getView().findViewById(R.id.nameText);
+				
+				email = emailText.getText().toString();
+				password = passwordText.getText().toString();
+				StudyBuddy.currentUName = nameText.getText().toString();
+				
+				StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
+					public void onSuccess(){
+						StudyBuddy.ROOT_REF.authWithPassword(email, password, new AuthResultHandler("password"));
+					}
+					public void onError(FirebaseError firebaseError){
+						createAccountDialog.hide();
+						ProgressDialog errorDialog = new ProgressDialog(getActivity());
+						errorDialog.setTitle("Error creating user");
+						errorDialog.setMessage(firebaseError.toString());
+						errorDialog.show();
+					}
+				});
+				break;
+			case R.id.cancelButton:
+				getActivity().getFragmentManager().popBackStackImmediate();
+				break;
+		}
 	}
+	
 	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
 
@@ -99,17 +102,18 @@ public class CreateUserFragment extends Fragment
 			newUser.put("name", StudyBuddy.currentUName);
 			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).setValue(newUser);
 
-			FragmentManager fragmentManager = getActivity().getFragmentManager();
-			fragmentManager.popBackStackImmediate();
-			
-			startActivity(intent);
+			startActivity(new Intent(getActivity(), MainActivity.class));
+			getActivity().getFragmentManager().popBackStackImmediate();
+
+
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {
 			createAccountDialog.hide();
 			ProgressDialog errorDialog = new ProgressDialog(getActivity());
 			errorDialog.setTitle("Error authenticating user");
-			errorDialog.setMessage(firebaseError.getDetails());
+			errorDialog.setMessage(firebaseError.toString());
+			errorDialog.show();
 		}	
 	}
 	

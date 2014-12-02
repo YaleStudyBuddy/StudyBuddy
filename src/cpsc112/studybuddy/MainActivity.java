@@ -23,23 +23,6 @@ public class MainActivity extends StudyBuddy {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-//		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
-//			public void onAuthStateChanged(AuthData authData){
-//				if (authData != null){
-//					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
-//					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-//						public void onDataChange(DataSnapshot snapshot){
-//							StudyBuddy.currentUName = snapshot.getValue().toString();
-//						}
-//						public void onCancelled(FirebaseError firebaseError){}
-//					});
-//				} else {
-//					StudyBuddy.currentUName = null;
-//					finish();
-//				}
-//			}
-//		});
-		
 		fragmentManager = getFragmentManager();
 
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,9 +73,7 @@ public class MainActivity extends StudyBuddy {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()){
-//			case R.id.logout_button:
-//				StudyBuddy.ROOT_REF.unauth();
-//				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}

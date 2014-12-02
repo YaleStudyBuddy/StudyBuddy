@@ -10,6 +10,7 @@
     <string name="create_account_text">Don\'t have an account? Click here!</string>
     <string name="create_account_title">Create Account</string>
     <string name="create_account_button">Create Account</string>
+    <string name="cancel_button">Cancel</string>
     <string name="email_label">Email: </string>
     <string name="password_label">Password: </string>
     <string name="name_label">Name: </string>

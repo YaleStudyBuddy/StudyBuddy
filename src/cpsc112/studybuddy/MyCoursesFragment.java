@@ -75,7 +75,7 @@ public class MyCoursesFragment extends Fragment {
 	
 	private OnItemClickListener courseClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Intent intent = new Intent(getActivity(), DisplayUsersActivity.class);			
+			Intent intent = new Intent(getActivity(), DisplayUsersFragment.class);			
 			intent.putExtra(StudyBuddy.COURSE_FILTER, courses.get(position));
 			startActivity(intent);
 		}

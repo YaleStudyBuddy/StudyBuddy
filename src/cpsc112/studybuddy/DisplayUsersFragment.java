@@ -16,7 +16,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class DisplayUsersActivity extends StudyBuddy {
+public class DisplayUsersFragment extends StudyBuddy {
 	
 	private ArrayList<String> userNames, userIDs;
 	private ArrayAdapter<String> adapter;
@@ -29,23 +29,6 @@ public class DisplayUsersActivity extends StudyBuddy {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display_users);
-
-//		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
-//			public void onAuthStateChanged(AuthData authData){
-//				if (authData != null){
-//					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
-//					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-//						public void onDataChange(DataSnapshot snapshot){
-//							StudyBuddy.currentUName = snapshot.getValue().toString();
-//						}
-//						public void onCancelled(FirebaseError firebaseError){}
-//					});
-//				} else {
-//					StudyBuddy.currentUName = null;
-//					finish();
-//				}
-//			}
-//		});
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
