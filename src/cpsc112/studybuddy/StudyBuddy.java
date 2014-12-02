@@ -18,8 +18,6 @@ public abstract class StudyBuddy extends Activity {
 	protected static String currentUID;
 	protected static String currentUName;
 	
-
-	
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
