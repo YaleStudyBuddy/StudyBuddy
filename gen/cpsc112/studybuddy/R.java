@@ -1228,9 +1228,9 @@ containing a value of this type.
     public static final class menu {
         public static final int create_user=0x7f0c0000;
         public static final int display_users=0x7f0c0001;
-        public static final int fragment_my_courses=0x7f0c0002;
-        public static final int login=0x7f0c0003;
-        public static final int main=0x7f0c0004;
+        public static final int login=0x7f0c0002;
+        public static final int main=0x7f0c0003;
+        public static final int my_courses=0x7f0c0004;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

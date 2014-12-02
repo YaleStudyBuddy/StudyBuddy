@@ -60,7 +60,7 @@ public class MyCoursesFragment extends Fragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		inflater.inflate(R.menu.fragment_my_courses, menu);
+		inflater.inflate(R.menu.my_courses, menu);
 	}
 	
 	@Override

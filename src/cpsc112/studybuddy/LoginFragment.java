@@ -53,9 +53,9 @@ public class LoginFragment extends Fragment implements OnClickListener{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
-		
+			default:
+				return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 	public void onClick(View view){
@@ -63,8 +63,8 @@ public class LoginFragment extends Fragment implements OnClickListener{
 			case R.id.loginButton:
 				mAuthProgressDialog.show();
 				
-				EditText emailText = (EditText) view.findViewById(R.id.emailText);
-				EditText passwordText = (EditText) view.findViewById(R.id.passwordText);
+				EditText emailText = (EditText) getView().findViewById(R.id.emailText);
+				EditText passwordText = (EditText) getView().findViewById(R.id.passwordText);
 				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
 				break;
 		
