@@ -47,9 +47,6 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()){
 		
 		}
@@ -88,6 +85,11 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 		}
 	}
 	
+	protected static String checkCourseString(String course){
+		//check there are no extra spaces in course number input
+		//make string all caps
+		return null;
+	}	
 	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
 
@@ -104,8 +106,6 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 
 			startActivity(new Intent(getActivity(), MainActivity.class));
 			getActivity().getFragmentManager().popBackStackImmediate();
-
-
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {

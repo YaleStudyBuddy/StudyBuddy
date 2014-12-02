@@ -18,11 +18,7 @@ public abstract class StudyBuddy extends Activity {
 	protected static String currentUID;
 	protected static String currentUName;
 	
-	protected static String checkCourseString(String course){
-		//check there are no extra spaces in course number input
-		//make string all caps
-		return null;
-	}
+
 	
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -42,16 +38,12 @@ public abstract class StudyBuddy extends Activity {
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()){
 		case R.id.logout_button:
 			StudyBuddy.ROOT_REF.unauth();

@@ -100,9 +100,6 @@ public class MyCoursesFragment extends Fragment {
 				roster.put(StudyBuddy.currentUID, StudyBuddy.currentUName);
 				StudyBuddy.ROOT_REF.child("courses").child(newCourse).updateChildren(roster);
 				
-//				adapter = new ArrayAdapter<String>(getActivity(), R.layout.custom_list_item, courses);
-//				listView.setAdapter(adapter);
-				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
 				courseMap.put(Integer.toString(courses.size()), newCourse);
 				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").updateChildren(courseMap);

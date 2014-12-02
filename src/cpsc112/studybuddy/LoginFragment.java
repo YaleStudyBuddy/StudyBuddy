@@ -52,9 +52,6 @@ public class LoginFragment extends Fragment implements OnClickListener{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()){
 		
 		}
@@ -66,12 +63,9 @@ public class LoginFragment extends Fragment implements OnClickListener{
 			case R.id.loginButton:
 				mAuthProgressDialog.show();
 				
-				@SuppressWarnings("unused")
 				EditText emailText = (EditText) view.findViewById(R.id.emailText);
-				@SuppressWarnings("unused")
 				EditText passwordText = (EditText) view.findViewById(R.id.passwordText);
-//				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
-				StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
+				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
 				break;
 		
 			case R.id.createAccountText:
