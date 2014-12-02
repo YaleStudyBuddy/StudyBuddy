@@ -14,13 +14,8 @@ public class UserProfileFragment extends Fragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-		if (getArguments() == null){
-			userID = StudyBuddy.currentUID;
-			userName = StudyBuddy.currentName;
-		} else {
-			userID = getArguments().getString(StudyBuddy.UID);
-			userName = getArguments().getString(StudyBuddy.NAME);
-		}
+		userID = getArguments().getString(StudyBuddy.UID, StudyBuddy.currentUID);
+		userName = getArguments().getString(StudyBuddy.NAME, StudyBuddy.currentName);
 		
 		setHasOptionsMenu(true);
 		

@@ -40,6 +40,10 @@ public class MainActivity extends StudyBuddy {
 						setTitle(getString(R.string.app_name));
 						break;
 					case 1:
+						if (myProfile.getArguments() == null){
+							Bundle args = new Bundle();
+							myProfile.setArguments(args);
+						}
 						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myProfile).addToBackStack(null).commit();
 						break;
 					case 2:
