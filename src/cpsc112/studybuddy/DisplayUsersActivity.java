@@ -12,14 +12,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class DisplayUsersActivity extends Activity {
+public class DisplayUsersActivity extends StudyBuddy {
 	
 	private ArrayList<String> userNames, userIDs;
 	private ArrayAdapter<String> adapter;
@@ -31,25 +28,24 @@ public class DisplayUsersActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_display_users);
 
-		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
-			public void onAuthStateChanged(AuthData authData){
-				if (authData != null){
-					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
-					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-						public void onDataChange(DataSnapshot snapshot){
-							StudyBuddy.currentUName = snapshot.getValue().toString();
-						}
-						public void onCancelled(FirebaseError firebaseError){}
-					});
-				} else {
-					StudyBuddy.currentUName = null;
-					finish();
-				}
-			}
-		});
+//		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
+//			public void onAuthStateChanged(AuthData authData){
+//				if (authData != null){
+//					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
+//					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+//						public void onDataChange(DataSnapshot snapshot){
+//							StudyBuddy.currentUName = snapshot.getValue().toString();
+//						}
+//						public void onCancelled(FirebaseError firebaseError){}
+//					});
+//				} else {
+//					StudyBuddy.currentUName = null;
+//					finish();
+//				}
+//			}
+//		});
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -83,9 +79,9 @@ public class DisplayUsersActivity extends Activity {
 			case R.id.remove_course:
 				removeCourse();
 				return true;
-			case R.id.logout_button:
-				StudyBuddy.ROOT_REF.unauth();
-				return true;
+//			case R.id.logout_button:
+//				StudyBuddy.ROOT_REF.unauth();
+//				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}

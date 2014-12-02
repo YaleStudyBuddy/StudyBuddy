@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.firebase.client.Firebase.AuthStateListener;
 
 public abstract class StudyBuddy extends Activity {
 	protected final static Firebase ROOT_REF = new Firebase("https://scorching-heat-1838.firebaseio.com/");
@@ -13,7 +15,7 @@ public abstract class StudyBuddy extends Activity {
 	protected final static String UID = "cpsc112.studybuddy.UID";
 	protected final static String[] NAV_MENU = {"Home", "My Profile", "My Courses"};
 	
-	protected static String currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
+	protected static String currentUID;
 	protected static String currentUName;
 	
 	protected static String checkCourseString(String course){
@@ -26,6 +28,17 @@ public abstract class StudyBuddy extends Activity {
 		super.onCreate(savedInstanceState);
 		Firebase.setAndroidContext(this);
 		
+		ROOT_REF.addAuthStateListener(new AuthStateListener(){
+			public void onAuthStateChanged(AuthData authData){
+				if (authData != null){
+
+				} else {
+					currentUID = null;
+					currentUName = null;
+					finish();
+				}
+			}
+		});
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,7 +52,12 @@ public abstract class StudyBuddy extends Activity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		return super.onOptionsItemSelected(item);	
+		switch (item.getItemId()){
+		case R.id.logout_button:
+			StudyBuddy.ROOT_REF.unauth();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
 }

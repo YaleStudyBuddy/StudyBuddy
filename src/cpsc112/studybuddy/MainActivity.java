@@ -1,6 +1,5 @@
 package cpsc112.studybuddy;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -13,14 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.firebase.client.Firebase.AuthStateListener;
-
-public class MainActivity extends Activity {
+public class MainActivity extends StudyBuddy {
 	private DrawerLayout dLayout;
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
@@ -30,24 +22,23 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Firebase.setAndroidContext(this);
 		
-		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
-			public void onAuthStateChanged(AuthData authData){
-				if (authData != null){
-					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
-					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-						public void onDataChange(DataSnapshot snapshot){
-							StudyBuddy.currentUName = snapshot.getValue().toString();
-						}
-						public void onCancelled(FirebaseError firebaseError){}
-					});
-				} else {
-					StudyBuddy.currentUName = null;
-					finish();
-				}
-			}
-		});
+//		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
+//			public void onAuthStateChanged(AuthData authData){
+//				if (authData != null){
+//					StudyBuddy.currentUID = StudyBuddy.ROOT_REF.getAuth().getUid();
+//					StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+//						public void onDataChange(DataSnapshot snapshot){
+//							StudyBuddy.currentUName = snapshot.getValue().toString();
+//						}
+//						public void onCancelled(FirebaseError firebaseError){}
+//					});
+//				} else {
+//					StudyBuddy.currentUName = null;
+//					finish();
+//				}
+//			}
+//		});
 		
 		fragmentManager = getFragmentManager();
 
@@ -73,7 +64,7 @@ public class MainActivity extends Activity {
 						setTitle(StudyBuddy.NAV_MENU[position]);
 						fragment = new MyCoursesFragment();
 						fragment.setArguments(args);
-						fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+						fragmentManager.beginTransaction().replace(R.id.main_content_frame, fragment).commit();
 						break;
 					default:
 						break;
@@ -99,9 +90,9 @@ public class MainActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()){
-			case R.id.logout_button:
-				StudyBuddy.ROOT_REF.unauth();
-				return true;
+//			case R.id.logout_button:
+//				StudyBuddy.ROOT_REF.unauth();
+//				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
