@@ -234,9 +234,11 @@ int drawable abc_textfield_searchview_holo_dark 0x7f020053
 int drawable abc_textfield_searchview_holo_light 0x7f020054
 int drawable abc_textfield_searchview_right_holo_dark 0x7f020055
 int drawable abc_textfield_searchview_right_holo_light 0x7f020056
-int drawable ic_action_discard 0x7f020057
-int drawable ic_action_new 0x7f020058
-int drawable ic_launcher 0x7f020059
+int drawable ic_action_add_person 0x7f020057
+int drawable ic_action_discard 0x7f020058
+int drawable ic_action_edit 0x7f020059
+int drawable ic_action_new 0x7f02005a
+int drawable ic_launcher 0x7f02005b
 int id action_bar 0x7f05001c
 int id action_bar_activity_content 0x7f050015
 int id action_bar_container 0x7f05001b
@@ -249,6 +251,7 @@ int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f050024
 int id activity_chooser_view_content 0x7f050025
+int id add_buddy_button 0x7f050054
 int id add_course_button 0x7f050052
 int id always 0x7f05000b
 int id appNameView 0x7f05004b
@@ -265,6 +268,7 @@ int id dialog 0x7f05000e
 int id disableHome 0x7f050008
 int id drawer_layout 0x7f05003d
 int id dropdown 0x7f05000f
+int id edit_profile_button 0x7f050053
 int id edit_query 0x7f050030
 int id emailLabel 0x7f050042
 int id emailText 0x7f050043
@@ -351,12 +355,15 @@ int layout fragment_create_user 0x7f03001a
 int layout fragment_display_users 0x7f03001b
 int layout fragment_login 0x7f03001c
 int layout fragment_my_courses 0x7f03001d
-int layout support_simple_spinner_dropdown_item 0x7f03001e
+int layout fragment_user_profile 0x7f03001e
+int layout support_simple_spinner_dropdown_item 0x7f03001f
 int menu create_user 0x7f0c0000
 int menu display_users 0x7f0c0001
 int menu login 0x7f0c0002
 int menu main 0x7f0c0003
 int menu my_courses 0x7f0c0004
+int menu my_profile 0x7f0c0005
+int menu user_profile 0x7f0c0006
 int string abc_action_bar_home_description 0x7f0a0001
 int string abc_action_bar_up_description 0x7f0a0002
 int string abc_action_menu_overflow_description 0x7f0a0003
@@ -371,6 +378,7 @@ int string abc_searchview_description_voice 0x7f0a0008
 int string abc_shareactionprovider_share_with 0x7f0a000c
 int string abc_shareactionprovider_share_with_application 0x7f0a000b
 int string action_settings 0x7f0a000e
+int string add_buddy 0x7f0a0021
 int string add_course_button 0x7f0a001c
 int string app_name 0x7f0a000d
 int string cancel_button 0x7f0a0016
@@ -379,6 +387,7 @@ int string create_account_text 0x7f0a0013
 int string create_account_title 0x7f0a0014
 int string display_courses_title 0x7f0a001b
 int string display_users_title 0x7f0a001d
+int string edit_profile 0x7f0a0020
 int string email_hint 0x7f0a000f
 int string email_label 0x7f0a0017
 int string login_button 0x7f0a0011

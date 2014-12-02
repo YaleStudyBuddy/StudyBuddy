@@ -16,6 +16,9 @@ public class MainActivity extends StudyBuddy {
 	private ArrayAdapter<String> adapter;
 	protected static MyCoursesFragment myCourses = new MyCoursesFragment();
 	protected static DisplayUsersFragment displayUsers = new DisplayUsersFragment();
+	protected static UserProfileFragment myProfile = new UserProfileFragment();
+	protected static UserProfileFragment userProfile = new UserProfileFragment();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,10 @@ public class MainActivity extends StudyBuddy {
 						setTitle(getString(R.string.app_name));
 						break;
 					case 1:
-						getFragmentManager().beginTransaction().remove(myCourses).commit();
-						setTitle(StudyBuddy.NAV_MENU[position]);
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myProfile).addToBackStack(null).commit();
 						break;
 					case 2:
-						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myCourses).commit();
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myCourses).addToBackStack(null).commit();
 						break;
 					default:
 						break;

@@ -64,7 +64,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 				
 				email = emailText.getText().toString();
 				password = passwordText.getText().toString();
-				StudyBuddy.currentUName = nameText.getText().toString();
+				StudyBuddy.currentName = nameText.getText().toString();
 				
 				StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
 					public void onSuccess(){
@@ -101,7 +101,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 			StudyBuddy.currentUID = authData.getUid();
 			
 			Map<String, Object> newUser = new HashMap<String, Object>();
-			newUser.put("name", StudyBuddy.currentUName);
+			newUser.put("name", StudyBuddy.currentName);
 			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).setValue(newUser);
 
 			startActivity(new Intent(getActivity(), MainActivity.class));

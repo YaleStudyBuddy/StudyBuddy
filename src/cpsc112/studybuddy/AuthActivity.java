@@ -14,8 +14,8 @@ public class AuthActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Firebase.setAndroidContext(this);
 		setContentView(R.layout.activity_auth);
+		Firebase.setAndroidContext(this);
 		
 		getFragmentManager().beginTransaction().replace(R.id.auth_content_frame, login).commit();
 	}

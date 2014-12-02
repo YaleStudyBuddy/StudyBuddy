@@ -119,7 +119,11 @@ public class DisplayUsersFragment extends Fragment {
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+			Bundle args = new Bundle();
+			args.putString(StudyBuddy.UID, userIDs.get(position));
+			args.putString(StudyBuddy.NAME, userNames.get(position));
+			MainActivity.userProfile.setArguments(args);
+			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
 		}
 	};
 

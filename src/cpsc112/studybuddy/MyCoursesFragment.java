@@ -97,7 +97,7 @@ public class MyCoursesFragment extends Fragment {
 				String newCourse = inputText.getText().toString();
 				
 				Map<String, Object> roster = new HashMap<String, Object>();
-				roster.put(StudyBuddy.currentUID, StudyBuddy.currentUName);
+				roster.put(StudyBuddy.currentUID, StudyBuddy.currentName);
 				StudyBuddy.ROOT_REF.child("courses").child(newCourse).updateChildren(roster);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();

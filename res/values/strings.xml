@@ -20,5 +20,7 @@
     <string name="display_users_title">Current Users</string>
     <string name="logout_button">Logout</string>
     <string name="remove_course_button">Remove Course</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="add_buddy">Add StudyBuddy</string>
 
 </resources>

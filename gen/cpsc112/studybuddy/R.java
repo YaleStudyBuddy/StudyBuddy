@@ -1077,9 +1077,11 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int ic_action_discard=0x7f020057;
-        public static final int ic_action_new=0x7f020058;
-        public static final int ic_launcher=0x7f020059;
+        public static final int ic_action_add_person=0x7f020057;
+        public static final int ic_action_discard=0x7f020058;
+        public static final int ic_action_edit=0x7f020059;
+        public static final int ic_action_new=0x7f02005a;
+        public static final int ic_launcher=0x7f02005b;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1094,6 +1096,7 @@ containing a value of this type.
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
         public static final int activity_chooser_view_content=0x7f050025;
+        public static final int add_buddy_button=0x7f050054;
         public static final int add_course_button=0x7f050052;
         public static final int always=0x7f05000b;
         public static final int appNameView=0x7f05004b;
@@ -1110,6 +1113,7 @@ containing a value of this type.
         public static final int disableHome=0x7f050008;
         public static final int drawer_layout=0x7f05003d;
         public static final int dropdown=0x7f05000f;
+        public static final int edit_profile_button=0x7f050053;
         public static final int edit_query=0x7f050030;
         public static final int emailLabel=0x7f050042;
         public static final int emailText=0x7f050043;
@@ -1222,7 +1226,8 @@ containing a value of this type.
         public static final int fragment_display_users=0x7f03001b;
         public static final int fragment_login=0x7f03001c;
         public static final int fragment_my_courses=0x7f03001d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
+        public static final int fragment_user_profile=0x7f03001e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
     }
     public static final class menu {
         public static final int create_user=0x7f0c0000;
@@ -1230,6 +1235,8 @@ containing a value of this type.
         public static final int login=0x7f0c0002;
         public static final int main=0x7f0c0003;
         public static final int my_courses=0x7f0c0004;
+        public static final int my_profile=0x7f0c0005;
+        public static final int user_profile=0x7f0c0006;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1273,6 +1280,7 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000e;
+        public static final int add_buddy=0x7f0a0021;
         public static final int add_course_button=0x7f0a001c;
         public static final int app_name=0x7f0a000d;
         public static final int cancel_button=0x7f0a0016;
@@ -1281,6 +1289,7 @@ containing a value of this type.
         public static final int create_account_title=0x7f0a0014;
         public static final int display_courses_title=0x7f0a001b;
         public static final int display_users_title=0x7f0a001d;
+        public static final int edit_profile=0x7f0a0020;
         public static final int email_hint=0x7f0a000f;
         public static final int email_label=0x7f0a0017;
         public static final int login_button=0x7f0a0011;
