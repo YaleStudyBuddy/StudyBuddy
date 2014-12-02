@@ -1,5 +1,6 @@
 package cpsc112.studybuddy;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -10,7 +11,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends StudyBuddy {
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+import com.firebase.client.Firebase.AuthStateListener;
+
+public class MainActivity extends Activity {
 	private DrawerLayout dLayout;
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
@@ -18,13 +23,27 @@ public class MainActivity extends StudyBuddy {
 	protected static DisplayUsersFragment displayUsers = new DisplayUsersFragment();
 	protected static UserProfileFragment myProfile = new UserProfileFragment();
 	protected static UserProfileFragment userProfile = new UserProfileFragment();
+	protected static MyBuddiesFragment myBuddies = new MyBuddiesFragment();
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Firebase.setAndroidContext(this);
 
+		StudyBuddy.ROOT_REF.addAuthStateListener(new AuthStateListener(){
+			public void onAuthStateChanged(AuthData authData){
+				if (authData != null){
+
+				} else {
+					StudyBuddy.currentUID = null;
+					StudyBuddy.currentName = null;
+					finish();
+				}
+			}
+		});
+		
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		dList = (ListView) findViewById(R.id.left_drawer);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, StudyBuddy.NAV_MENU);
@@ -49,6 +68,8 @@ public class MainActivity extends StudyBuddy {
 					case 2:
 						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myCourses).addToBackStack(null).commit();
 						break;
+					case 3:
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myBuddies).addToBackStack(null).commit();
 					default:
 						break;
 				}
@@ -73,7 +94,9 @@ public class MainActivity extends StudyBuddy {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()){
-
+			case R.id.logout_button:
+				StudyBuddy.ROOT_REF.unauth();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}

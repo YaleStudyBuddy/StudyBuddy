@@ -1,5 +1,8 @@
 package cpsc112.studybuddy;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -48,6 +51,15 @@ public class UserProfileFragment extends Fragment {
 				getActivity().getFragmentManager().popBackStackImmediate();
 				return true;
 			case R.id.add_buddy_button:
+				Map<String, Object> newBuddy;
+				
+				newBuddy= new HashMap<String, Object>();
+				newBuddy.put(userID, false);
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").updateChildren(newBuddy);
+				
+				newBuddy = new HashMap<String, Object>();
+				newBuddy.put(StudyBuddy.currentUID, false);
+				StudyBuddy.ROOT_REF.child("users").child(userID).child("buddies").updateChildren(newBuddy);
 				
 				return true;
 			case R.id.edit_profile_button:

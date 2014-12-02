@@ -37,7 +37,14 @@ public class MyCoursesFragment extends Fragment {
 		getActivity().setTitle(StudyBuddy.NAV_MENU[2]);
 		
 		listView = (ListView) view.findViewById(R.id.course_list);
-		listView.setOnItemClickListener(courseClickListener);
+		listView.setOnItemClickListener(new OnItemClickListener(){
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Bundle args = new Bundle();
+				args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
+				MainActivity.displayUsers.setArguments(args);
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.displayUsers).addToBackStack(null).commit();
+			}
+		});
 		
 		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
@@ -73,15 +80,6 @@ public class MyCoursesFragment extends Fragment {
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	private OnItemClickListener courseClickListener = new OnItemClickListener() {
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Bundle args = new Bundle();
-			args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
-			MainActivity.displayUsers.setArguments(args);
-			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.displayUsers).addToBackStack(null).commit();
-		}
-	};
 	
 	public void addCourse (){
 		
