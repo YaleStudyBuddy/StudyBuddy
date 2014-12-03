@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
 	
-	protected static MyCoursesFragment myCourses = new MyCoursesFragment();
+	protected  MyCoursesFragment myCourses = new MyCoursesFragment();
 	protected static DisplayUsersFragment displayUsers = new DisplayUsersFragment();
 	protected static UserProfileFragment myProfile = new UserProfileFragment();
 	protected static UserProfileFragment userProfile = new UserProfileFragment();
@@ -70,22 +70,18 @@ public class MainActivity extends Activity {
 				}
 
 			}
-		});
-		
-		
+		});	
 	}
 	
 	protected void replaceFrameWith(Fragment fragment, Bundle args, boolean addToBackStack){
-		if (fragment.isAdded()){
-			getFragmentManager().beginTransaction().remove(fragment).commit();
-		}
-		
-		fragment.setArguments(args);
-		
-		if (addToBackStack){
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-		} else {
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+		if (!fragment.isAdded()){
+			fragment.setArguments(args);
+			
+			if (addToBackStack){
+				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+			} else {
+				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+			}
 		}
 	}
 	
