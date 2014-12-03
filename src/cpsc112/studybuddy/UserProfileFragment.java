@@ -44,7 +44,9 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		final MenuInflater thisInflater = inflater;
 		final Menu thisMenu = menu;
 		
-		if (userID.equals(StudyBuddy.currentUID)){
+		if (userID == null){
+			setHasOptionsMenu(false);
+		} else if (userID.equals(StudyBuddy.currentUID)){
 			thisInflater.inflate(R.menu.my_profile, thisMenu);	
 		} else {
 			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userID).addListenerForSingleValueEvent(new ValueEventListener(){

@@ -27,11 +27,15 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().setTitle(StudyBuddy.NAV_MENU[3]);
 		
-		//retrieve buddy requests
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").addValueEventListener(buddyRequestsListListener);
-		
-		//retrieve buddy list
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").addValueEventListener(buddyListListener);
+		if (!MainActivity.buddyListeners.contains(StudyBuddy.currentUID)){
+			MainActivity.buddyListeners.add(StudyBuddy.currentUID);
+			
+			//retrieve buddy requests
+			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").addValueEventListener(buddyRequestsListListener);
+			
+			//retrieve buddy list
+			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").addValueEventListener(buddyListListener);
+		}
 		
 		buddyRequestsListView = (ListView) view.findViewById(R.id.buddy_requests_list);
 		buddyListView = (ListView) view.findViewById(R.id.buddy_list);

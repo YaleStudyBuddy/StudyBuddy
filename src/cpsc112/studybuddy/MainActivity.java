@@ -1,5 +1,7 @@
 package cpsc112.studybuddy;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -24,11 +26,15 @@ public class MainActivity extends Activity {
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
 	
-	protected  MyCoursesFragment myCourses = new MyCoursesFragment();
-	protected static DisplayUsersFragment displayUsers = new DisplayUsersFragment();
+	protected static MyCoursesFragment myCourses = new MyCoursesFragment();
+	protected static DisplayRosterFragment displayRoster = new DisplayRosterFragment();
 	protected static UserProfileFragment myProfile = new UserProfileFragment();
 	protected static UserProfileFragment userProfile = new UserProfileFragment();
 	protected static MyBuddiesFragment myBuddies = new MyBuddiesFragment();
+	
+	protected static ArrayList<String> rosterListeners = new ArrayList<String>();
+	protected static ArrayList<String> courseListeners = new ArrayList<String>();
+	protected static ArrayList<String> buddyListeners = new ArrayList<String>();
 	
 	
 	@Override
@@ -97,14 +103,25 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()){
 			case R.id.logout_button:
 				//remove listeners from myCourses
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").removeEventListener(myCourses.courseListListener);
+				for (String user : courseListeners){
+					StudyBuddy.ROOT_REF.child("users").child(user).child("courses").removeEventListener(myCourses.courseListListener);	
+				}
 				
 				//remove listeners from displayUsers
-				StudyBuddy.ROOT_REF.child("courses").addListenerForSingleValueEvent(removeCourseListeners);
+				for (String roster : rosterListeners){
+					StudyBuddy.ROOT_REF.child("courses").child(roster).removeEventListener(displayRoster.rosterListener);
+				}
+//				StudyBuddy.ROOT_REF.child("courses").addListenerForSingleValueEvent(removeCourseListeners);
 				
 				//remove listeners from myBuddies
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").removeEventListener(myBuddies.buddyRequestsListListener);
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").removeEventListener(myBuddies.buddyListListener);
+				for (String user : buddyListeners){
+					StudyBuddy.ROOT_REF.child("users").child(user).child("buddy requests").removeEventListener(myBuddies.buddyRequestsListListener);
+					StudyBuddy.ROOT_REF.child("users").child(user).child("buddies").removeEventListener(myBuddies.buddyListListener);
+				}
+				
+				courseListeners = new ArrayList<String>();
+				rosterListeners = new ArrayList<String>();
+				buddyListeners = new ArrayList<String>();
 				
 				StudyBuddy.ROOT_REF.unauth();
 				return true;
@@ -134,14 +151,14 @@ public class MainActivity extends Activity {
 		}
 	};
 	
-	private ValueEventListener removeCourseListeners = new ValueEventListener(){
-		public void onDataChange(DataSnapshot snapshot){
-			Iterable<DataSnapshot> courses = snapshot.getChildren();
-			
-			for (DataSnapshot course : courses){
-				StudyBuddy.ROOT_REF.child("courses").child(course.getValue().toString()).removeEventListener(displayUsers.rosterListener);
-			}
-		}
-		public void onCancelled(FirebaseError firebaseError){}
-	};
+//	private ValueEventListener removeCourseListeners = new ValueEventListener(){
+//		public void onDataChange(DataSnapshot snapshot){
+//			Iterable<DataSnapshot> courses = snapshot.getChildren();
+//			
+//			for (DataSnapshot course : courses){
+//				StudyBuddy.ROOT_REF.child("courses").child(course.getValue().toString()).removeEventListener(displayUsers.rosterListener);
+//			}
+//		}
+//		public void onCancelled(FirebaseError firebaseError){}
+//	};
 }

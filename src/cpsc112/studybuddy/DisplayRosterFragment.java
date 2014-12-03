@@ -18,7 +18,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class DisplayUsersFragment extends StudyBuddyFragment {
+public class DisplayRosterFragment extends StudyBuddyFragment {
 	
 	private ArrayList<String> userNames, userIDs;
 	private ArrayAdapter<String> adapter;
@@ -28,8 +28,8 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
-		View view = inflater.inflate(R.layout.fragment_display_users, container, false);
-		courseFilter = getArguments().getString(StudyBuddy.COURSE_FILTER);
+		View view = inflater.inflate(R.layout.fragment_display_roster, container, false);
+		courseFilter = getArguments().getString(StudyBuddy.COURSE);
 		setHasOptionsMenu(true);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().setTitle(courseFilter);
@@ -37,14 +37,17 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 		listView = (ListView) view.findViewById(R.id.userList);
 		listView.setOnItemClickListener(userClickListener);
 		
-		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
+		if (!MainActivity.rosterListeners.contains(courseFilter)){
+			MainActivity.rosterListeners.add(courseFilter);
+			StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
+		}
 		
 		return view;
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		inflater.inflate(R.menu.display_users, menu);
+		inflater.inflate(R.menu.display_roster, menu);
 	}
 
 	@Override

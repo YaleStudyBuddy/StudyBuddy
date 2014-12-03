@@ -39,14 +39,17 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		listView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				StudyBuddy.args = new Bundle();
-				StudyBuddy.args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
-				MainActivity.displayUsers.setArguments(StudyBuddy.args);
+				StudyBuddy.args.putString(StudyBuddy.COURSE, courses.get(position));
+				MainActivity.displayRoster.setArguments(StudyBuddy.args);
 				
-				replaceFrameWith(MainActivity.displayUsers, StudyBuddy.args, true);
+				replaceFrameWith(MainActivity.displayRoster, StudyBuddy.args, true);
 			}
 		});
 		
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(courseListListener);
+		if (!MainActivity.courseListeners.contains(StudyBuddy.currentUID)){
+			MainActivity.courseListeners.add(StudyBuddy.currentUID);
+			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(courseListListener);	
+		}
 		
 		return view;
 	}

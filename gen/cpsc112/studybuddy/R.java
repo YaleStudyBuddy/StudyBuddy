@@ -1229,7 +1229,7 @@ containing a value of this type.
         public static final int activity_auth=0x7f030018;
         public static final int activity_main=0x7f030019;
         public static final int fragment_create_user=0x7f03001a;
-        public static final int fragment_display_users=0x7f03001b;
+        public static final int fragment_display_roster=0x7f03001b;
         public static final int fragment_login=0x7f03001c;
         public static final int fragment_my_buddies=0x7f03001d;
         public static final int fragment_my_courses=0x7f03001e;
@@ -1238,7 +1238,7 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int create_user=0x7f0c0000;
-        public static final int display_users=0x7f0c0001;
+        public static final int display_roster=0x7f0c0001;
         public static final int login=0x7f0c0002;
         public static final int main=0x7f0c0003;
         public static final int my_buddies=0x7f0c0004;
