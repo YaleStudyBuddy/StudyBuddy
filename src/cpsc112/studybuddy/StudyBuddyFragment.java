@@ -27,16 +27,25 @@ public abstract class StudyBuddyFragment extends Fragment {
 	}
 	
 	protected void replaceFrameWith(Fragment fragment, Bundle args, boolean addToBackStack){
-		if (fragment.isAdded()){
-			getActivity().getFragmentManager().beginTransaction().remove(fragment).commit();
-		}
-		
-		fragment.setArguments(args);
-		
-		if (addToBackStack){
-			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-		} else {
-			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+//		if (fragment.isAdded()){
+//			getActivity().getFragmentManager().beginTransaction().remove(fragment).commit();
+//		}
+//		
+//		fragment.setArguments(args);
+//		
+//		if (addToBackStack){
+//			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+//		} else {
+//			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+//		}
+		if (!fragment.isAdded()){
+			fragment.setArguments(args);
+			
+			if (addToBackStack){
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+			} else {
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+			}
 		}
 	}
 }

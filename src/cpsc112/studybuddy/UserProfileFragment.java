@@ -22,6 +22,7 @@ public class UserProfileFragment extends StudyBuddyFragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+		
 		userID = getArguments().getString(StudyBuddy.UID);
 		userName = getArguments().getString(StudyBuddy.NAME);
 		
