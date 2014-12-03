@@ -38,20 +38,25 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		listView = (ListView) view.findViewById(R.id.course_list);
 		listView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
 				StudyBuddy.args = new Bundle();
 				StudyBuddy.args.putString(StudyBuddy.COURSE, courses.get(position));
-				MainActivity.displayRoster.setArguments(StudyBuddy.args);
+				((MainActivity)getActivity()).displayRoster.setArguments(StudyBuddy.args);
 				
-				replaceFrameWith(MainActivity.displayRoster, StudyBuddy.args, true);
+				replaceFrameWith(((MainActivity)getActivity()).displayRoster, StudyBuddy.args, true);
 			}
 		});
 		
-		if (!MainActivity.courseListeners.contains(StudyBuddy.currentUID)){
-			MainActivity.courseListeners.add(StudyBuddy.currentUID);
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(courseListListener);	
-		}
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(courseListListener);
 		
 		return view;
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").removeEventListener(courseListListener);
+		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".courses");
 	}
 	
 	@Override
@@ -114,6 +119,8 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 			
 			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, courses);
 			listView.setAdapter(adapter);
+			
+			System.out.println("listener added to ROOT_REF.users." + StudyBuddy.currentUID + ".courses");
 		}
 		
 		public void onCancelled(FirebaseError firebaseError){}

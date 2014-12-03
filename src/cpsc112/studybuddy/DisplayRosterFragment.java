@@ -2,6 +2,8 @@ package cpsc112.studybuddy;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,15 +38,19 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 		
 		listView = (ListView) view.findViewById(R.id.userList);
 		listView.setOnItemClickListener(userClickListener);
-		
-		if (!MainActivity.rosterListeners.contains(courseFilter)){
-			MainActivity.rosterListeners.add(courseFilter);
-			StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
-		}
+
+		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
 		
 		return view;
 	}
 
+	@Override
+	public void onPause(){
+		super.onPause();
+		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).removeEventListener(rosterListener);
+		System.out.println("listener removed from ROOT_REF.courses." + courseFilter);
+	}
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 		inflater.inflate(R.menu.display_roster, menu);
@@ -64,36 +70,52 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 		}
 	}
 	
-	public void removeCourse(){		
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addListenerForSingleValueEvent(new ValueEventListener(){
+	public void removeCourse(){
+		AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(getActivity());
+		confirmationDialog.setTitle("Remove Course");
+		confirmationDialog.setMessage("Are you sure you want to remove " + courseFilter);
+		
+		confirmationDialog.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addListenerForSingleValueEvent(new ValueEventListener(){
 
-			public void onDataChange(DataSnapshot snapshot){
-				Iterable<DataSnapshot> courseList = snapshot.getChildren();
-				ArrayList<String> newCourseList = new ArrayList<String>(); 
-				
-				for (DataSnapshot course : courseList){
-					if (!course.getValue().toString().equals(courseFilter)){
-						newCourseList.add(course.getValue().toString());
-					}
-				}
-				
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").setValue(newCourseList);
-				
-				StudyBuddy.ROOT_REF.child("courses").child(courseFilter).child(StudyBuddy.currentUID).addListenerForSingleValueEvent(new ValueEventListener(){
 					public void onDataChange(DataSnapshot snapshot){
-						StudyBuddy.ROOT_REF.child("courses").child(courseFilter).removeEventListener(rosterListener);
-						snapshot.getRef().removeValue();
+						Iterable<DataSnapshot> courseList = snapshot.getChildren();
+						ArrayList<String> newCourseList = new ArrayList<String>(); 
+						
+						for (DataSnapshot course : courseList){
+							if (!course.getValue().toString().equals(courseFilter)){
+								newCourseList.add(course.getValue().toString());
+							}
+						}
+						
+						StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").setValue(newCourseList);
+						
+						StudyBuddy.ROOT_REF.child("courses").child(courseFilter).child(StudyBuddy.currentUID).addListenerForSingleValueEvent(new ValueEventListener(){
+							public void onDataChange(DataSnapshot snapshot){
+								StudyBuddy.ROOT_REF.child("courses").child(courseFilter).removeEventListener(rosterListener);
+								snapshot.getRef().removeValue();
+							}
+							
+							public void onCancelled(FirebaseError firebaseError){}
+						});
+						
 					}
 					
 					public void onCancelled(FirebaseError firebaseError){}
 				});
 				
+				back();
 			}
-			
-			public void onCancelled(FirebaseError firebaseError){}
 		});
 		
-		back();
+		confirmationDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		
+		confirmationDialog.show();
 	}
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {
@@ -118,6 +140,8 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 			
 			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userNames);
 			listView.setAdapter(adapter);
+			
+			System.out.println("listener added to ROOT_REF.courses." + courseFilter);
 		}
 		
 		public void onCancelled(FirebaseError firebaseError){}

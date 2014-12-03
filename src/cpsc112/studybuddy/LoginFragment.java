@@ -15,9 +15,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 public class LoginFragment extends Fragment implements OnClickListener{
 	private ProgressDialog mAuthProgressDialog;
@@ -82,16 +84,18 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
+			Intent intent = new Intent(getActivity(), MainActivity.class);
+			StudyBuddy.args = new Bundle();
+			StudyBuddy.args.putString(StudyBuddy.UID, authData.getUid());
+			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+				public void onDataChange(DataSnapshot snapshot){
+					StudyBuddy.args.putString(StudyBuddy.NAME, snapshot.getValue().toString());
+				}
+				public void onCancelled(FirebaseError firebaseError){}
+			});
+			intent.putExtras(StudyBuddy.args);
+			startActivity(intent);
 			mAuthProgressDialog.hide();
-//			StudyBuddy.currentUID = authData.getUid();
-//			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-//				public void onDataChange(DataSnapshot snapshot){
-//					StudyBuddy.currentName = snapshot.getValue().toString();
-//				}
-//				public void onCancelled(FirebaseError firebaseError){}
-//			});
-			
-			startActivity(new Intent(getActivity(), MainActivity.class));
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {
@@ -108,5 +112,4 @@ public class LoginFragment extends Fragment implements OnClickListener{
 	                .show();
 	    }
 	}
-	
 }

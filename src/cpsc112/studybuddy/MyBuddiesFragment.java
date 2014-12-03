@@ -26,16 +26,13 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		setHasOptionsMenu(false);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().setTitle(StudyBuddy.NAV_MENU[3]);
+			
+		//retrieve buddy requests
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").addValueEventListener(buddyRequestsListListener);
 		
-		if (!MainActivity.buddyListeners.contains(StudyBuddy.currentUID)){
-			MainActivity.buddyListeners.add(StudyBuddy.currentUID);
-			
-			//retrieve buddy requests
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").addValueEventListener(buddyRequestsListListener);
-			
-			//retrieve buddy list
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").addValueEventListener(buddyListListener);
-		}
+		//retrieve buddy list
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").addValueEventListener(buddyListListener);
+
 		
 		buddyRequestsListView = (ListView) view.findViewById(R.id.buddy_requests_list);
 		buddyListView = (ListView) view.findViewById(R.id.buddy_list);
@@ -65,10 +62,22 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		return view;
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").removeEventListener(buddyRequestsListListener);
+		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".buddy requests");
+
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").removeEventListener(buddyListListener);
+		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".buddies");
+	}
+	
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 		inflater.inflate(R.menu.my_buddies, menu);
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()){
 			default:
@@ -94,7 +103,8 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			
 			buddyRequestsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyRequestsNames);
 			buddyRequestsListView.setAdapter(buddyRequestsAdapter);
-
+			
+			System.out.println("listener added to ROOT_REF.users." + StudyBuddy.currentUID + ".buddy requests");
 		}
 		public void onCancelled(FirebaseError firebaseError){}
 	};
@@ -117,6 +127,7 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			buddyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyNames);
 			buddyListView.setAdapter(buddyAdapter);
 			
+			System.out.println("listener added to ROOT_REF.users." + StudyBuddy.currentUID + ".buddies");
 		}
 		public void onCancelled(FirebaseError firebaseError){}
 	};
