@@ -24,7 +24,6 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 	private String courseFilter;
-	private ValueEventListener rosterListener;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
@@ -37,27 +36,6 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 		
 		listView = (ListView) view.findViewById(R.id.userList);
 		listView.setOnItemClickListener(userClickListener);
-		
-		rosterListener = new ValueEventListener(){
-			public void onDataChange(DataSnapshot snapshot){
-
-				Iterable<DataSnapshot> roster = snapshot.getChildren();
-				userNames = new ArrayList<String>();
-				userIDs = new ArrayList<String>();
-				
-				for (DataSnapshot student : roster){
-					if (!student.getKey().equals(StudyBuddy.currentUID)){
-						userNames.add(student.getValue().toString());
-						userIDs.add(student.getKey().toString());
-					}
-				}
-				
-				adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userNames);
-				listView.setAdapter(adapter);
-			}
-			
-			public void onCancelled(FirebaseError firebaseError){}
-		};
 		
 		StudyBuddy.ROOT_REF.child("courses").child(courseFilter).addValueEventListener(rosterListener);
 		
@@ -73,12 +51,11 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				getActivity().getFragmentManager().popBackStackImmediate();
+				back();
 				return true;
 			case R.id.remove_course:
 				removeCourse();
 				return true;
-
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -113,7 +90,7 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 			public void onCancelled(FirebaseError firebaseError){}
 		});
 		
-		getActivity().getFragmentManager().popBackStackImmediate();
+		back();
 	}
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {
@@ -122,4 +99,24 @@ public class DisplayUsersFragment extends StudyBuddyFragment {
 		}
 	};
 
+	protected ValueEventListener rosterListener = new ValueEventListener(){
+		public void onDataChange(DataSnapshot snapshot){
+
+			Iterable<DataSnapshot> roster = snapshot.getChildren();
+			userNames = new ArrayList<String>();
+			userIDs = new ArrayList<String>();
+			
+			for (DataSnapshot student : roster){
+				if (!student.getKey().equals(StudyBuddy.currentUID)){
+					userNames.add(student.getValue().toString());
+					userIDs.add(student.getKey().toString());
+				}
+			}
+			
+			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userNames);
+			listView.setAdapter(adapter);
+		}
+		
+		public void onCancelled(FirebaseError firebaseError){}
+	};
 }

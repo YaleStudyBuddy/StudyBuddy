@@ -1103,10 +1103,10 @@ containing a value of this type.
         public static final int app_name_text=0x7f05004b;
         public static final int auth_content_frame=0x7f05003c;
         public static final int beginning=0x7f050011;
-        public static final int buddies_list=0x7f050052;
-        public static final int buddies_text=0x7f050050;
+        public static final int buddy_list=0x7f050052;
         public static final int buddy_requests_list=0x7f050051;
         public static final int buddy_requests_text=0x7f05004f;
+        public static final int buddy_text=0x7f050050;
         public static final int cancelButton=0x7f050048;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;

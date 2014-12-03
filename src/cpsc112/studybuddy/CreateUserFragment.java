@@ -22,7 +22,7 @@ import com.firebase.client.Firebase.ResultHandler;
 import com.firebase.client.FirebaseError;
 
 public class CreateUserFragment extends Fragment implements OnClickListener{
-	private String email, password;
+	private String email, password, name;
 	private ProgressDialog createAccountDialog;
 
 	@Override
@@ -64,7 +64,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 				
 				email = emailText.getText().toString();
 				password = passwordText.getText().toString();
-				StudyBuddy.currentName = nameText.getText().toString();
+				name = nameText.getText().toString();
 				
 				StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
 					public void onSuccess(){
@@ -101,7 +101,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 			StudyBuddy.currentUID = authData.getUid();
 			
 			Map<String, Object> newUser = new HashMap<String, Object>();
-			newUser.put("name", StudyBuddy.currentName);
+			newUser.put("name", name);
 			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).setValue(newUser);
 
 			startActivity(new Intent(getActivity(), MainActivity.class));

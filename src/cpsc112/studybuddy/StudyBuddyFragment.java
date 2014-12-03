@@ -15,13 +15,28 @@ public abstract class StudyBuddyFragment extends Fragment {
 	
 	protected void displayProfile(String userID, String userName){
 		StudyBuddy.args = new Bundle();
-		if (MainActivity.userProfile.isAdded()){
-			getFragmentManager().beginTransaction().remove(MainActivity.userProfile).commit();	
-		}
 		StudyBuddy.args.putString(StudyBuddy.UID, userID);
 		StudyBuddy.args.putString(StudyBuddy.NAME, userName);
 		
 		MainActivity.userProfile.setArguments(StudyBuddy.args);
-		getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
+		replaceFrameWith(MainActivity.userProfile, StudyBuddy.args, true);
+	}
+	
+	protected void back(){
+		getActivity().getFragmentManager().popBackStackImmediate();
+	}
+	
+	protected void replaceFrameWith(Fragment fragment, Bundle args, boolean addToBackStack){
+		if (fragment.isAdded()){
+			getActivity().getFragmentManager().beginTransaction().remove(fragment).commit();
+		}
+		
+		fragment.setArguments(args);
+		
+		if (addToBackStack){
+			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+		} else {
+			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+		}
 	}
 }

@@ -258,10 +258,10 @@ int id always 0x7f05000b
 int id app_name_text 0x7f05004b
 int id auth_content_frame 0x7f05003c
 int id beginning 0x7f050011
-int id buddies_list 0x7f050052
-int id buddies_text 0x7f050050
+int id buddy_list 0x7f050052
 int id buddy_requests_list 0x7f050051
 int id buddy_requests_text 0x7f05004f
+int id buddy_text 0x7f050050
 int id cancelButton 0x7f050048
 int id checkbox 0x7f05002d
 int id collapseActionView 0x7f05000d

@@ -38,32 +38,15 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		listView = (ListView) view.findViewById(R.id.course_list);
 		listView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (MainActivity.displayUsers.isAdded()){
-					getActivity().getFragmentManager().beginTransaction().remove(MainActivity.displayUsers).commit();
-				}
 				StudyBuddy.args = new Bundle();
 				StudyBuddy.args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
 				MainActivity.displayUsers.setArguments(StudyBuddy.args);
-				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.displayUsers).addToBackStack(null).commit();
+				
+				replaceFrameWith(MainActivity.displayUsers, StudyBuddy.args, true);
 			}
 		});
 		
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(new ValueEventListener(){
-			public void onDataChange(DataSnapshot snapshot){
-				Iterable<DataSnapshot> courseList = snapshot.getChildren();
-
-				courses = new ArrayList<String>();
-				
-				for(DataSnapshot course : courseList){
-					courses.add(course.getValue().toString());
-				}
-				
-				adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, courses);
-				listView.setAdapter(adapter);
-			}
-			
-			public void onCancelled(FirebaseError firebaseError){}
-		});
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(courseListListener);
 		
 		return view;
 	}
@@ -115,4 +98,21 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		
 		inputDialog.show();
 	}
+	
+	protected ValueEventListener courseListListener = new ValueEventListener(){
+		public void onDataChange(DataSnapshot snapshot){
+			Iterable<DataSnapshot> courseList = snapshot.getChildren();
+
+			courses = new ArrayList<String>();
+			
+			for(DataSnapshot course : courseList){
+				courses.add(course.getValue().toString());
+			}
+			
+			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, courses);
+			listView.setAdapter(adapter);
+		}
+		
+		public void onCancelled(FirebaseError firebaseError){}
+	};
 }

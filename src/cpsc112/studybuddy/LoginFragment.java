@@ -15,9 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.ValueEventListener;
 import com.firebase.client.Firebase.AuthStateListener;
 import com.firebase.client.FirebaseError;
 
@@ -85,13 +83,13 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		
 		public void onAuthenticated(AuthData authData) {
 			mAuthProgressDialog.hide();
-			StudyBuddy.currentUID = authData.getUid();
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-				public void onDataChange(DataSnapshot snapshot){
-					StudyBuddy.currentName = snapshot.getValue().toString();
-				}
-				public void onCancelled(FirebaseError firebaseError){}
-			});
+//			StudyBuddy.currentUID = authData.getUid();
+//			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+//				public void onDataChange(DataSnapshot snapshot){
+//					StudyBuddy.currentName = snapshot.getValue().toString();
+//				}
+//				public void onCancelled(FirebaseError firebaseError){}
+//			});
 			
 			startActivity(new Intent(getActivity(), MainActivity.class));
 		}

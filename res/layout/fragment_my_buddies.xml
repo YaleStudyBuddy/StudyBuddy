@@ -20,7 +20,7 @@
         android:textColor="#fff" />
 
     <TextView
-        android:id="@+id/buddies_text"
+        android:id="@+id/buddy_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dip"
@@ -41,11 +41,11 @@
     </ListView>
 
     <ListView
-        android:id="@+id/buddies_list"
+        android:id="@+id/buddy_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buddies_text"
-        android:layout_below="@+id/buddies_text" >
+        android:layout_alignLeft="@+id/buddy_text"
+        android:layout_below="@+id/buddy_text" >
     </ListView>
 
 </RelativeLayout>
