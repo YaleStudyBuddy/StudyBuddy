@@ -1081,11 +1081,10 @@ containing a value of this type.
         public static final int ic_action_discard=0x7f020058;
         public static final int ic_action_edit=0x7f020059;
         public static final int ic_action_new=0x7f02005a;
-        public static final int ic_launcher=0x7f02005b;
+        public static final int ic_action_remove=0x7f02005b;
+        public static final int ic_launcher=0x7f02005c;
     }
     public static final class id {
-        public static final int accepted_buddies_list=0x7f050052;
-        public static final int accepted_buddies_text=0x7f050050;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1104,6 +1103,8 @@ containing a value of this type.
         public static final int appNameView=0x7f05004b;
         public static final int auth_content_frame=0x7f05003c;
         public static final int beginning=0x7f050011;
+        public static final int buddies_list=0x7f050052;
+        public static final int buddies_text=0x7f050050;
         public static final int buddy_requests_list=0x7f050051;
         public static final int buddy_requests_text=0x7f05004f;
         public static final int cancelButton=0x7f050048;
@@ -1149,6 +1150,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
+        public static final int remove_buddy_button=0x7f050059;
         public static final int remove_course=0x7f050054;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
@@ -1242,7 +1244,8 @@ containing a value of this type.
         public static final int my_buddies=0x7f0c0004;
         public static final int my_courses=0x7f0c0005;
         public static final int my_profile=0x7f0c0006;
-        public static final int user_profile=0x7f0c0007;
+        public static final int user_profile_add=0x7f0c0007;
+        public static final int user_profile_remove=0x7f0c0008;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1285,12 +1288,12 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int accepted_buddies=0x7f0a0023;
+        public static final int accepted_buddies=0x7f0a0024;
         public static final int action_settings=0x7f0a000e;
         public static final int add_buddy=0x7f0a0021;
         public static final int add_course_button=0x7f0a001c;
         public static final int app_name=0x7f0a000d;
-        public static final int buddy_requests=0x7f0a0022;
+        public static final int buddy_requests=0x7f0a0023;
         public static final int cancel_button=0x7f0a0016;
         public static final int create_account_button=0x7f0a0015;
         public static final int create_account_text=0x7f0a0013;
@@ -1307,6 +1310,7 @@ containing a value of this type.
         public static final int name_label=0x7f0a0019;
         public static final int password_hint=0x7f0a0010;
         public static final int password_label=0x7f0a0018;
+        public static final int remove_buddy=0x7f0a0022;
         public static final int remove_course_button=0x7f0a001f;
     }
     public static final class style {

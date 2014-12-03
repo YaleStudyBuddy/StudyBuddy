@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,25 +13,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
 public class UserProfileFragment extends Fragment {
 	String userID, userName;
-	boolean isBuddy;
+	Boolean isBuddy;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 		userID = getArguments().getString(StudyBuddy.UID, StudyBuddy.currentUID);
 		userName = getArguments().getString(StudyBuddy.NAME, StudyBuddy.currentName);
+		isBuddy = getArguments().getBoolean(StudyBuddy.IS_BUDDY);
 		
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userID).addValueEventListener(new ValueEventListener(){
-			public void onDataChange(DataSnapshot snapshot){
-				isBuddy = (!snapshot.getKey().toString().equals(null));
-			}
-			public void onCancelled(FirebaseError firebaseError){}
-		});
+		ProgressDialog testDialog = new ProgressDialog(getActivity());
+		testDialog.setTitle("friends? " + isBuddy);
+		testDialog.show();
+		
+//		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userID).addValueEventListener(new ValueEventListener(){
+//			public void onDataChange(DataSnapshot snapshot){
+//				isBuddy = (snapshot.getValue() != null);
+//				ProgressDialog testDialog = new ProgressDialog(getActivity());
+//				testDialog.setTitle("friends? " + isBuddy);
+//				testDialog.show();
+//			}
+//			public void onCancelled(FirebaseError firebaseError){}
+//		});
 		
 		setHasOptionsMenu(true);
 		
@@ -50,7 +55,7 @@ public class UserProfileFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 		if (userID.equals(StudyBuddy.currentUID)){
 			inflater.inflate(R.menu.my_profile, menu);	
-		} else if (isBuddy) {
+		} else if (isBuddy.booleanValue()) {
 			inflater.inflate(R.menu.user_profile_remove, menu);
 		} else {
 			inflater.inflate(R.menu.user_profile_add, menu);

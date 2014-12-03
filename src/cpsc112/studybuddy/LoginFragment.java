@@ -65,7 +65,8 @@ public class LoginFragment extends Fragment implements OnClickListener{
 				
 				EditText emailText = (EditText) getView().findViewById(R.id.emailText);
 				EditText passwordText = (EditText) getView().findViewById(R.id.passwordText);
-				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
+//				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
+				StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
 				break;
 		
 			case R.id.createAccountText:

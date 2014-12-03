@@ -21,8 +21,9 @@
     <string name="logout_button">Logout</string>
     <string name="remove_course_button">Remove Course</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="add_buddy">Add StudyBuddy</string>
+    <string name="add_buddy">Add Buddy</string>
+    <string name="remove_buddy">Remove Buddy</string>
     <string name="buddy_requests">Buddy Requests</string>
-    <string name="accepted_buddies">Accepted Buddies</string>
+    <string name="accepted_buddies">Buddies</string>
 
 </resources>

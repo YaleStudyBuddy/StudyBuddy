@@ -119,11 +119,24 @@ public class DisplayUsersFragment extends Fragment {
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Bundle args = new Bundle();
-			args.putString(StudyBuddy.UID, userIDs.get(position));
-			args.putString(StudyBuddy.NAME, userNames.get(position));
-			MainActivity.userProfile.setArguments(args);
-			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
+			StudyBuddy.args = new Bundle();
+			if (MainActivity.userProfile.isAdded()){
+				getFragmentManager().beginTransaction().remove(MainActivity.userProfile);	
+			}
+			StudyBuddy.args.putString(StudyBuddy.UID, userIDs.get(position));
+			StudyBuddy.args.putString(StudyBuddy.NAME, userNames.get(position));
+			
+			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userIDs.get(position)).addValueEventListener(new ValueEventListener(){
+				public void onDataChange(DataSnapshot snapshot){
+					Boolean isBuddy = Boolean.valueOf(snapshot.getValue() != null);
+					
+					StudyBuddy.args.putBoolean(StudyBuddy.IS_BUDDY, isBuddy);
+				}
+				public void onCancelled(FirebaseError firebaseError){}
+			});
+			
+			MainActivity.userProfile.setArguments(StudyBuddy.args);
+			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
 		}
 	};
 

@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
 	private DrawerLayout dLayout;
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
+	
 	protected static MyCoursesFragment myCourses = new MyCoursesFragment();
 	protected static DisplayUsersFragment displayUsers = new DisplayUsersFragment();
 	protected static UserProfileFragment myProfile = new UserProfileFragment();
@@ -63,13 +64,13 @@ public class MainActivity extends Activity {
 							Bundle args = new Bundle();
 							myProfile.setArguments(args);
 						}
-						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myProfile).addToBackStack(null).commit();
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myProfile).commit();
 						break;
 					case 2:
-						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myCourses).addToBackStack(null).commit();
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myCourses).commit();
 						break;
 					case 3:
-						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myBuddies).addToBackStack(null).commit();
+						getFragmentManager().beginTransaction().replace(R.id.main_content_frame, myBuddies).commit();
 					default:
 						break;
 				}
