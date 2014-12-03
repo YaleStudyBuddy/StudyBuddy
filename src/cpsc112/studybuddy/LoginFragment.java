@@ -42,6 +42,8 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		view.findViewById(R.id.loginButton).setOnClickListener(this);
 		view.findViewById(R.id.createAccountText).setOnClickListener(this);
 		
+		view.findViewById(R.id.app_name_text).setOnClickListener(this);
+		
 		return view;
 	}
 	
@@ -65,13 +67,16 @@ public class LoginFragment extends Fragment implements OnClickListener{
 				
 				EditText emailText = (EditText) getView().findViewById(R.id.emailText);
 				EditText passwordText = (EditText) getView().findViewById(R.id.passwordText);
-//				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
-				StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
+				StudyBuddy.ROOT_REF.authWithPassword(emailText.getText().toString(), passwordText.getText().toString(), new AuthResultHandler("password"));
 				break;
 		
 			case R.id.createAccountText:
 				getActivity().getFragmentManager().beginTransaction().replace(R.id.auth_content_frame, AuthActivity.createUser).addToBackStack(null).commit();
 				break;
+				
+			case R.id.app_name_text:
+				mAuthProgressDialog.show();
+				StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
 		}
 	}
 	

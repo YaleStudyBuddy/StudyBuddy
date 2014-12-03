@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +20,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class MyBuddiesFragment extends Fragment {
+public class MyBuddiesFragment extends StudyBuddyFragment {
 	private ArrayList<String> buddyRequestsUIDs, buddyRequestsNames, buddyUIDs, buddyNames;
 	private ArrayAdapter<String> requestsAdapter, acceptedAdapter;
 	private ListView requestsListView, acceptedListView;
@@ -92,32 +91,7 @@ public class MyBuddiesFragment extends Fragment {
 		acceptedListView = (ListView) view.findViewById(R.id.buddies_list);
 		acceptedListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				if (MainActivity.userProfile.isAdded()){
-//					getActivity().getFragmentManager().beginTransaction().remove(MainActivity.userProfile);	
-//				}
-//				Bundle args = new Bundle();
-//				args.putString(StudyBuddy.UID, buddyUIDs.get(position));
-//				args.putString(StudyBuddy.NAME, buddyNames.get(position));
-//				MainActivity.userProfile.setArguments(args);
-//				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
-				
-				StudyBuddy.args = new Bundle();
-				
-				if (MainActivity.userProfile.isAdded()){
-					getFragmentManager().beginTransaction().remove(MainActivity.userProfile);	
-				}
-				StudyBuddy.args.putString(StudyBuddy.UID, buddyUIDs.get(position));
-				StudyBuddy.args.putString(StudyBuddy.NAME, buddyNames.get(position));
-				
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(buddyUIDs.get(position)).addValueEventListener(new ValueEventListener(){
-					public void onDataChange(DataSnapshot snapshot){
-						StudyBuddy.args.putBoolean(StudyBuddy.IS_BUDDY, snapshot.getValue() != null);
-					}
-					public void onCancelled(FirebaseError firebaseError){}
-				});
-				
-				MainActivity.userProfile.setArguments(StudyBuddy.args);
-				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
+				displayProfile(buddyUIDs.get(position), buddyNames.get(position));
 			}
 		});
 		

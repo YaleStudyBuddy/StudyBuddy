@@ -255,7 +255,7 @@ int id activity_chooser_view_content 0x7f050025
 int id add_buddy_button 0x7f050058
 int id add_course_button 0x7f050056
 int id always 0x7f05000b
-int id appNameView 0x7f05004b
+int id app_name_text 0x7f05004b
 int id auth_content_frame 0x7f05003c
 int id beginning 0x7f050011
 int id buddies_list 0x7f050052

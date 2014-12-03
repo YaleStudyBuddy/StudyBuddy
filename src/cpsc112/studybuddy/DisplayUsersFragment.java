@@ -2,7 +2,6 @@ package cpsc112.studybuddy;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +18,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class DisplayUsersFragment extends Fragment {
+public class DisplayUsersFragment extends StudyBuddyFragment {
 	
 	private ArrayList<String> userNames, userIDs;
 	private ArrayAdapter<String> adapter;
@@ -119,24 +118,7 @@ public class DisplayUsersFragment extends Fragment {
 	
 	private OnItemClickListener userClickListener = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			StudyBuddy.args = new Bundle();
-			if (MainActivity.userProfile.isAdded()){
-				getFragmentManager().beginTransaction().remove(MainActivity.userProfile);	
-			}
-			StudyBuddy.args.putString(StudyBuddy.UID, userIDs.get(position));
-			StudyBuddy.args.putString(StudyBuddy.NAME, userNames.get(position));
-			
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userIDs.get(position)).addValueEventListener(new ValueEventListener(){
-				public void onDataChange(DataSnapshot snapshot){
-					Boolean isBuddy = Boolean.valueOf(snapshot.getValue() != null);
-					
-					StudyBuddy.args.putBoolean(StudyBuddy.IS_BUDDY, isBuddy);
-				}
-				public void onCancelled(FirebaseError firebaseError){}
-			});
-			
-			MainActivity.userProfile.setArguments(StudyBuddy.args);
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.userProfile).addToBackStack(null).commit();
+			displayProfile(userIDs.get(position), userNames.get(position));
 		}
 	};
 

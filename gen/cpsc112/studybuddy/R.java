@@ -1100,7 +1100,7 @@ containing a value of this type.
         public static final int add_buddy_button=0x7f050058;
         public static final int add_course_button=0x7f050056;
         public static final int always=0x7f05000b;
-        public static final int appNameView=0x7f05004b;
+        public static final int app_name_text=0x7f05004b;
         public static final int auth_content_frame=0x7f05003c;
         public static final int beginning=0x7f050011;
         public static final int buddies_list=0x7f050052;

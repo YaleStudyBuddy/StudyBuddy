@@ -11,7 +11,7 @@
     tools:context="cpsc112.studybuddy.AuthActivity" >
 
     <TextView
-        android:id="@+id/appNameView"
+        android:id="@+id/app_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

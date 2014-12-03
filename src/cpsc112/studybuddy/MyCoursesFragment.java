@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +23,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class MyCoursesFragment extends Fragment {
+public class MyCoursesFragment extends StudyBuddyFragment {
 	private ArrayList<String> courses;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
@@ -39,9 +38,12 @@ public class MyCoursesFragment extends Fragment {
 		listView = (ListView) view.findViewById(R.id.course_list);
 		listView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Bundle args = new Bundle();
-				args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
-				MainActivity.displayUsers.setArguments(args);
+				if (MainActivity.displayUsers.isAdded()){
+					getActivity().getFragmentManager().beginTransaction().remove(MainActivity.displayUsers).commit();
+				}
+				StudyBuddy.args = new Bundle();
+				StudyBuddy.args.putString(StudyBuddy.COURSE_FILTER, courses.get(position));
+				MainActivity.displayUsers.setArguments(StudyBuddy.args);
 				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, MainActivity.displayUsers).addToBackStack(null).commit();
 			}
 		});

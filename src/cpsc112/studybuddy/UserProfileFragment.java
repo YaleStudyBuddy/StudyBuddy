@@ -3,8 +3,10 @@ package cpsc112.studybuddy;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Fragment;
-import android.app.ProgressDialog;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,29 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class UserProfileFragment extends Fragment {
+public class UserProfileFragment extends StudyBuddyFragment {
 	String userID, userName;
-	Boolean isBuddy;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 		userID = getArguments().getString(StudyBuddy.UID, StudyBuddy.currentUID);
 		userName = getArguments().getString(StudyBuddy.NAME, StudyBuddy.currentName);
-		isBuddy = getArguments().getBoolean(StudyBuddy.IS_BUDDY);
-		
-		ProgressDialog testDialog = new ProgressDialog(getActivity());
-		testDialog.setTitle("friends? " + isBuddy);
-		testDialog.show();
-		
-//		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userID).addValueEventListener(new ValueEventListener(){
-//			public void onDataChange(DataSnapshot snapshot){
-//				isBuddy = (snapshot.getValue() != null);
-//				ProgressDialog testDialog = new ProgressDialog(getActivity());
-//				testDialog.setTitle("friends? " + isBuddy);
-//				testDialog.show();
-//			}
-//			public void onCancelled(FirebaseError firebaseError){}
-//		});
 		
 		setHasOptionsMenu(true);
 		
@@ -53,14 +39,23 @@ public class UserProfileFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		if (userID.equals(StudyBuddy.currentUID)){
-			inflater.inflate(R.menu.my_profile, menu);	
-		} else if (isBuddy.booleanValue()) {
-			inflater.inflate(R.menu.user_profile_remove, menu);
-		} else {
-			inflater.inflate(R.menu.user_profile_add, menu);
-		}
+		final MenuInflater thisInflater = inflater;
+		final Menu thisMenu = menu;
 		
+		if (userID.equals(StudyBuddy.currentUID)){
+			thisInflater.inflate(R.menu.my_profile, thisMenu);	
+		} else {
+			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userID).addListenerForSingleValueEvent(new ValueEventListener(){
+				public void onDataChange(DataSnapshot snapshot){
+					if (snapshot.getValue() != null){
+						thisInflater.inflate(R.menu.user_profile_remove, thisMenu);
+					} else {
+						thisInflater.inflate(R.menu.user_profile_add, thisMenu);
+					}
+				}
+				public void onCancelled(FirebaseError firebaseError){}
+			});
+		}
 	}
 	
 	@Override
