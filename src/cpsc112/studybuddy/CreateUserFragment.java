@@ -66,6 +66,8 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 				password = passwordText.getText().toString();
 				name = nameText.getText().toString();
 				
+				//create user account checks go here
+				
 				StudyBuddy.ROOT_REF.createUser(email, password, new ResultHandler(){
 					public void onSuccess(){
 						StudyBuddy.ROOT_REF.authWithPassword(email, password, new AuthResultHandler("password"));
@@ -96,16 +98,17 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
-			createAccountDialog.hide();
-			
-			StudyBuddy.currentUID = authData.getUid();
+			//save user data to firebase
+			String id = authData.getUid();
+			StudyBuddy.currentUser = new User(id, name, null, null, null);
 			
 			Map<String, Object> newUser = new HashMap<String, Object>();
-			newUser.put("name", name);
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).setValue(newUser);
-
+			newUser.put(id, StudyBuddy.currentUser);
+			StudyBuddy.ROOT_REF.child("users").child(id).setValue(newUser);
+			
 			startActivity(new Intent(getActivity(), MainActivity.class));
 			getActivity().getFragmentManager().popBackStackImmediate();
+			createAccountDialog.hide();
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {

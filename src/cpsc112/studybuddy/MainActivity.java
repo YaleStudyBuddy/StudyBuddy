@@ -32,9 +32,11 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Firebase.setAndroidContext(this);
+		
+		StudyBuddy.currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
 
-		StudyBuddy.currentUID = getIntent().getExtras().getString(StudyBuddy.UID);
-		StudyBuddy.currentName = getIntent().getExtras().getString(StudyBuddy.NAME);
+		StudyBuddy.currentUID = StudyBuddy.currentUser.getID();
+		StudyBuddy.currentName = StudyBuddy.currentUser.getName();
 		System.out.println("Current UID: " + StudyBuddy.currentUID);
 		System.out.println("Current User Name: " + StudyBuddy.currentName);
 		
@@ -109,17 +111,7 @@ public class MainActivity extends Activity {
 	private AuthStateListener authListener = new AuthStateListener(){
 		public void onAuthStateChanged(AuthData authData){
 			if (authData != null){
-//				StudyBuddy.currentUID = authData.getUid();
-//				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
-//					public void onDataChange(DataSnapshot snapshot){
-//						StudyBuddy.currentName = snapshot.getValue().toString();
-//						System.out.println("Current User Name: " + StudyBuddy.currentName);
-//					}
-//					public void onCancelled(FirebaseError firebaseError){}
-//				});
-				
-				System.out.println("auth listener Current UID: " + StudyBuddy.currentUID);
-				System.out.println("auth listener Current User Name: " + StudyBuddy.currentName);
+
 			} else {
 //				StudyBuddy.currentUID = null;
 //				StudyBuddy.currentName = null;

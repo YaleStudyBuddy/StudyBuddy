@@ -1,5 +1,8 @@
 package cpsc112.studybuddy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -84,18 +87,26 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
-			Intent intent = new Intent(getActivity(), MainActivity.class);
-			StudyBuddy.args = new Bundle();
-			StudyBuddy.args.putString(StudyBuddy.UID, authData.getUid());
-			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).child("name").addListenerForSingleValueEvent(new ValueEventListener(){
+			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+				@SuppressWarnings("unchecked")
 				public void onDataChange(DataSnapshot snapshot){
-					StudyBuddy.args.putString(StudyBuddy.NAME, snapshot.getValue().toString());
+					String id = snapshot.child("id").getValue().toString();
+					String name = snapshot.child("name").getValue().toString();
+					ArrayList<String> courses = (ArrayList<String>) snapshot.child("courses").getValue();
+					HashMap<String, Object> buddies = (HashMap<String, Object>) snapshot.child("buddies").getValue();
+					HashMap<String, Object> buddyRequests = (HashMap<String, Object>) snapshot.child("buddy requests").getValue();
+					StudyBuddy.currentUser = new User(id, name, courses, buddies, buddyRequests);
+					
+					Intent intent = new Intent(getActivity(), MainActivity.class);
+					StudyBuddy.args = new Bundle();
+					StudyBuddy.args.putParcelable(StudyBuddy.USER, StudyBuddy.currentUser);
+					intent.putExtras(StudyBuddy.args);
+					
+					startActivity(intent);
+					mAuthProgressDialog.hide();
 				}
 				public void onCancelled(FirebaseError firebaseError){}
 			});
-			intent.putExtras(StudyBuddy.args);
-			startActivity(intent);
-			mAuthProgressDialog.hide();
 		}
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {
