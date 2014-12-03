@@ -48,8 +48,9 @@ public class MyCoursesFragment extends Fragment {
 		
 		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
-				courses = new ArrayList<String>();
 				Iterable<DataSnapshot> courseList = snapshot.getChildren();
+
+				courses = new ArrayList<String>();
 				
 				for(DataSnapshot course : courseList){
 					courses.add(course.getValue().toString());
