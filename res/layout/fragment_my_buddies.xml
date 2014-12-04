@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:padding="8dip"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buddy_requests_list"
+        android:layout_below="@id/buddy_requests_list"
         android:text="@string/accepted_buddies"
         android:textAppearance="?android:attr/textAppearanceLarge" 
         android:background="#33B5E5"
@@ -44,8 +44,8 @@
         android:id="@+id/buddy_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buddy_text"
-        android:layout_below="@+id/buddy_text" >
+        android:layout_alignLeft="@id/buddy_text"
+        android:layout_below="@id/buddy_text" >
     </ListView>
 
 </RelativeLayout>

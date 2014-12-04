@@ -9,7 +9,7 @@
     tools:context="cpsc112.studybuddy.DisplayRosterFragment" >
 
     <ListView
-        android:id="@+id/userList"
+        android:id="@+id/roster_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">

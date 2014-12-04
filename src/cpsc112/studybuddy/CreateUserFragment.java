@@ -34,8 +34,8 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 		createAccountDialog.setMessage("Creating new user account, please wait...");
 		createAccountDialog.setCancelable(false);
 		
-		view.findViewById(R.id.createAccountButton).setOnClickListener(this);
-		view.findViewById(R.id.cancelButton).setOnClickListener(this);
+		view.findViewById(R.id.create_account_button).setOnClickListener(this);
+		view.findViewById(R.id.cancel_button).setOnClickListener(this);
 		
 		return view;
 	}
@@ -55,12 +55,12 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 	
 	public void onClick(View view){
 		switch(view.getId()){
-			case R.id.createAccountButton:
+			case R.id.create_account_button:
 				createAccountDialog.show();
 				
-				EditText emailText = (EditText) getView().findViewById(R.id.emailText);
-				EditText passwordText = (EditText) getView().findViewById(R.id.passwordText);
-				EditText nameText = (EditText) getView().findViewById(R.id.nameText);
+				EditText emailText = (EditText) getView().findViewById(R.id.new_email_text);
+				EditText passwordText = (EditText) getView().findViewById(R.id.new_password_text);
+				EditText nameText = (EditText) getView().findViewById(R.id.name_text);
 				
 				email = emailText.getText().toString();
 				password = passwordText.getText().toString();
@@ -81,7 +81,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 					}
 				});
 				break;
-			case R.id.cancelButton:
+			case R.id.cancel_button:
 				getActivity().getFragmentManager().popBackStackImmediate();
 				break;
 		}
