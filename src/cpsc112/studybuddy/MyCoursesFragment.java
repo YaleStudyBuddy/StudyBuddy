@@ -55,9 +55,8 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		return view;
 	}
 	
-	@Override
-	public void onPause(){
-		super.onPause();
+	public void onStop(){
+		super.onStop();
 		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").removeEventListener(courseListener);
 		System.out.println("course listener removed");
 	}

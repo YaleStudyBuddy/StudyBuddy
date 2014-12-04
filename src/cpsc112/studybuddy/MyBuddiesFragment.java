@@ -70,8 +70,8 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	}
 	
 	@Override
-	public void onPause(){
-		super.onPause();
+	public void onStop(){
+		super.onStop();
 		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").removeEventListener(buddyRequestsListener);
 		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").removeEventListener(buddiesListener);
 		System.out.println("buddy listeners removed");

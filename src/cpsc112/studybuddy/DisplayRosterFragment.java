@@ -29,7 +29,7 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
 		View view = inflater.inflate(R.layout.fragment_display_roster, container, false);
-		course = getArguments().getString(StudyBuddy.COURSE);
+		course = arguments.getString(StudyBuddy.COURSE);
 		setHasOptionsMenu(true);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().setTitle(course);
@@ -49,9 +49,8 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 		return view;
 	}
 
-	@Override
-	public void onPause(){
-		super.onPause();
+	public void onStop(){
+		super.onStop();
 		StudyBuddy.ROOT_REF.child("courses").child(course).removeEventListener(rosterListener);
 		System.out.println("roster listener removed");
 	}

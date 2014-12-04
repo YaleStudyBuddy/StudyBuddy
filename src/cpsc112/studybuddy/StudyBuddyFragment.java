@@ -37,8 +37,6 @@ public abstract class StudyBuddyFragment extends Fragment {
 				HashMap<String, Object> buddies = (HashMap<String, Object>) snapshot.child("buddies").getValue();
 				HashMap<String, Object> buddyRequests = (HashMap<String, Object>) snapshot.child("buddy requests").getValue();
 								
-//				HashMap<String, Object> userInfo = (HashMap<String, Object>) snapshot.getValue();
-								
 				StudyBuddy.args = new Bundle();
 				StudyBuddy.args.putParcelable(StudyBuddy.USER, new User(id, name, courses, buddies, buddyRequests));
 				
