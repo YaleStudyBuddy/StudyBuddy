@@ -1,9 +1,9 @@
 package cpsc112.studybuddy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,12 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
 public class MyCoursesFragment extends StudyBuddyFragment {
-	private ArrayList<String> courses;
+//	private ArrayList<String> courses;
 	private ArrayAdapter<String> adapter;
 	private ListView listView;
 
@@ -40,14 +36,17 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
 				StudyBuddy.args = new Bundle();
-				StudyBuddy.args.putString(StudyBuddy.COURSE, courses.get(position));
+				StudyBuddy.args.putString(StudyBuddy.COURSE, StudyBuddy.currentUser.getCourses().get(position));
 				((MainActivity)getActivity()).displayRoster.setArguments(StudyBuddy.args);
 				
 				replaceFrameWith(((MainActivity)getActivity()).displayRoster, StudyBuddy.args, true);
 			}
 		});
 		
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").addValueEventListener(courseListListener);
+		if (StudyBuddy.currentUser.getCourses() != null){
+			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, StudyBuddy.currentUser.getCourses());
+			listView.setAdapter(adapter);
+		}
 		
 		return view;
 	}
@@ -55,8 +54,6 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 	@Override
 	public void onPause(){
 		super.onPause();
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").removeEventListener(courseListListener);
-		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".courses");
 	}
 	
 	@Override
@@ -88,12 +85,21 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 
 				String newCourse = inputText.getText().toString();
 				
+				if (StudyBuddy.currentUser.getCourses() == null){
+					StudyBuddy.currentUser.addCourse(newCourse);
+					adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, StudyBuddy.currentUser.getCourses());
+					listView.setAdapter(adapter);
+				} else {
+					StudyBuddy.currentUser.addCourse(newCourse);
+					adapter.notifyDataSetChanged();
+				}
+				
 				Map<String, Object> roster = new HashMap<String, Object>();
 				roster.put(StudyBuddy.currentUID, StudyBuddy.currentName);
 				StudyBuddy.ROOT_REF.child("courses").child(newCourse).updateChildren(roster);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
-				courseMap.put(Integer.toString(courses.size()), newCourse);
+				courseMap.put(Integer.toString(StudyBuddy.currentUser.getCourses().size() - 1), newCourse);
 				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").updateChildren(courseMap);
 			}
 		});
@@ -107,22 +113,36 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		inputDialog.show();
 	}
 	
-	protected ValueEventListener courseListListener = new ValueEventListener(){
-		public void onDataChange(DataSnapshot snapshot){
-			Iterable<DataSnapshot> courseList = snapshot.getChildren();
-
-			courses = new ArrayList<String>();
-			
-			for(DataSnapshot course : courseList){
-				courses.add(course.getValue().toString());
-			}
-			
-			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, courses);
-			listView.setAdapter(adapter);
-			
-			System.out.println("listener added to ROOT_REF.users." + StudyBuddy.currentUID + ".courses");
-		}
+	public void removeCourse(int i, Activity activity){
 		
-		public void onCancelled(FirebaseError firebaseError){}
-	};
+		final int position = i;
+		
+		AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(activity);
+		confirmationDialog.setTitle("Remove Course");
+		confirmationDialog.setMessage("Are you sure you want to remove " + StudyBuddy.currentUser.getCourses().get(position));
+		
+		confirmationDialog.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				
+				StudyBuddy.currentUser.removeCourse(StudyBuddy.currentUser.getCourses().get(position));
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").child(String.valueOf(position)).removeValue();
+				StudyBuddy.ROOT_REF.child("courses").child(StudyBuddy.currentUser.getCourses().get(position)).child(StudyBuddy.currentUser.getID()).removeValue();
+				
+				if (StudyBuddy.currentUser.getCourses() == null){
+					adapter.clear();
+				} else {
+					adapter.notifyDataSetChanged();	
+				}
+			}
+		});
+
+		confirmationDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		
+		confirmationDialog.show();
+	}
+
 }

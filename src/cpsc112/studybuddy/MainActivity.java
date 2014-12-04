@@ -113,13 +113,30 @@ public class MainActivity extends Activity {
 			if (authData != null){
 
 			} else {
-//				StudyBuddy.currentUID = null;
-//				StudyBuddy.currentName = null;
-
+//				Map<String, Object> updateUser = new HashMap<String, Object>();
+//				updateUser.put("id", StudyBuddy.currentUser.getID());
+//				updateUser.put("name", StudyBuddy.currentUser.getName());
+//				updateUser.put("courses", StudyBuddy.currentUser.getCourses());
+//				updateUser.put("buddies", StudyBuddy.currentUser.getBuddies());
+//				updateUser.put("buddy requests", StudyBuddy.currentUser.getBuddyRequests());
+//				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).setValue(updateUser);
+				
+				removeFirebaseListeners();
+				
+				StudyBuddy.currentUser = null;
+				
 				StudyBuddy.ROOT_REF.removeAuthStateListener(this);
 				System.out.println("auth state listener removed");
 				finish();
 			}
 		}
 	};
+	
+	private void removeFirebaseListeners(){
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").removeEventListener(myBuddies.buddyRequestsListener);
+		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".buddy requests");
+
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").removeEventListener(myBuddies.buddiesListener);
+		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".buddies");
+	}
 }

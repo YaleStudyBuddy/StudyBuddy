@@ -15,9 +15,25 @@ public class User implements Parcelable {
 	public User(String id, String name, ArrayList<String> courses, HashMap<String, Object> buddies, HashMap<String, Object> buddyRequests){
 		this.id = id;
 		this.name = name;
-		this.courses = courses;
-		this.buddies = buddies;
-		this.buddyRequests = buddyRequests;
+		
+		if (courses != null){
+			this.courses = courses;	
+		} else {
+			this.courses = new ArrayList<String>();
+		}
+		
+		if (buddies != null){
+			this.buddies = buddies;
+		} else {
+			this.buddies = new HashMap<String, Object>();
+		}
+		
+		if (buddyRequests != null){
+			this.buddyRequests = buddyRequests;	
+		} else {
+			this.buddyRequests = new HashMap<String, Object>();
+		}
+		
 	}
 	
 //	public User(String ID, String name){
@@ -35,16 +51,31 @@ public class User implements Parcelable {
 //	}
 	
 	
-	//code to pass object through bundle from http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
+	//parcelable interface method signatures from http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
 	@SuppressWarnings("unchecked")
 	public User(Parcel in){
 		Bundle user = in.readBundle();
-		
+	
 		this.id = user.getString("id");
 		this.name = user.getString("name");
-		this.courses = user.getStringArrayList("courses");
-		this.buddies = (HashMap<String, Object>) user.getSerializable("buddies");
-		this.buddyRequests = (HashMap<String, Object>) user.getSerializable("buddy requests");
+		
+		if (user.getStringArrayList("courses") != null){
+			this.courses = user.getStringArrayList("courses");	
+		} else {
+			this.courses = new ArrayList<String>();
+		}
+		
+		if ((HashMap<String, Object>) user.getSerializable("buddies") != null){
+			this.buddies = (HashMap<String, Object>) user.getSerializable("buddies");
+		} else {
+			this.buddies = new HashMap<String, Object>();
+		}
+		
+		if ((HashMap<String, Object>) user.getSerializable("buddy requests") != null){
+			this.buddyRequests = (HashMap<String, Object>) user.getSerializable("buddy requests");	
+		} else {
+			this.buddyRequests = new HashMap<String, Object>();
+		}
 	}
 
 	@Override
@@ -91,23 +122,19 @@ public class User implements Parcelable {
 		return courses;
 	}
 	
-	protected void setCourses(ArrayList<String> courses){
-		this.courses = courses;
+	protected void addCourse(String course){
+		this.courses.add(course);
+	}
+	
+	protected void removeCourse(String course){
+		this.courses.remove(course);
 	}
 	
 	protected HashMap<String, Object> getBuddies(){
 		return buddies;
 	}
 	
-	protected void setBuddies(HashMap<String, Object> buddies){
-		this.buddies = buddies;
-	}
-	
 	protected HashMap<String, Object> getBuddyRequests(){
 		return buddyRequests;
-	}
-	
-	protected void setBuddyRequests(HashMap<String, Object> buddyRequests){
-		this.buddyRequests = buddyRequests;
 	}
 }

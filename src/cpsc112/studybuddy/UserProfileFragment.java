@@ -13,10 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
 public class UserProfileFragment extends StudyBuddyFragment {
 	String userID, userName;
 	
@@ -28,7 +24,7 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		
 		setHasOptionsMenu(true);
 		
-		if (userID.equals(StudyBuddy.currentUID)){
+		if (userID.equals(StudyBuddy.currentUser.getID())){
 			getActivity().setTitle(StudyBuddy.NAV_MENU[1]);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		} else {
@@ -41,24 +37,15 @@ public class UserProfileFragment extends StudyBuddyFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		final MenuInflater thisInflater = inflater;
-		final Menu thisMenu = menu;
 		
-		if (userID == null){
-			setHasOptionsMenu(false);
-		} else if (userID.equals(StudyBuddy.currentUID)){
-			thisInflater.inflate(R.menu.my_profile, thisMenu);	
+		if (userID.equals(StudyBuddy.currentUser.getID())){
+			inflater.inflate(R.menu.my_profile, menu);	
 		} else {
-			StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").child(userID).addListenerForSingleValueEvent(new ValueEventListener(){
-				public void onDataChange(DataSnapshot snapshot){
-					if (snapshot.getValue() != null){
-						thisInflater.inflate(R.menu.user_profile_remove, thisMenu);
-					} else {
-						thisInflater.inflate(R.menu.user_profile_add, thisMenu);
-					}
-				}
-				public void onCancelled(FirebaseError firebaseError){}
-			});
+			if (StudyBuddy.currentUser.getBuddies().containsKey(userID)){
+				inflater.inflate(R.menu.user_profile_remove, menu);
+			} else {
+				inflater.inflate(R.menu.user_profile_add, menu);
+			}
 		}
 	}
 	

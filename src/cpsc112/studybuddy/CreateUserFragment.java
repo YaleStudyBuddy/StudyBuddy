@@ -103,10 +103,16 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 			StudyBuddy.currentUser = new User(id, name, null, null, null);
 			
 			Map<String, Object> newUser = new HashMap<String, Object>();
-			newUser.put(id, StudyBuddy.currentUser);
+			newUser.put("id", StudyBuddy.currentUser.getID());
+			newUser.put("name", StudyBuddy.currentUser.getName());
 			StudyBuddy.ROOT_REF.child("users").child(id).setValue(newUser);
 			
-			startActivity(new Intent(getActivity(), MainActivity.class));
+			Intent intent = new Intent(getActivity(), MainActivity.class);
+			StudyBuddy.args = new Bundle();
+			StudyBuddy.args.putParcelable(StudyBuddy.USER, StudyBuddy.currentUser);
+			intent.putExtras(StudyBuddy.args);
+			
+			startActivity(intent);
 			getActivity().getFragmentManager().popBackStackImmediate();
 			createAccountDialog.hide();
 		}
