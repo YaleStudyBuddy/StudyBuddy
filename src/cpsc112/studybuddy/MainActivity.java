@@ -1,7 +1,6 @@
 package cpsc112.studybuddy;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -34,11 +33,6 @@ public class MainActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		
 		StudyBuddy.currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
-
-		StudyBuddy.currentUID = StudyBuddy.currentUser.getID();
-		StudyBuddy.currentName = StudyBuddy.currentUser.getName();
-		System.out.println("Current UID: " + StudyBuddy.currentUID);
-		System.out.println("Current User Name: " + StudyBuddy.currentName);
 		
 		StudyBuddy.ROOT_REF.addAuthStateListener(authListener);
 		System.out.println("auth state listener added");
@@ -60,8 +54,7 @@ public class MainActivity extends Activity {
 						break;
 					case 1:
 						StudyBuddy.args = new Bundle();
-						StudyBuddy.args.putString(StudyBuddy.UID, StudyBuddy.currentUID);
-						StudyBuddy.args.putString(StudyBuddy.NAME, StudyBuddy.currentName);
+						StudyBuddy.args.putParcelable(StudyBuddy.USER, StudyBuddy.currentUser);
 						replaceFrameWith(myProfile, StudyBuddy.args, false);
 						break;
 					case 2:
@@ -77,15 +70,12 @@ public class MainActivity extends Activity {
 		});	
 	}
 	
-	protected void replaceFrameWith(Fragment fragment, Bundle args, boolean addToBackStack){
-		if (!fragment.isAdded()){
-			fragment.setArguments(args);
-			
-			if (addToBackStack){
-				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-			} else {
-				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
-			}
+	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
+		fragment.updateArguments(args);
+		if (addToBackStack){
+			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+		} else {
+			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
 		}
 	}
 	
@@ -113,18 +103,9 @@ public class MainActivity extends Activity {
 			if (authData != null){
 
 			} else {
-//				Map<String, Object> updateUser = new HashMap<String, Object>();
-//				updateUser.put("id", StudyBuddy.currentUser.getID());
-//				updateUser.put("name", StudyBuddy.currentUser.getName());
-//				updateUser.put("courses", StudyBuddy.currentUser.getCourses());
-//				updateUser.put("buddies", StudyBuddy.currentUser.getBuddies());
-//				updateUser.put("buddy requests", StudyBuddy.currentUser.getBuddyRequests());
-//				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).setValue(updateUser);
-				
+			
 				removeFirebaseListeners();
-				
 				StudyBuddy.currentUser = null;
-				
 				StudyBuddy.ROOT_REF.removeAuthStateListener(this);
 				System.out.println("auth state listener removed");
 				finish();
@@ -133,10 +114,16 @@ public class MainActivity extends Activity {
 	};
 	
 	private void removeFirebaseListeners(){
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").removeEventListener(myBuddies.buddyRequestsListener);
-		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".buddy requests");
-
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").removeEventListener(myBuddies.buddiesListener);
-		System.out.println("listener removed from ROOT_REF.users." + StudyBuddy.currentUID + ".buddies");
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").removeEventListener(myBuddies.buddyRequestsListener);
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").removeEventListener(myBuddies.buddiesListener);
+		System.out.println("buddy listeners removed");
+		
+		for (String course : StudyBuddy.currentUser.getCourses()){
+			StudyBuddy.ROOT_REF.child("courses").child(course).removeEventListener(displayRoster.rosterListener);
+		}
+		System.out.println("roster listeners removed");
+		
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").removeEventListener(myCourses.courseListener);
+		System.out.println("course listener removed");
 	}
 }

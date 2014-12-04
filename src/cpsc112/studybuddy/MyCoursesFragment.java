@@ -1,9 +1,9 @@
 package cpsc112.studybuddy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,10 +19,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+
 public class MyCoursesFragment extends StudyBuddyFragment {
-//	private ArrayList<String> courses;
-	private ArrayAdapter<String> adapter;
-	private ListView listView;
+	private ArrayList<String> courses;
+	private ArrayAdapter<String> courseAdapter;
+	private ListView courseListView;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
@@ -31,22 +35,22 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().setTitle(StudyBuddy.NAV_MENU[2]);
 		
-		listView = (ListView) view.findViewById(R.id.course_list);
-		listView.setOnItemClickListener(new OnItemClickListener(){
+		courses = new ArrayList<String>();
+		
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").addChildEventListener(courseListener);
+		System.out.println("course listener added");
+		
+		courseListView = (ListView) view.findViewById(R.id.course_list);
+		courseListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
 				StudyBuddy.args = new Bundle();
-				StudyBuddy.args.putString(StudyBuddy.COURSE, StudyBuddy.currentUser.getCourses().get(position));
+				StudyBuddy.args.putString(StudyBuddy.COURSE, courses.get(position));
 				((MainActivity)getActivity()).displayRoster.setArguments(StudyBuddy.args);
 				
 				replaceFrameWith(((MainActivity)getActivity()).displayRoster, StudyBuddy.args, true);
 			}
 		});
-		
-		if (StudyBuddy.currentUser.getCourses() != null){
-			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, StudyBuddy.currentUser.getCourses());
-			listView.setAdapter(adapter);
-		}
 		
 		return view;
 	}
@@ -54,6 +58,8 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 	@Override
 	public void onPause(){
 		super.onPause();
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").removeEventListener(courseListener);
+		System.out.println("course listener removed");
 	}
 	
 	@Override
@@ -87,20 +93,20 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 				
 				if (StudyBuddy.currentUser.getCourses() == null){
 					StudyBuddy.currentUser.addCourse(newCourse);
-					adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, StudyBuddy.currentUser.getCourses());
-					listView.setAdapter(adapter);
+					courseAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, StudyBuddy.currentUser.getCourses());
+					courseListView.setAdapter(courseAdapter);
 				} else {
 					StudyBuddy.currentUser.addCourse(newCourse);
-					adapter.notifyDataSetChanged();
+					courseAdapter.notifyDataSetChanged();
 				}
 				
 				Map<String, Object> roster = new HashMap<String, Object>();
-				roster.put(StudyBuddy.currentUID, StudyBuddy.currentName);
+				roster.put(StudyBuddy.currentUser.getID(), StudyBuddy.currentUser.getName());
 				StudyBuddy.ROOT_REF.child("courses").child(newCourse).updateChildren(roster);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
 				courseMap.put(Integer.toString(StudyBuddy.currentUser.getCourses().size() - 1), newCourse);
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("courses").updateChildren(courseMap);
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").updateChildren(courseMap);
 			}
 		});
 		
@@ -113,26 +119,18 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		inputDialog.show();
 	}
 	
-	public void removeCourse(int i, Activity activity){
+	protected void removeCourse(String course){
 		
-		final int position = i;
+		final int position = StudyBuddy.currentUser.getCourses().indexOf(course);
 		
-		AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(activity);
+		AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(getActivity());
 		confirmationDialog.setTitle("Remove Course");
 		confirmationDialog.setMessage("Are you sure you want to remove " + StudyBuddy.currentUser.getCourses().get(position));
 		
 		confirmationDialog.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				
-				StudyBuddy.currentUser.removeCourse(StudyBuddy.currentUser.getCourses().get(position));
 				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("courses").child(String.valueOf(position)).removeValue();
 				StudyBuddy.ROOT_REF.child("courses").child(StudyBuddy.currentUser.getCourses().get(position)).child(StudyBuddy.currentUser.getID()).removeValue();
-				
-				if (StudyBuddy.currentUser.getCourses() == null){
-					adapter.clear();
-				} else {
-					adapter.notifyDataSetChanged();	
-				}
 			}
 		});
 
@@ -143,6 +141,36 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 		});
 		
 		confirmationDialog.show();
+	}
+	
+	protected ChildEventListener courseListener = new ChildEventListener(){
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
+		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
+			courses.add(snapshot.getValue().toString());
+			if (!StudyBuddy.currentUser.getCourses().contains(snapshot.getValue().toString())){
+				StudyBuddy.currentUser.addCourse(snapshot.getValue().toString());	
+			}
+			updateCourseAdapter();
+		}
+		public void onChildRemoved(DataSnapshot snapshot){
+			int index;
+			index = courses.indexOf(snapshot.getValue().toString());
+			courses.remove(index);
+			index = StudyBuddy.currentUser.getCourses().indexOf(snapshot.getValue().toString());
+			StudyBuddy.currentUser.removeCourse(index);
+			updateCourseAdapter();
+		}
+		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
+		public void onCancelled(FirebaseError firebaseError){}
+	};
+	
+	private void updateCourseAdapter(){
+		if (courseListView.getAdapter() != null){
+			courseAdapter.notifyDataSetChanged();
+		} else {
+			courseAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, courses);
+			courseListView.setAdapter(courseAdapter);
+		}
 	}
 
 }

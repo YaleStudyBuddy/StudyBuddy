@@ -8,13 +8,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class User implements Parcelable {
-	private String name, id;
+//	private String name, id;
 	private ArrayList<String> courses;
-	private HashMap<String, Object> buddies, buddyRequests;
+	private HashMap<String, Object> userInfo, buddies, buddyRequests;
 	
 	public User(String id, String name, ArrayList<String> courses, HashMap<String, Object> buddies, HashMap<String, Object> buddyRequests){
-		this.id = id;
-		this.name = name;
+		this.userInfo = new HashMap<String, Object>();
+		this.userInfo.put("id", id);
+		this.userInfo.put("name", name);
 		
 		if (courses != null){
 			this.courses = courses;	
@@ -36,28 +37,12 @@ public class User implements Parcelable {
 		
 	}
 	
-//	public User(String ID, String name){
-//		this.id = ID;
-//		this.name = name;
-//		
-//		HashMap<String, Object> newUser = new HashMap<String, Object>();
-//		newUser.put("id", ID);
-//		newUser.put("name", name);
-////		newUser.put("courses", courses);
-////		newUser.put("buddies", buddies);
-////		newUser.put("buddy requests", buddyRequests);
-//		
-////		StudyBuddy.ROOT_REF.child("users").child(UID).setValue(newUser);
-//	}
-	
-	
 	//parcelable interface method signatures from http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
 	@SuppressWarnings("unchecked")
 	public User(Parcel in){
 		Bundle user = in.readBundle();
 	
-		this.id = user.getString("id");
-		this.name = user.getString("name");
+		this.userInfo = (HashMap<String, Object>) user.getSerializable("user info");
 		
 		if (user.getStringArrayList("courses") != null){
 			this.courses = user.getStringArrayList("courses");	
@@ -86,8 +71,7 @@ public class User implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		Bundle user = new Bundle();
-		user.putString("id", id);
-		user.putString("name", name);
+		user.putSerializable("user info", userInfo);
 		user.putStringArrayList("courses", courses);
 		user.putSerializable("buddies", buddies);
 		user.putSerializable("buddy requests", buddyRequests);
@@ -106,16 +90,20 @@ public class User implements Parcelable {
 		}
 	};
 	
+	protected HashMap<String, Object> getUserInfo(){
+		return userInfo;
+	}
+	
 	protected String getID(){
-		return id;
+		return userInfo.get("id").toString();
 	}
 	
 	protected String getName(){
-		return name;
+		return userInfo.get("name").toString();
 	}
 	
 	protected void setName(String name){
-		this.name = name;
+		this.userInfo.put("name", name);
 	}
 	
 	protected ArrayList<String> getCourses(){
@@ -126,8 +114,8 @@ public class User implements Parcelable {
 		this.courses.add(course);
 	}
 	
-	protected void removeCourse(String course){
-		this.courses.remove(course);
+	protected void removeCourse(int index){
+		this.courses.remove(index);
 	}
 	
 	protected HashMap<String, Object> getBuddies(){

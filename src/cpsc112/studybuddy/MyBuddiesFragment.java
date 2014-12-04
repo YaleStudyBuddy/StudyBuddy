@@ -24,7 +24,6 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	private ArrayList<String> buddyRequestsIDs, buddyRequestsNames,buddyIDs, buddyNames;
 	private ArrayAdapter<String> buddyRequestsAdapter, buddyAdapter;
 	private static ListView buddyRequestsListView, buddyListView;
-	private final String[] emptyArray = new String[]{""};
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_my_buddies, container, false);
@@ -33,8 +32,8 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		getActivity().setTitle(StudyBuddy.NAV_MENU[3]);
 
 		//retrieve buddy requests and buddies
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").addChildEventListener(buddyRequestsListener);
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").addChildEventListener(buddiesListener);
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").addChildEventListener(buddyRequestsListener);
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").addChildEventListener(buddiesListener);
 		System.out.println("buddy listeners added");
 		
 		buddyRequestsIDs = new ArrayList<String>();
@@ -50,20 +49,20 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 				
 				newBuddy = new HashMap<String, Object>();
 				newBuddy.put(buddyRequestsIDs.get(position), buddyRequestsNames.get(position));
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").updateChildren(newBuddy);
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").updateChildren(newBuddy);
 				
 				newBuddy = new HashMap<String, Object>();
-				newBuddy.put(StudyBuddy.currentUID, StudyBuddy.currentName);
+				newBuddy.put(StudyBuddy.currentUser.getID(), StudyBuddy.currentUser.getName());
 				StudyBuddy.ROOT_REF.child("users").child(buddyRequestsIDs.get(position)).child("buddies").updateChildren(newBuddy);
 				
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").child(buddyRequestsIDs.get(position)).removeValue();
+				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").child(buddyRequestsIDs.get(position)).removeValue();
 			}
 		});
 		
 		buddyListView = (ListView) view.findViewById(R.id.buddy_list);
 		buddyListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				displayProfile(buddyIDs.get(position), buddyNames.get(position));
+				displayProfile(buddyIDs.get(position));
 			}
 		});
 		
@@ -73,8 +72,8 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	@Override
 	public void onPause(){
 		super.onPause();
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddy requests").removeEventListener(buddyRequestsListener);
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUID).child("buddies").removeEventListener(buddiesListener);
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").removeEventListener(buddyRequestsListener);
+		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").removeEventListener(buddiesListener);
 		System.out.println("buddy listeners removed");
 	}
 	
@@ -93,10 +92,7 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	
 	//firebase listeners
 	protected ChildEventListener buddyRequestsListener = new ChildEventListener(){
-		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){
-//			StudyBuddy.currentUser.getBuddyRequests().put(snapshot.getKey(), snapshot.getValue());
-//			buddyRequestsAdapter.notifyDataSetChanged();
-		}
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
 			StudyBuddy.currentUser.getBuddyRequests().put(snapshot.getKey(), snapshot.getValue());
@@ -114,16 +110,11 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		}
 		
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
-		
 		public void onCancelled(FirebaseError firebaseError){}
-
 	};
 	
 	protected ChildEventListener buddiesListener = new ChildEventListener(){
-		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){
-//			StudyBuddy.currentUser.getBuddies().put(snapshot.getKey(), snapshot.getValue());
-//			buddyAdapter.notifyDataSetChanged();
-		}
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
 			StudyBuddy.currentUser.getBuddies().put(snapshot.getKey(), snapshot.getValue());
@@ -137,40 +128,27 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			int index = buddyIDs.indexOf(snapshot.getKey());
 			buddyIDs.remove(index);
 			buddyNames.remove(index);
-			buddyAdapter.notifyDataSetChanged();
 			updateBuddyAdapter();
 		}
 		
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
-		
 		public void onCancelled(FirebaseError firebaseError){}
-
 	};
 	
 	private void updateBuddyRequestsAdapter(){
-		if (StudyBuddy.currentUser.getBuddyRequests() != null){
-			if (buddyRequestsListView.getAdapter() != null){
-				buddyRequestsAdapter.notifyDataSetChanged();
-			} else {
-				buddyRequestsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyRequestsNames);
-				buddyRequestsListView.setAdapter(buddyRequestsAdapter);
-			}
+		if (buddyRequestsListView.getAdapter() != null){
+			buddyRequestsAdapter.notifyDataSetChanged();
 		} else {
-			buddyRequestsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, emptyArray);
+			buddyRequestsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyRequestsNames);
 			buddyRequestsListView.setAdapter(buddyRequestsAdapter);
-		}		
+		}
 	}
 	
 	private void updateBuddyAdapter(){
-		if (StudyBuddy.currentUser.getBuddies() != null){
-			if (buddyListView.getAdapter() != null){
-				buddyAdapter.notifyDataSetChanged();
-			} else {
-				buddyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyNames);
-				buddyListView.setAdapter(buddyAdapter);
-			}
+		if (buddyListView.getAdapter() != null){
+			buddyAdapter.notifyDataSetChanged();
 		} else {
-			buddyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, emptyArray);
+			buddyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyNames);
 			buddyListView.setAdapter(buddyAdapter);
 		}
 	}

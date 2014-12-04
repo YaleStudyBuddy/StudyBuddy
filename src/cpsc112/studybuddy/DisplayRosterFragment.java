@@ -14,15 +14,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 public class DisplayRosterFragment extends StudyBuddyFragment {
 	
-	private ArrayList<String> userNames, userIDs;
-	private ArrayAdapter<String> adapter;
-	private ListView listView;
+	private ArrayList<String> rosterNames, rosterIDs;
+	private ArrayAdapter<String> rosterAdapter;
+	private ListView rosterListView;
 	private String course;
 	
 	@Override
@@ -34,10 +34,17 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().setTitle(course);
 		
-		listView = (ListView) view.findViewById(R.id.userList);
-		listView.setOnItemClickListener(userClickListener);
+		rosterIDs = new ArrayList<String>();
+		rosterNames = new ArrayList<String>();
+		
+		rosterListView = (ListView) view.findViewById(R.id.userList);
+		rosterListView.setOnItemClickListener(new OnItemClickListener(){
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				displayProfile(rosterIDs.get(position));
+			}
+		});
 
-		StudyBuddy.ROOT_REF.child("courses").child(course).addValueEventListener(rosterListener);
+		StudyBuddy.ROOT_REF.child("courses").child(course).addChildEventListener(rosterListener);
 		
 		return view;
 	}
@@ -46,7 +53,7 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 	public void onPause(){
 		super.onPause();
 		StudyBuddy.ROOT_REF.child("courses").child(course).removeEventListener(rosterListener);
-		System.out.println("listener removed from ROOT_REF.courses." + course);
+		System.out.println("roster listener removed");
 	}
 	
 	@Override
@@ -61,7 +68,7 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 				back();
 				return true;
 			case R.id.remove_course:
-				((MainActivity) getActivity()).myCourses.removeCourse(StudyBuddy.currentUser.getCourses().indexOf(course), getActivity());
+				((MainActivity) getActivity()).myCourses.removeCourse(course);
 				back();
 				return true;
 			default:
@@ -69,32 +76,31 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 		}
 	}
 	
-	private OnItemClickListener userClickListener = new OnItemClickListener() {
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			displayProfile(userIDs.get(position), userNames.get(position));
-		}
-	};
-
-	protected ValueEventListener rosterListener = new ValueEventListener(){
-		public void onDataChange(DataSnapshot snapshot){
-
-			Iterable<DataSnapshot> roster = snapshot.getChildren();
-			userNames = new ArrayList<String>();
-			userIDs = new ArrayList<String>();
-			
-			for (DataSnapshot student : roster){
-				if (!student.getKey().equals(StudyBuddy.currentUID)){
-					userNames.add(student.getValue().toString());
-					userIDs.add(student.getKey().toString());
-				}
+	protected ChildEventListener rosterListener = new ChildEventListener(){
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
+		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
+			if (!snapshot.getKey().equals(StudyBuddy.currentUser.getID())){
+				rosterIDs.add(snapshot.getKey());
+				rosterNames.add(snapshot.getValue().toString());
+				updateRosterAdapter();
 			}
-			
-			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userNames);
-			listView.setAdapter(adapter);
-			
-			System.out.println("listener added to ROOT_REF.courses." + course);
 		}
-		
+		public void onChildRemoved(DataSnapshot snapshot){
+			int index = rosterIDs.indexOf(snapshot.getKey());
+			rosterIDs.remove(index);
+			rosterNames.remove(index);
+			updateRosterAdapter();
+		}
+		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
 		public void onCancelled(FirebaseError firebaseError){}
 	};
+
+	private void updateRosterAdapter(){
+		if (rosterListView.getAdapter() != null){
+			rosterAdapter.notifyDataSetChanged();
+		} else {
+			rosterAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, rosterNames);
+			rosterListView.setAdapter(rosterAdapter);
+		}
+	}
 }

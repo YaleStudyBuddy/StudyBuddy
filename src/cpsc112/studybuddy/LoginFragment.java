@@ -90,8 +90,8 @@ public class LoginFragment extends Fragment implements OnClickListener{
 			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
 				@SuppressWarnings("unchecked")
 				public void onDataChange(DataSnapshot snapshot){
-					String id = snapshot.child("id").getValue().toString();
-					String name = snapshot.child("name").getValue().toString();
+					String id = snapshot.child("user info").child("id").getValue().toString();
+					String name = snapshot.child("user info").child("name").getValue().toString();
 					ArrayList<String> courses = (ArrayList<String>) snapshot.child("courses").getValue();
 					HashMap<String, Object> buddies = (HashMap<String, Object>) snapshot.child("buddies").getValue();
 					HashMap<String, Object> buddyRequests = (HashMap<String, Object>) snapshot.child("buddy requests").getValue();
