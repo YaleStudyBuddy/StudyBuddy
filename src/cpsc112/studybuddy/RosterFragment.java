@@ -23,6 +23,35 @@ public class RosterFragment extends StudyBuddyFragment {
 	private ListView rosterListView;
 	private String course;
 	
+	//Firebase listener for roster
+	private ChildEventListener rosterListener = new ChildEventListener(){
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
+		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
+			if (!snapshot.getKey().equals(getCurrentUserID()) && !rosterIDs.contains(snapshot.getKey())){
+				rosterIDs.add(snapshot.getKey());
+				rosterNames.add(snapshot.getValue().toString());
+				updateAdapter(rosterListView, rosterNames);
+			}
+		}
+		public void onChildRemoved(DataSnapshot snapshot){
+			int index = rosterIDs.indexOf(snapshot.getKey());
+			if (index > -1){
+				rosterIDs.remove(index);
+				rosterNames.remove(index);
+				updateAdapter(rosterListView, rosterNames);
+			}
+		}
+		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
+		public void onCancelled(FirebaseError firebaseError){}
+	};
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+		//add roster listener
+		StudyBuddy.COURSES_REF.child(course).addChildEventListener(rosterListener);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
@@ -41,16 +70,7 @@ public class RosterFragment extends StudyBuddyFragment {
 				displayProfile(rosterIDs.get(position));
 			}
 		});
-
-		StudyBuddy.COURSES_REF.child(course).addChildEventListener(rosterListener);
-		
 		return view;
-	}
-
-	public void onStop(){
-		super.onStop();
-		StudyBuddy.COURSES_REF.child(course).removeEventListener(rosterListener);
-		System.out.println("roster listener removed");
 	}
 	
 	@Override
@@ -65,31 +85,17 @@ public class RosterFragment extends StudyBuddyFragment {
 				back();
 				return true;
 			case R.id.remove_course:
-				((MainActivity) getActivity()).myCourses.removeCourse(course);
+				((MainActivity) getActivity()).coursesFragment.removeCourse(course);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
 	
-	protected ChildEventListener rosterListener = new ChildEventListener(){
-		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
-		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-			if (!snapshot.getKey().equals(getCurrentUserID())){
-				rosterIDs.add(snapshot.getKey());
-				rosterNames.add(snapshot.getValue().toString());
-				updateAdapter(rosterListView, rosterNames);
-			}
-		}
-		public void onChildRemoved(DataSnapshot snapshot){
-			int index = rosterIDs.indexOf(snapshot.getKey());
-			if (index > 0){
-				rosterIDs.remove(index);
-				rosterNames.remove(index);
-				updateAdapter(rosterListView, rosterNames);
-			}
-		}
-		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
-		public void onCancelled(FirebaseError firebaseError){}
-	};
+	@Override
+	public void onStop(){
+		super.onStop();
+		StudyBuddy.COURSES_REF.child(course).removeEventListener(rosterListener);
+		System.out.println("roster listener removed");
+	}
 }

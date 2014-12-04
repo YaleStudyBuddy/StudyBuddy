@@ -17,22 +17,61 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+
 public class CoursesFragment extends StudyBuddyFragment {
 	private ListView courseListView;
+	
+	private ChildEventListener courseListener = new ChildEventListener(){
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
+		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
+			if (!user.getCourses().contains(snapshot.getValue().toString())){
+				user.addCourse(snapshot.getValue().toString());
+				updateAdapter(courseListView, user.getCourses());
+			}
+		}
+		public void onChildRemoved(DataSnapshot snapshot){
+			int index = user.getCourses().indexOf(snapshot.getValue().toString());
+			if (index > -1){
+				user.removeCourse(index);
+				updateAdapter(courseListView, user.getCourses());
+			}
+		}
+		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
+		public void onCancelled(FirebaseError firebaseError){}
+	};
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+		StudyBuddy.USERS_REF.child(user.getID()).child("courses").addChildEventListener(courseListener);
+		System.out.println("course listener added");
+	}
 
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
-		
 		View view = inflater.inflate(R.layout.fragment_courses, container, false);
-		setHasOptionsMenu(true);
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-		getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+		user = arguments.getParcelable(StudyBuddy.USER);
+		
+		if (user.getID() == getCurrentUserID()){
+			user = getCurrentUser();
+			setHasOptionsMenu(true);
+			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+		} else {
+			setHasOptionsMenu(false);
+			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+			getActivity().setTitle(user.getName() + "'s Courses");
+		}
 		
 		courseListView = (ListView) view.findViewById(R.id.course_list);
 		courseListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Bundle args = new Bundle();
 				args.putString(StudyBuddy.COURSE, getCurrentUser().getCourses().get(position));
-				replaceFrameWith(((MainActivity)getActivity()).displayRoster, args, true);
+				replaceFrameWith(((MainActivity)getActivity()).rosterFragment, args, true);
 			}
 		});
 		
@@ -44,6 +83,8 @@ public class CoursesFragment extends StudyBuddyFragment {
 	@Override
 	public void onStop(){
 		super.onStop();
+		StudyBuddy.USERS_REF.child(user.getID()).child("courses").removeEventListener(courseListener);
+		System.out.println("course listener removed");
 	}
 	
 	@Override
@@ -54,6 +95,9 @@ public class CoursesFragment extends StudyBuddyFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()){
+			case android.R.id.home:
+				back();
+				return true;
 			case R.id.add_course_button:
 				addCourse();
 				return true;
@@ -84,12 +128,12 @@ public class CoursesFragment extends StudyBuddyFragment {
 				updateAdapter(courseListView, getCurrentUser().getCourses());
 				
 				Map<String, Object> roster = new HashMap<String, Object>();
-				roster.put(getCurrentUserID(), getCurrentUserName());
+				roster.put(user.getID(), user.getName());
 				StudyBuddy.COURSES_REF.child(newCourse).updateChildren(roster);
 				
 				Map<String, Object> courseMap = new HashMap<String, Object>();
 				courseMap.put(Integer.toString(getCurrentUser().getCourses().size() - 1), newCourse);
-				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("courses").updateChildren(courseMap);
+				StudyBuddy.USERS_REF.child(user.getID()).child("courses").updateChildren(courseMap);
 			}
 		});
 		
@@ -113,8 +157,8 @@ public class CoursesFragment extends StudyBuddyFragment {
 			public void onClick(DialogInterface dialog, int which) {
 				int index = getCurrentUser().getCourses().indexOf(course);
 				
-				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("courses").child(String.valueOf(index)).removeValue();
-				StudyBuddy.COURSES_REF.child(course).child(getCurrentUserID()).removeValue();
+				StudyBuddy.USERS_REF.child(user.getID()).child("courses").child(String.valueOf(index)).removeValue();
+				StudyBuddy.COURSES_REF.child(course).child(user.getID()).removeValue();
 				getCurrentUser().removeCourse(index);
 				
 				updateAdapter(courseListView, getCurrentUser().getCourses());

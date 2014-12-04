@@ -16,10 +16,16 @@ import com.firebase.client.ValueEventListener;
 
 public abstract class StudyBuddyFragment extends Fragment {
 	protected Bundle arguments;
+	protected User user;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	public void onStart(){
+		super.onStart();
 	}
 	
 	@Override
@@ -33,7 +39,7 @@ public abstract class StudyBuddyFragment extends Fragment {
 			public void onDataChange(DataSnapshot snapshot){
 				Bundle args = new Bundle();
 				args.putParcelable(StudyBuddy.USER, StudyBuddy.getUser(snapshot));
-				replaceFrameWith(((MainActivity)getActivity()).userProfile, args, true);
+				replaceFrameWith(((MainActivity)getActivity()).profileFragment, args, true);
 			}
 			public void onCancelled(FirebaseError firebaseError){}
 		});

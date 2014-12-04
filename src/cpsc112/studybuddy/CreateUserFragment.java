@@ -99,7 +99,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 			Map<String, Object> newUserMap = new HashMap<String, Object>();
 			newUserMap.put("id", newUser.getID());
 			newUserMap.put("name", newUser.getName());
-			StudyBuddy.USERS_REF.child(id).child("user info").setValue(newUser);
+			StudyBuddy.USERS_REF.child(id).child("user info").setValue(newUserMap);
 			
 			Intent intent = new Intent(getActivity(), MainActivity.class);
 			Bundle args = new Bundle();

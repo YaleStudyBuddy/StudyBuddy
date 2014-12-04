@@ -13,17 +13,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 public class ProfileFragment extends StudyBuddyFragment {
-	private User user;
 	
+	@Override
+	public void onStart(){
+		super.onStart();
+		StudyBuddy.USERS_REF.child(user.getID()).child("user info").addValueEventListener(profileListener);
+		System.out.println("profile listener added");
+	}
+	
+	//Firebase listener for profile
+	private ValueEventListener profileListener = new ValueEventListener(){
+		public void onDataChange(DataSnapshot snapshot){
+			
+		}
+		public void onCancelled(FirebaseError firebaseError){}
+	};
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_profile, container, false);
-		
 		user = arguments.getParcelable(StudyBuddy.USER);
-		
 		setHasOptionsMenu(true);
 		
 		if (user.getID().equals(getCurrentUserID())){
+			user = getCurrentUser();
 			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		} else {
@@ -33,11 +51,11 @@ public class ProfileFragment extends StudyBuddyFragment {
 		
 		return view;
 	}
-
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 		
-		if (user.getID().toString().equals(getCurrentUserID())){
+		if (user.getID().equals(getCurrentUserID())){
 			inflater.inflate(R.menu.my_profile, menu);	
 		} else {
 			if (getCurrentUser().getBuddies().containsKey(user.getID().toString())){
@@ -66,6 +84,13 @@ public class ProfileFragment extends StudyBuddyFragment {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+		StudyBuddy.USERS_REF.child(user.getID()).child("user info").removeEventListener(profileListener);
+		System.out.println("profile listener removed");
 	}
 	
 	//sends buddy request
