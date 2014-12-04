@@ -1,7 +1,9 @@
 package cpsc112.studybuddy;
 
-import android.os.Bundle;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
 public class StudyBuddy {
@@ -12,7 +14,13 @@ public class StudyBuddy {
 	protected final static String IS_BUDDY = "cpsc112.studybuddy.IS_BUDDY";
 	protected final static String[] NAV_MENU = {"Home", "My Profile", "My Courses", "My Buddies"};
 	
-	protected static User currentUser;
-	
-	protected static Bundle args;
+	@SuppressWarnings("unchecked")
+	protected static User getUser(DataSnapshot snapshot){
+		String id = snapshot.child("user info").child("id").getValue().toString();
+		String name = snapshot.child("user info").child("name").getValue().toString();
+		ArrayList<String> courses = (ArrayList<String>) snapshot.child("courses").getValue();
+		HashMap<String, Object> buddies = (HashMap<String, Object>) snapshot.child("buddies").getValue();
+		HashMap<String, Object> buddyRequests = (HashMap<String, Object>) snapshot.child("buddy requests").getValue();
+		return new User(id, name, courses, buddies, buddyRequests);
+	}
 }

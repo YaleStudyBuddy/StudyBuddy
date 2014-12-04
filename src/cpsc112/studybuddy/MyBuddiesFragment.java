@@ -32,8 +32,8 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		getActivity().setTitle(StudyBuddy.NAV_MENU[3]);
 
 		//retrieve buddy requests and buddies
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").addChildEventListener(buddyRequestsListener);
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").addChildEventListener(buddiesListener);
+		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddy requests").addChildEventListener(buddyRequestsListener);
+		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").addChildEventListener(buddiesListener);
 		System.out.println("buddy listeners added");
 		
 		buddyRequestsIDs = new ArrayList<String>();
@@ -49,13 +49,13 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 				
 				newBuddy = new HashMap<String, Object>();
 				newBuddy.put(buddyRequestsIDs.get(position), buddyRequestsNames.get(position));
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").updateChildren(newBuddy);
+				StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").updateChildren(newBuddy);
 				
 				newBuddy = new HashMap<String, Object>();
-				newBuddy.put(StudyBuddy.currentUser.getID(), StudyBuddy.currentUser.getName());
+				newBuddy.put(getCurrentUser().getID(), getCurrentUser().getName());
 				StudyBuddy.ROOT_REF.child("users").child(buddyRequestsIDs.get(position)).child("buddies").updateChildren(newBuddy);
 				
-				StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").child(buddyRequestsIDs.get(position)).removeValue();
+				StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddy requests").child(buddyRequestsIDs.get(position)).removeValue();
 			}
 		});
 		
@@ -72,8 +72,8 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	@Override
 	public void onStop(){
 		super.onStop();
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddy requests").removeEventListener(buddyRequestsListener);
-		StudyBuddy.ROOT_REF.child("users").child(StudyBuddy.currentUser.getID()).child("buddies").removeEventListener(buddiesListener);
+		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddy requests").removeEventListener(buddyRequestsListener);
+		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").removeEventListener(buddiesListener);
 		System.out.println("buddy listeners removed");
 	}
 	
@@ -95,14 +95,14 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-			StudyBuddy.currentUser.getBuddyRequests().put(snapshot.getKey(), snapshot.getValue());
+			getCurrentUser().getBuddyRequests().put(snapshot.getKey(), snapshot.getValue());
 			buddyRequestsIDs.add(snapshot.getKey());
 			buddyRequestsNames.add(snapshot.getValue().toString());
 			updateBuddyRequestsAdapter();
 		}
 		
 		public void onChildRemoved(DataSnapshot snapshot){
-			StudyBuddy.currentUser.getBuddyRequests().remove(snapshot.getKey());
+			getCurrentUser().getBuddyRequests().remove(snapshot.getKey());
 			int index = buddyRequestsIDs.indexOf(snapshot.getKey());
 			buddyRequestsIDs.remove(index);
 			buddyRequestsNames.remove(index);
@@ -117,14 +117,14 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-			StudyBuddy.currentUser.getBuddies().put(snapshot.getKey(), snapshot.getValue());
+			getCurrentUser().getBuddies().put(snapshot.getKey(), snapshot.getValue());
 			buddyIDs.add(snapshot.getKey());
 			buddyNames.add(snapshot.getValue().toString());
 			updateBuddyAdapter();
 		}
 		
 		public void onChildRemoved(DataSnapshot snapshot){
-			StudyBuddy.currentUser.getBuddies().remove(snapshot.getKey());
+			getCurrentUser().getBuddies().remove(snapshot.getKey());
 			int index = buddyIDs.indexOf(snapshot.getKey());
 			buddyIDs.remove(index);
 			buddyNames.remove(index);

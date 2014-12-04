@@ -100,17 +100,17 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 		public void onAuthenticated(AuthData authData) {
 			//save user data to firebase
 			String id = authData.getUid();
-			StudyBuddy.currentUser = new User(id, name, null, null, null);
+			User newUser = new User(id, name, null, null, null);
 			
-			Map<String, Object> newUser = new HashMap<String, Object>();
-			newUser.put("id", StudyBuddy.currentUser.getID());
-			newUser.put("name", StudyBuddy.currentUser.getName());
-			StudyBuddy.ROOT_REF.child("users").child(id).setValue(newUser);
+			Map<String, Object> newUserMap = new HashMap<String, Object>();
+			newUserMap.put("id", newUser.getID());
+			newUserMap.put("name", newUser.getName());
+			StudyBuddy.ROOT_REF.child("users").child(id).child("user info").setValue(newUser);
 			
 			Intent intent = new Intent(getActivity(), MainActivity.class);
-			StudyBuddy.args = new Bundle();
-			StudyBuddy.args.putParcelable(StudyBuddy.USER, StudyBuddy.currentUser);
-			intent.putExtras(StudyBuddy.args);
+			Bundle args = new Bundle();
+			args.putParcelable(StudyBuddy.USER, newUser);
+			intent.putExtras(args);
 			
 			startActivity(intent);
 			getActivity().getFragmentManager().popBackStackImmediate();

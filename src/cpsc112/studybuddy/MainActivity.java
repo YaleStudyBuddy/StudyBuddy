@@ -26,13 +26,16 @@ public class MainActivity extends Activity {
 	protected UserProfileFragment userProfile = new UserProfileFragment();
 	protected MyBuddiesFragment myBuddies = new MyBuddiesFragment();
 	
+	protected User currentUser;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Firebase.setAndroidContext(this);
 		
-		StudyBuddy.currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
+		currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
+//		StudyBuddy.currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
 		
 		StudyBuddy.ROOT_REF.addAuthStateListener(authListener);
 		System.out.println("auth state listener added");
@@ -53,9 +56,9 @@ public class MainActivity extends Activity {
 						setTitle(getString(R.string.app_name));
 						break;
 					case 1:
-						StudyBuddy.args = new Bundle();
-						StudyBuddy.args.putParcelable(StudyBuddy.USER, StudyBuddy.currentUser);
-						replaceFrameWith(myProfile, StudyBuddy.args, false);
+						Bundle args = new Bundle();
+						args.putParcelable(StudyBuddy.USER, currentUser);
+						replaceFrameWith(myProfile, args, false);
 						break;
 					case 2:
 						replaceFrameWith(myCourses, null, false);
@@ -72,6 +75,7 @@ public class MainActivity extends Activity {
 	
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
 		fragment.updateArguments(args);
+		
 		if (addToBackStack){
 			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
 		} else {

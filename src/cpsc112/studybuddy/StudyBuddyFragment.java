@@ -1,8 +1,5 @@
 package cpsc112.studybuddy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,18 +26,10 @@ public abstract class StudyBuddyFragment extends Fragment {
 	
 	protected void displayProfile(String id){
 		StudyBuddy.ROOT_REF.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener(){
-			@SuppressWarnings("unchecked")
 			public void onDataChange(DataSnapshot snapshot){
-				String id = snapshot.child("user info").child("id").getValue().toString();
-				String name = snapshot.child("user info").child("name").getValue().toString();
-				ArrayList<String> courses = (ArrayList<String>) snapshot.child("courses").getValue();
-				HashMap<String, Object> buddies = (HashMap<String, Object>) snapshot.child("buddies").getValue();
-				HashMap<String, Object> buddyRequests = (HashMap<String, Object>) snapshot.child("buddy requests").getValue();
-								
-				StudyBuddy.args = new Bundle();
-				StudyBuddy.args.putParcelable(StudyBuddy.USER, new User(id, name, courses, buddies, buddyRequests));
-				
-				replaceFrameWith(((MainActivity)getActivity()).userProfile, StudyBuddy.args, true);
+				Bundle args = new Bundle();
+				args.putParcelable(StudyBuddy.USER, StudyBuddy.getUser(snapshot));
+				replaceFrameWith(((MainActivity)getActivity()).userProfile, args, true);
 			}
 			public void onCancelled(FirebaseError firebaseError){}
 		});
@@ -68,6 +57,10 @@ public abstract class StudyBuddyFragment extends Fragment {
 		} else {
 			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
 		}
+	}
+	
+	protected User getCurrentUser(){
+		return ((MainActivity) getActivity()).currentUser;
 	}
 	
 	protected void updateArguments(Bundle args){

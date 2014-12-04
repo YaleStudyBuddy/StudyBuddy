@@ -78,7 +78,7 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 	protected ChildEventListener rosterListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-			if (!snapshot.getKey().equals(StudyBuddy.currentUser.getID())){
+			if (!snapshot.getKey().equals(getCurrentUser().getID())){
 				rosterIDs.add(snapshot.getKey());
 				rosterNames.add(snapshot.getValue().toString());
 				updateRosterAdapter();
