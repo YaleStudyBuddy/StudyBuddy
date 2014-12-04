@@ -17,12 +17,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class MyCoursesFragment extends StudyBuddyFragment {
+public class CoursesFragment extends StudyBuddyFragment {
 	private ListView courseListView;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
-		View view = inflater.inflate(R.layout.fragment_my_courses, container, false);
+		View view = inflater.inflate(R.layout.fragment_courses, container, false);
 		setHasOptionsMenu(true);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
@@ -48,7 +48,7 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		inflater.inflate(R.menu.my_courses, menu);
+		inflater.inflate(R.menu.courses, menu);
 	}
 	
 	@Override

@@ -20,11 +20,11 @@ public class MainActivity extends Activity {
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
 	
-	protected MyCoursesFragment myCourses = new MyCoursesFragment();
-	protected DisplayRosterFragment displayRoster = new DisplayRosterFragment();
-	protected UserProfileFragment myProfile = new UserProfileFragment();
-	protected UserProfileFragment userProfile = new UserProfileFragment();
-	protected MyBuddiesFragment myBuddies = new MyBuddiesFragment();
+	protected CoursesFragment myCourses = new CoursesFragment();
+	protected RosterFragment displayRoster = new RosterFragment();
+	protected ProfileFragment myProfile = new ProfileFragment();
+	protected ProfileFragment userProfile = new ProfileFragment();
+	protected BuddiesFragment myBuddies = new BuddiesFragment();
 	
 	protected User currentUser;
 	

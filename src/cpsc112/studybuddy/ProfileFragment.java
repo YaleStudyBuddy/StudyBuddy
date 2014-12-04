@@ -13,11 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class UserProfileFragment extends StudyBuddyFragment {
+public class ProfileFragment extends StudyBuddyFragment {
 	private User user;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
-		View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+		View view = inflater.inflate(R.layout.fragment_profile, container, false);
 		
 		user = arguments.getParcelable(StudyBuddy.USER);
 		
@@ -41,9 +41,9 @@ public class UserProfileFragment extends StudyBuddyFragment {
 			inflater.inflate(R.menu.my_profile, menu);	
 		} else {
 			if (getCurrentUser().getBuddies().containsKey(user.getID().toString())){
-				inflater.inflate(R.menu.user_profile_remove, menu);
+				inflater.inflate(R.menu.profile_remove, menu);
 			} else {
-				inflater.inflate(R.menu.user_profile_add, menu);
+				inflater.inflate(R.menu.profile_add, menu);
 			}
 		}
 	}

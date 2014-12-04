@@ -17,7 +17,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 
-public class DisplayRosterFragment extends StudyBuddyFragment {
+public class RosterFragment extends StudyBuddyFragment {
 	
 	private ArrayList<String> rosterNames, rosterIDs;
 	private ListView rosterListView;
@@ -26,7 +26,7 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		
-		View view = inflater.inflate(R.layout.fragment_display_roster, container, false);
+		View view = inflater.inflate(R.layout.fragment_roster, container, false);
 		course = arguments.getString(StudyBuddy.COURSE);
 		setHasOptionsMenu(true);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,7 +55,7 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		inflater.inflate(R.menu.display_roster, menu);
+		inflater.inflate(R.menu.roster, menu);
 	}
 
 	@Override

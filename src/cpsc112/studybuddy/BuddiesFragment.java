@@ -19,12 +19,12 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 
-public class MyBuddiesFragment extends StudyBuddyFragment {
+public class BuddiesFragment extends StudyBuddyFragment {
 	private ArrayList<String> buddyRequestsIDs, buddyRequestsNames,buddyIDs, buddyNames;
 	private static ListView buddyRequestsListView, buddyListView;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
-		View view = inflater.inflate(R.layout.fragment_my_buddies, container, false);
+		View view = inflater.inflate(R.layout.fragment_buddies, container, false);
 		setHasOptionsMenu(false);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
@@ -76,7 +76,7 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		inflater.inflate(R.menu.my_buddies, menu);
+		inflater.inflate(R.menu.buddies, menu);
 	}
 	
 	@Override

@@ -19,6 +19,15 @@
         android:background="#33B5E5"
         android:textColor="#fff" />
 
+    <ListView
+        android:id="@+id/buddy_requests_list"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/buddy_requests_text" >
+
+    </ListView>
+    
     <TextView
         android:id="@+id/buddy_text"
         android:layout_width="match_parent"
@@ -30,16 +39,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" 
         android:background="#33B5E5"
         android:textColor="#fff" />
-
-    <ListView
-        android:id="@+id/buddy_requests_list"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/buddy_requests_text" >
-
-    </ListView>
-
+    
     <ListView
         android:id="@+id/buddy_list"
         android:layout_width="match_parent"
