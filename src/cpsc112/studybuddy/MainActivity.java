@@ -20,12 +20,9 @@ public class MainActivity extends Activity {
 	private ListView dList;
 	private ArrayAdapter<String> adapter;
 	
-	protected CoursesFragment myCourses = new CoursesFragment();
 	protected CoursesFragment coursesFragment = new CoursesFragment();
 	protected RosterFragment rosterFragment = new RosterFragment();
-	protected ProfileFragment myProfileFragment = new ProfileFragment();
 	protected ProfileFragment profileFragment = new ProfileFragment();
-	protected BuddiesFragment myBuddiesFragment = new BuddiesFragment();
 	protected BuddiesFragment buddiesFragment = new BuddiesFragment();
 	
 	protected User currentUser;
@@ -57,7 +54,7 @@ public class MainActivity extends Activity {
 					case 0:
 						args.putParcelable(StudyBuddy.USER, currentUser);
 						args.putInt(StudyBuddy.MENU_INDEX, index);
-						replaceFrameWith(myProfileFragment, args, false);
+						replaceFrameWith(profileFragment, args, false);
 						break;
 					case 1:
 						args.putParcelable(StudyBuddy.USER, currentUser);
@@ -67,7 +64,7 @@ public class MainActivity extends Activity {
 					case 2:
 						args.putParcelable(StudyBuddy.USER, currentUser);
 						args.putInt(StudyBuddy.MENU_INDEX, index);
-						replaceFrameWith(myBuddiesFragment, args, false);
+						replaceFrameWith(buddiesFragment, args, false);
 						break;
 					default:
 						break;
@@ -80,7 +77,7 @@ public class MainActivity extends Activity {
 		Bundle args = new Bundle();
 		args.putParcelable(StudyBuddy.USER, currentUser);
 		args.putInt(StudyBuddy.MENU_INDEX, 0);
-		replaceFrameWith(myProfileFragment, args, false);
+		replaceFrameWith(profileFragment, args, false);
 		
 	}
 	
@@ -105,6 +102,9 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
+			case android.R.id.home:
+				getFragmentManager().popBackStackImmediate();
+				return true;
 			case R.id.logout_button:
 				StudyBuddy.ROOT_REF.unauth();
 				return true;

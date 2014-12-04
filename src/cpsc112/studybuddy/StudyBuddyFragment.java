@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,6 +34,19 @@ public abstract class StudyBuddyFragment extends Fragment {
 		return inflater.inflate(R.layout.activity_main, container, false);
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+	}
+	
 	//passes on User object to profile fragment
 	protected void displayProfile(String id){
 		StudyBuddy.ROOT_REF.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener(){
@@ -43,16 +57,6 @@ public abstract class StudyBuddyFragment extends Fragment {
 			}
 			public void onCancelled(FirebaseError firebaseError){}
 		});
-	}
-	
-	@Override
-	public void onPause(){
-		super.onPause();
-	}
-	
-	@Override
-	public void onStop(){
-		super.onStop();
 	}
 	
 	protected void back(){

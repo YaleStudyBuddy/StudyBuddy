@@ -81,9 +81,9 @@ public class RosterFragment extends StudyBuddyFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				back();
-				return true;
+//			case android.R.id.home:
+//				back();
+//				return true;
 			case R.id.remove_course:
 				((MainActivity) getActivity()).coursesFragment.removeCourse(course);
 				return true;

@@ -95,9 +95,9 @@ public class CoursesFragment extends StudyBuddyFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()){
-			case android.R.id.home:
-				back();
-				return true;
+//			case android.R.id.home:
+//				back();
+//				return true;
 			case R.id.add_course_button:
 				addCourse();
 				return true;
