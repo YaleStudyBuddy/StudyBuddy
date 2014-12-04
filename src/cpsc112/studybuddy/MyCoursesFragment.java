@@ -46,7 +46,7 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 				
 				StudyBuddy.args = new Bundle();
 				StudyBuddy.args.putString(StudyBuddy.COURSE, courses.get(position));
-				((MainActivity)getActivity()).displayRoster.setArguments(StudyBuddy.args);
+				((MainActivity)getActivity()).displayRoster.updateArguments(StudyBuddy.args);
 				
 				replaceFrameWith(((MainActivity)getActivity()).displayRoster, StudyBuddy.args, true);
 			}
