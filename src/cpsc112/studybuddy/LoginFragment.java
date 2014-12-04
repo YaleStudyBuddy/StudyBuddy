@@ -30,7 +30,7 @@ public class LoginFragment extends Fragment implements OnClickListener{
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
-	
+		
 		mAuthProgressDialog = new ProgressDialog(getActivity());
 		mAuthProgressDialog.setTitle("Please wait");
 		mAuthProgressDialog.setMessage("Authenticating with server...");

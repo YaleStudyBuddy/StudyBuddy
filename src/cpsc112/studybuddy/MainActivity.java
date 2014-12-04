@@ -103,7 +103,6 @@ public class MainActivity extends Activity {
 			if (authData != null){
 
 			} else {
-				StudyBuddy.currentUser = null;
 				StudyBuddy.ROOT_REF.removeAuthStateListener(this);
 				System.out.println("auth state listener removed");
 				finish();
