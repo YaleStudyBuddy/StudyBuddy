@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.firebase.client.ChildEventListener;
@@ -22,26 +21,21 @@ import com.firebase.client.FirebaseError;
 
 public class MyBuddiesFragment extends StudyBuddyFragment {
 	private ArrayList<String> buddyRequestsIDs, buddyRequestsNames,buddyIDs, buddyNames;
-	private ArrayAdapter<String> buddyRequestsAdapter, buddyAdapter;
 	private static ListView buddyRequestsListView, buddyListView;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_my_buddies, container, false);
 		setHasOptionsMenu(false);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-		getActivity().setTitle(StudyBuddy.NAV_MENU[3]);
+		getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
 
 		//retrieve buddy requests and buddies
-		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddy requests").addChildEventListener(buddyRequestsListener);
-		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").addChildEventListener(buddiesListener);
+		StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddy requests").addChildEventListener(buddyRequestsListener);
+		StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddies").addChildEventListener(buddiesListener);
 		System.out.println("buddy listeners added");
 		
 		buddyRequestsIDs = new ArrayList<String>();
 		buddyRequestsNames = new ArrayList<String>();
-
-		buddyIDs = new ArrayList<String>();
-		buddyNames = new ArrayList<String>();
-
 		buddyRequestsListView = (ListView) view.findViewById(R.id.buddy_requests_list);
 		buddyRequestsListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -49,16 +43,18 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 				
 				newBuddy = new HashMap<String, Object>();
 				newBuddy.put(buddyRequestsIDs.get(position), buddyRequestsNames.get(position));
-				StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").updateChildren(newBuddy);
+				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddies").updateChildren(newBuddy);
 				
 				newBuddy = new HashMap<String, Object>();
-				newBuddy.put(getCurrentUser().getID(), getCurrentUser().getName());
-				StudyBuddy.ROOT_REF.child("users").child(buddyRequestsIDs.get(position)).child("buddies").updateChildren(newBuddy);
+				newBuddy.put(getCurrentUserID(), getCurrentUserName());
+				StudyBuddy.USERS_REF.child(buddyRequestsIDs.get(position)).child("buddies").updateChildren(newBuddy);
 				
-				StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddy requests").child(buddyRequestsIDs.get(position)).removeValue();
+				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddy requests").child(buddyRequestsIDs.get(position)).removeValue();
 			}
 		});
-		
+
+		buddyIDs = new ArrayList<String>();
+		buddyNames = new ArrayList<String>();		
 		buddyListView = (ListView) view.findViewById(R.id.buddy_list);
 		buddyListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,8 +68,9 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 	@Override
 	public void onStop(){
 		super.onStop();
-		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddy requests").removeEventListener(buddyRequestsListener);
-		StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").removeEventListener(buddiesListener);
+		//removes Firebase listeners upon closing fragment or activity
+		StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddy requests").removeEventListener(buddyRequestsListener);
+		StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddies").removeEventListener(buddiesListener);
 		System.out.println("buddy listeners removed");
 	}
 	
@@ -90,7 +87,7 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 		}
 	}
 	
-	//firebase listeners
+	//Firebase listener for buddy requests
 	protected ChildEventListener buddyRequestsListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
@@ -98,7 +95,7 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			getCurrentUser().getBuddyRequests().put(snapshot.getKey(), snapshot.getValue());
 			buddyRequestsIDs.add(snapshot.getKey());
 			buddyRequestsNames.add(snapshot.getValue().toString());
-			updateBuddyRequestsAdapter();
+			updateAdapter(buddyRequestsListView, buddyRequestsNames);
 		}
 		
 		public void onChildRemoved(DataSnapshot snapshot){
@@ -106,13 +103,14 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			int index = buddyRequestsIDs.indexOf(snapshot.getKey());
 			buddyRequestsIDs.remove(index);
 			buddyRequestsNames.remove(index);
-			updateBuddyRequestsAdapter();
+			updateAdapter(buddyRequestsListView, buddyRequestsNames);
 		}
 		
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
 		public void onCancelled(FirebaseError firebaseError){}
 	};
 	
+	//Firebase listener for buddies
 	protected ChildEventListener buddiesListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
@@ -120,7 +118,7 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			getCurrentUser().getBuddies().put(snapshot.getKey(), snapshot.getValue());
 			buddyIDs.add(snapshot.getKey());
 			buddyNames.add(snapshot.getValue().toString());
-			updateBuddyAdapter();
+			updateAdapter(buddyListView, buddyNames);
 		}
 		
 		public void onChildRemoved(DataSnapshot snapshot){
@@ -128,28 +126,28 @@ public class MyBuddiesFragment extends StudyBuddyFragment {
 			int index = buddyIDs.indexOf(snapshot.getKey());
 			buddyIDs.remove(index);
 			buddyNames.remove(index);
-			updateBuddyAdapter();
+			updateAdapter(buddyListView, buddyNames);
 		}
 		
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
 		public void onCancelled(FirebaseError firebaseError){}
 	};
 	
-	private void updateBuddyRequestsAdapter(){
-		if (buddyRequestsListView.getAdapter() != null){
-			buddyRequestsAdapter.notifyDataSetChanged();
-		} else {
-			buddyRequestsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyRequestsNames);
-			buddyRequestsListView.setAdapter(buddyRequestsAdapter);
-		}
-	}
-	
-	private void updateBuddyAdapter(){
-		if (buddyListView.getAdapter() != null){
-			buddyAdapter.notifyDataSetChanged();
-		} else {
-			buddyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyNames);
-			buddyListView.setAdapter(buddyAdapter);
-		}
-	}
+//	private void updateBuddyRequestsAdapter(){
+//		if (buddyRequestsListView.getAdapter() != null){
+//			buddyRequestsAdapter.notifyDataSetChanged();
+//		} else {
+//			buddyRequestsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyRequestsNames);
+//			buddyRequestsListView.setAdapter(buddyRequestsAdapter);
+//		}
+//	}
+//	
+//	private void updateBuddyAdapter(){
+//		if (buddyListView.getAdapter() != null){
+//			buddyAdapter.notifyDataSetChanged();
+//		} else {
+//			buddyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buddyNames);
+//			buddyListView.setAdapter(buddyAdapter);
+//		}
+//	}
 }

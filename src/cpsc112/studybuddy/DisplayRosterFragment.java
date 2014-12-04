@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.firebase.client.ChildEventListener;
@@ -21,7 +20,6 @@ import com.firebase.client.FirebaseError;
 public class DisplayRosterFragment extends StudyBuddyFragment {
 	
 	private ArrayList<String> rosterNames, rosterIDs;
-	private ArrayAdapter<String> rosterAdapter;
 	private ListView rosterListView;
 	private String course;
 	
@@ -44,14 +42,14 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 			}
 		});
 
-		StudyBuddy.ROOT_REF.child("courses").child(course).addChildEventListener(rosterListener);
+		StudyBuddy.COURSES_REF.child(course).addChildEventListener(rosterListener);
 		
 		return view;
 	}
 
 	public void onStop(){
 		super.onStop();
-		StudyBuddy.ROOT_REF.child("courses").child(course).removeEventListener(rosterListener);
+		StudyBuddy.COURSES_REF.child(course).removeEventListener(rosterListener);
 		System.out.println("roster listener removed");
 	}
 	
@@ -68,7 +66,6 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 				return true;
 			case R.id.remove_course:
 				((MainActivity) getActivity()).myCourses.removeCourse(course);
-				back();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -78,28 +75,21 @@ public class DisplayRosterFragment extends StudyBuddyFragment {
 	protected ChildEventListener rosterListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-			if (!snapshot.getKey().equals(getCurrentUser().getID())){
+			if (!snapshot.getKey().equals(getCurrentUserID())){
 				rosterIDs.add(snapshot.getKey());
 				rosterNames.add(snapshot.getValue().toString());
-				updateRosterAdapter();
+				updateAdapter(rosterListView, rosterNames);
 			}
 		}
 		public void onChildRemoved(DataSnapshot snapshot){
 			int index = rosterIDs.indexOf(snapshot.getKey());
-			rosterIDs.remove(index);
-			rosterNames.remove(index);
-			updateRosterAdapter();
+			if (index > 0){
+				rosterIDs.remove(index);
+				rosterNames.remove(index);
+				updateAdapter(rosterListView, rosterNames);
+			}
 		}
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
 		public void onCancelled(FirebaseError firebaseError){}
 	};
-
-	private void updateRosterAdapter(){
-		if (rosterListView.getAdapter() != null){
-			rosterAdapter.notifyDataSetChanged();
-		} else {
-			rosterAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, rosterNames);
-			rosterListView.setAdapter(rosterAdapter);
-		}
-	}
 }

@@ -1,17 +1,20 @@
 package cpsc112.studybuddy;
 
+import java.util.ArrayList;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 public abstract class StudyBuddyFragment extends Fragment {
-	
 	protected Bundle arguments;
 	
 	@Override
@@ -24,6 +27,7 @@ public abstract class StudyBuddyFragment extends Fragment {
 		return inflater.inflate(R.layout.activity_main, container, false);
 	}
 	
+	//passes on User object to profile fragment
 	protected void displayProfile(String id){
 		StudyBuddy.ROOT_REF.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
@@ -49,6 +53,7 @@ public abstract class StudyBuddyFragment extends Fragment {
 		getActivity().getFragmentManager().popBackStackImmediate();
 	}
 	
+	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
 		fragment.updateArguments(args);
 			
@@ -59,11 +64,33 @@ public abstract class StudyBuddyFragment extends Fragment {
 		}
 	}
 	
+	//returns current user as User object
 	protected User getCurrentUser(){
 		return ((MainActivity) getActivity()).currentUser;
 	}
 	
+	//returns ID of current user
+	protected String getCurrentUserID(){
+		return getCurrentUser().getID();
+	}
+	
+	//returns name of current user
+	protected String getCurrentUserName(){
+		return getCurrentUser().getName();
+	}
+	
+	//updates fragment arguments
 	protected void updateArguments(Bundle args){
 		arguments = args;
+	}
+	
+	//updates ArrayAdapter
+	@SuppressWarnings("unchecked")
+	protected void updateAdapter(ListView listView, ArrayList<String> array){
+		if (listView.getAdapter() != null){
+			((ArrayAdapter<String>)listView.getAdapter()).notifyDataSetChanged();
+		} else {
+			listView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, array));
+		}
 	}
 }

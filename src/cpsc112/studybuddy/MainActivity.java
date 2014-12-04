@@ -35,44 +35,52 @@ public class MainActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		
 		currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
-//		StudyBuddy.currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
 		
 		StudyBuddy.ROOT_REF.addAuthStateListener(authListener);
 		System.out.println("auth state listener added");
 		
+		//initializes navigation drawer
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		dList = (ListView) findViewById(R.id.left_drawer);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, StudyBuddy.NAV_MENU);
 		dList.setAdapter(adapter);
 		dList.setSelector(android.R.color.holo_blue_dark);
 		dList.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int index, long id) {
 				dLayout.closeDrawers();
+				Bundle args = new Bundle();
 				
-				switch (position){
+				//handles navigation to different fragments
+				switch (index){
 					case 0:
-						//placeholder code
-						getFragmentManager().beginTransaction().remove(myCourses).commit();
-						setTitle(getString(R.string.app_name));
-						break;
-					case 1:
-						Bundle args = new Bundle();
 						args.putParcelable(StudyBuddy.USER, currentUser);
+						args.putInt(StudyBuddy.MENU_INDEX, index);
 						replaceFrameWith(myProfile, args, false);
 						break;
-					case 2:
-						replaceFrameWith(myCourses, null, false);
+					case 1:
+						args.putInt(StudyBuddy.MENU_INDEX, index);
+						replaceFrameWith(myCourses, args, false);
 						break;
-					case 3:
-						replaceFrameWith(myBuddies, null, false);
+					case 2:
+						args.putInt(StudyBuddy.MENU_INDEX, index);
+						replaceFrameWith(myBuddies, args, false);
+						break;
 					default:
 						break;
 				}
 
 			}
 		});	
+		
+		//starts with showing user profile
+		Bundle args = new Bundle();
+		args.putParcelable(StudyBuddy.USER, currentUser);
+		args.putInt(StudyBuddy.MENU_INDEX, 0);
+		replaceFrameWith(myProfile, args, false);
+		
 	}
 	
+	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
 		fragment.updateArguments(args);
 		
@@ -102,6 +110,7 @@ public class MainActivity extends Activity {
 		
 	}
 	
+	//handles logout event
 	private AuthStateListener authListener = new AuthStateListener(){
 		public void onAuthStateChanged(AuthData authData){
 			if (authData != null){

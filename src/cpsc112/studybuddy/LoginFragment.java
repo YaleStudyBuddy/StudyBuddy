@@ -40,7 +40,6 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		
 		view.findViewById(R.id.loginButton).setOnClickListener(this);
 		view.findViewById(R.id.createAccountText).setOnClickListener(this);
-		
 		view.findViewById(R.id.app_name_text).setOnClickListener(this);
 		
 		return view;
@@ -83,7 +82,7 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		public AuthResultHandler(String provider) {}
 		
 		public void onAuthenticated(AuthData authData) {
-			StudyBuddy.ROOT_REF.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+			StudyBuddy.USERS_REF.child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
 				public void onDataChange(DataSnapshot snapshot){
 					Intent intent = new Intent(getActivity(), MainActivity.class);
 					Bundle args = new Bundle();

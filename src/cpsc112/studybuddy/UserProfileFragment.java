@@ -23,8 +23,8 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		
 		setHasOptionsMenu(true);
 		
-		if (user.getID().equals(getCurrentUser().getID())){
-			getActivity().setTitle(StudyBuddy.NAV_MENU[1]);
+		if (user.getID().equals(getCurrentUserID())){
+			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		} else {
 			getActivity().setTitle(user.getName());
@@ -37,7 +37,7 @@ public class UserProfileFragment extends StudyBuddyFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
 		
-		if (user.getID().toString().equals(getCurrentUser().getID())){
+		if (user.getID().toString().equals(getCurrentUserID())){
 			inflater.inflate(R.menu.my_profile, menu);	
 		} else {
 			if (getCurrentUser().getBuddies().containsKey(user.getID().toString())){
@@ -68,12 +68,14 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		}
 	}
 	
+	//sends buddy request
 	protected void addBuddy(){
 		Map<String, Object> newBuddy = new HashMap<String, Object>();
-		newBuddy.put(getCurrentUser().getID(), getCurrentUser().getName());
-		StudyBuddy.ROOT_REF.child("users").child(user.getID()).child("buddy requests").updateChildren(newBuddy);
+		newBuddy.put(getCurrentUserID(), getCurrentUserName());
+		StudyBuddy.USERS_REF.child(user.getID()).child("buddy requests").updateChildren(newBuddy);
 	}
 	
+	//removes buddy
 	protected void removeBuddy(){
 		AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(getActivity());
 		confirmationDialog.setTitle("Remove Buddy");
@@ -81,8 +83,8 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		
 		confirmationDialog.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				StudyBuddy.ROOT_REF.child("users").child(getCurrentUser().getID()).child("buddies").child(user.getID()).removeValue();
-				StudyBuddy.ROOT_REF.child("users").child(user.getID()).child("buddies").child(getCurrentUser().getID()).removeValue();
+				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("buddies").child(user.getID()).removeValue();
+				StudyBuddy.USERS_REF.child(user.getID()).child("buddies").child(getCurrentUserID()).removeValue();
 
 				back();
 			}
