@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import com.firebase.client.Firebase;
 
 public class AuthActivity extends Activity {
-	protected static LoginFragment login = new LoginFragment();
-	protected static CreateUserFragment createUser = new CreateUserFragment();
+	protected LoginFragment login = new LoginFragment();
+	protected CreateUserFragment createUser = new CreateUserFragment();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +22,12 @@ public class AuthActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		return super.onOptionsItemSelected(item);
 	}
 }

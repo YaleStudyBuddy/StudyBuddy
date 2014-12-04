@@ -69,7 +69,7 @@ public class LoginFragment extends Fragment implements OnClickListener{
 				break;
 		
 			case R.id.createAccountText:
-				getActivity().getFragmentManager().beginTransaction().replace(R.id.auth_content_frame, AuthActivity.createUser).addToBackStack(null).commit();
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.auth_content_frame, ((AuthActivity) getActivity()).createUser).addToBackStack(null).commit();
 				break;
 				
 			case R.id.app_name_text:

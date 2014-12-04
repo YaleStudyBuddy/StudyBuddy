@@ -87,12 +87,6 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 		}
 	}
 	
-	protected static String checkCourseString(String course){
-		//check there are no extra spaces in course number input
-		//make string all caps
-		return null;
-	}	
-	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
 
 		public AuthResultHandler(String provider) {}

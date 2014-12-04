@@ -77,6 +77,9 @@ public class MyCoursesFragment extends StudyBuddyFragment {
 			public void onClick(DialogInterface dialog, int which) {
 
 				String newCourse = inputText.getText().toString();
+				
+				//checks on user input go here
+				
 				getCurrentUser().addCourse(newCourse);
 				updateAdapter(courseListView, getCurrentUser().getCourses());
 				
