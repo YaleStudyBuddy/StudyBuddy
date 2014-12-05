@@ -65,17 +65,15 @@ public abstract class StudyBuddyFragment extends Fragment {
 	
 	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
-		if (fragment.isAdded()){
-			getActivity().getFragmentManager().beginTransaction().remove(fragment).commit();
+		User user = args.getParcelable(StudyBuddy.USER);
+		if (user == null || !user.getID().equals(getCurrentUserID()) || !fragment.isAdded()){
+			fragment.updateArguments(args);	
+			if (addToBackStack){
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+			} else {
+				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+			}
 		}	
-		
-		fragment.updateArguments(args);
-			
-		if (addToBackStack){
-			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-		} else {
-			getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
-		}
 	}
 	
 	//returns current user as User object

@@ -99,21 +99,19 @@ public class MainActivity extends Activity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-		
 	}
 	
 	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
-		if (fragment.isAdded()){
-			getFragmentManager().beginTransaction().remove(fragment).commit();
-		}	
+		User user = args.getParcelable(StudyBuddy.USER);
 		
-		fragment.updateArguments(args);
-		
-		if (addToBackStack){
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-		} else {
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+		if (!user.getID().equals(currentUser.getID()) || !fragment.isAdded()){
+			fragment.updateArguments(args);	
+			if (addToBackStack){
+				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+			} else {
+				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+			}
 		}
 	}
 	
