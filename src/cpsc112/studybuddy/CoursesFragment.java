@@ -59,6 +59,7 @@ public class CoursesFragment extends StudyBuddyFragment {
 			user = getCurrentUser();
 			setHasOptionsMenu(true);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+			getActivity().getActionBar().setHomeButtonEnabled(false);
 			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
 		} else {
 			setHasOptionsMenu(false);
@@ -95,9 +96,6 @@ public class CoursesFragment extends StudyBuddyFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()){
-//			case android.R.id.home:
-//				back();
-//				return true;
 			case R.id.add_course_button:
 				addCourse();
 				return true;

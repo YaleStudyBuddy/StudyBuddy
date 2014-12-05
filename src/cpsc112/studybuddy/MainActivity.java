@@ -81,18 +81,6 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	//replaces activity content frame with fragment
-	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
-		fragment.updateArguments(args);
-		
-		if (addToBackStack){
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-		} else {
-			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
-		}
-	}
-	
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -112,6 +100,21 @@ public class MainActivity extends Activity {
 				return super.onOptionsItemSelected(item);
 		}
 		
+	}
+	
+	//replaces activity content frame with fragment
+	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
+		if (fragment.isAdded()){
+			getFragmentManager().beginTransaction().remove(fragment).commit();
+		}	
+		
+		fragment.updateArguments(args);
+		
+		if (addToBackStack){
+			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
+		} else {
+			getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
+		}
 	}
 	
 	//handles logout event

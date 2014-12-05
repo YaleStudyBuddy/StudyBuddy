@@ -65,6 +65,10 @@ public abstract class StudyBuddyFragment extends Fragment {
 	
 	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
+		if (fragment.isAdded()){
+			getActivity().getFragmentManager().beginTransaction().remove(fragment).commit();
+		}	
+		
 		fragment.updateArguments(args);
 			
 		if (addToBackStack){

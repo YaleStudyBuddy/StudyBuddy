@@ -90,6 +90,7 @@ public class BuddiesFragment extends StudyBuddyFragment {
 		if (user.getID() == getCurrentUserID()){
 			user = getCurrentUser();
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+			getActivity().getActionBar().setHomeButtonEnabled(false);
 			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
 		} else {
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
