@@ -1077,12 +1077,14 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int ic_action_add_person=0x7f020057;
-        public static final int ic_action_discard=0x7f020058;
-        public static final int ic_action_edit=0x7f020059;
-        public static final int ic_action_new=0x7f02005a;
-        public static final int ic_action_remove=0x7f02005b;
-        public static final int ic_launcher=0x7f02005c;
+        public static final int drawer_shadow=0x7f020057;
+        public static final int ic_action_add_person=0x7f020058;
+        public static final int ic_action_discard=0x7f020059;
+        public static final int ic_action_edit=0x7f02005a;
+        public static final int ic_action_new=0x7f02005b;
+        public static final int ic_action_remove=0x7f02005c;
+        public static final int ic_drawer=0x7f02005d;
+        public static final int ic_launcher=0x7f02005e;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1286,30 +1288,29 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int accepted_buddies=0x7f0a0024;
+        public static final int accepted_buddies=0x7f0a0023;
         public static final int action_settings=0x7f0a000e;
-        public static final int add_buddy=0x7f0a0021;
+        public static final int add_buddy=0x7f0a0020;
         public static final int add_course_button=0x7f0a001c;
         public static final int app_name=0x7f0a000d;
-        public static final int buddy_requests=0x7f0a0023;
+        public static final int buddy_requests=0x7f0a0022;
         public static final int cancel_button=0x7f0a0016;
         public static final int create_account_button=0x7f0a0015;
         public static final int create_account_text=0x7f0a0013;
         public static final int create_account_title=0x7f0a0014;
         public static final int display_courses_title=0x7f0a001b;
-        public static final int display_users_title=0x7f0a001d;
-        public static final int edit_profile=0x7f0a0020;
+        public static final int edit_profile=0x7f0a001f;
         public static final int email_hint=0x7f0a000f;
         public static final int email_label=0x7f0a0017;
         public static final int login_button=0x7f0a0011;
         public static final int login_text=0x7f0a0012;
-        public static final int logout_button=0x7f0a001e;
+        public static final int logout_button=0x7f0a001d;
         public static final int name_hint=0x7f0a001a;
         public static final int name_label=0x7f0a0019;
         public static final int password_hint=0x7f0a0010;
         public static final int password_label=0x7f0a0018;
-        public static final int remove_buddy=0x7f0a0022;
-        public static final int remove_course_button=0x7f0a001f;
+        public static final int remove_buddy=0x7f0a0021;
+        public static final int remove_course_button=0x7f0a001e;
     }
     public static final class style {
         /** 

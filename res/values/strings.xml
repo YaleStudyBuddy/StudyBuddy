@@ -17,7 +17,6 @@
     <string name="name_hint">name</string>
     <string name="display_courses_title">My Courses</string>
     <string name="add_course_button">Add</string>
-    <string name="display_users_title">Current Users</string>
     <string name="logout_button">Logout</string>
     <string name="remove_course_button">Remove Course</string>
     <string name="edit_profile">Edit Profile</string>

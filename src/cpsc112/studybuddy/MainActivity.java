@@ -34,11 +34,11 @@ public class MainActivity extends Activity {
 		Firebase.setAndroidContext(this);
 		
 		currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
-		
+
 		StudyBuddy.ROOT_REF.addAuthStateListener(authListener);
 		System.out.println("auth state listener added");
 		
-		//initializes navigation drawer
+		//initializes navigation drawer, code adapted from http://www.tutecentral.com/android-custom-navigation-drawer
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		dList = (ListView) findViewById(R.id.left_drawer);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, StudyBuddy.NAV_MENU);
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
 			}
 		});	
 		
-		//starts with showing user profile
+		//starts activity with showing user profile
 		Bundle args = new Bundle();
 		args.putParcelable(StudyBuddy.USER, currentUser);
 		args.putInt(StudyBuddy.MENU_INDEX, 0);
