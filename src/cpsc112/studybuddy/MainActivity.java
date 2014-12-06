@@ -1,6 +1,8 @@
 package cpsc112.studybuddy;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -28,15 +30,19 @@ public class MainActivity extends Activity {
 	protected User currentUser;
 	
 	@Override
+	protected void onStart(){
+		super.onStart();
+		StudyBuddy.ROOT_REF.addAuthStateListener(authListener);
+		System.out.println("auth state listener added");
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Firebase.setAndroidContext(this);
 		
 		currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
-
-		StudyBuddy.ROOT_REF.addAuthStateListener(authListener);
-		System.out.println("auth state listener added");
 		
 		//initializes navigation drawer, code adapted from http://www.tutecentral.com/android-custom-navigation-drawer
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -94,11 +100,18 @@ public class MainActivity extends Activity {
 				getFragmentManager().popBackStackImmediate();
 				return true;
 			case R.id.logout_button:
-				StudyBuddy.ROOT_REF.unauth();
+				logout();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	protected void onStop(){
+		super.onStop();
+		StudyBuddy.ROOT_REF.removeAuthStateListener(authListener);
+		System.out.println("auth state listener removed");
 	}
 	
 	//replaces activity content frame with fragment
@@ -115,16 +128,51 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	//handles logout event
+	//handles login timeouts event
 	private AuthStateListener authListener = new AuthStateListener(){
 		public void onAuthStateChanged(AuthData authData){
-			if (authData != null){
-
-			} else {
-				StudyBuddy.ROOT_REF.removeAuthStateListener(this);
-				System.out.println("auth state listener removed");
-				finish();
+			if (authData == null){
+				AlertDialog.Builder timeoutDialog = new AlertDialog.Builder(getActivity());
+				timeoutDialog.setTitle("Your session has timed out");
+				timeoutDialog.setMessage("You will be returned to the log in screen");
+				
+				timeoutDialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						StudyBuddy.ROOT_REF.removeAuthStateListener(authListener);
+						StudyBuddy.ROOT_REF.unauth();
+						finish();
+					}
+				});
+				
+				timeoutDialog.show();
 			}
 		}
 	};
+	
+	//logs user out
+	private void logout(){
+		AlertDialog.Builder logoutDialog = new AlertDialog.Builder(getActivity());
+		logoutDialog.setTitle("Log out");
+		logoutDialog.setMessage("Are you sure you want to log out?");
+		
+		logoutDialog.setPositiveButton("Log out", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				StudyBuddy.ROOT_REF.removeAuthStateListener(authListener);
+				StudyBuddy.ROOT_REF.unauth();
+				finish();
+			}
+		});
+		
+		logoutDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		
+		logoutDialog.show();
+	}
+	
+	private Activity getActivity(){
+		return this;
+	}
 }
