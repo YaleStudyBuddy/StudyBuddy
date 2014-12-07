@@ -67,7 +67,7 @@ public class RosterFragment extends StudyBuddyFragment {
 		rosterListView = (ListView) view.findViewById(R.id.roster_list);
 		rosterListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				displayProfile(rosterIDs.get(position));
+				displayUserProfile(rosterIDs.get(position));
 			}
 		});
 		return view;

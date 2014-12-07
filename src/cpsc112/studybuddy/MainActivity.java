@@ -24,8 +24,10 @@ public class MainActivity extends Activity {
 	
 	protected CoursesFragment coursesFragment = new CoursesFragment();
 	protected RosterFragment rosterFragment = new RosterFragment();
-	protected ProfileFragment profileFragment = new ProfileFragment();
+	protected UserProfileFragment userProfileFragment = new UserProfileFragment();
+	protected GroupProfileFragment groupProfileFragment = new GroupProfileFragment();
 	protected BuddiesFragment buddiesFragment = new BuddiesFragment();
+	protected GroupsFragment groupsFragment = new GroupsFragment();
 	
 	protected User currentUser;
 	
@@ -60,7 +62,7 @@ public class MainActivity extends Activity {
 					case 0:
 						args.putParcelable(StudyBuddy.USER, currentUser);
 						args.putInt(StudyBuddy.MENU_INDEX, index);
-						replaceFrameWith(profileFragment, args, false);
+						replaceFrameWith(userProfileFragment, args, false);
 						break;
 					case 1:
 						args.putParcelable(StudyBuddy.USER, currentUser);
@@ -72,6 +74,10 @@ public class MainActivity extends Activity {
 						args.putInt(StudyBuddy.MENU_INDEX, index);
 						replaceFrameWith(buddiesFragment, args, false);
 						break;
+					case 3:
+						args.putParcelable(StudyBuddy.USER, currentUser);
+						args.putInt(StudyBuddy.MENU_INDEX, index);
+						replaceFrameWith(groupsFragment, args, false);
 					default:
 						break;
 				}
@@ -83,7 +89,7 @@ public class MainActivity extends Activity {
 		Bundle args = new Bundle();
 		args.putParcelable(StudyBuddy.USER, currentUser);
 		args.putInt(StudyBuddy.MENU_INDEX, 0);
-		replaceFrameWith(profileFragment, args, false);
+		replaceFrameWith(userProfileFragment, args, false);
 		
 	}
 	
@@ -118,7 +124,7 @@ public class MainActivity extends Activity {
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
 		User user = args.getParcelable(StudyBuddy.USER);
 		
-		if (!user.getID().equals(currentUser.getID()) || !fragment.isAdded()){
+		if (user == null || !user.getID().equals(currentUser.getID()) || !fragment.isAdded()){
 			fragment.updateArguments(args);	
 			if (addToBackStack){
 				getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();

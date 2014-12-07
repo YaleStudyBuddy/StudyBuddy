@@ -83,7 +83,7 @@ public class BuddiesFragment extends StudyBuddyFragment {
 	}
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
-		View view = inflater.inflate(R.layout.fragment_buddies, container, false);
+		View view = inflater.inflate(R.layout.fragment_my_buddies, container, false);
 		user = arguments.getParcelable(StudyBuddy.USER);
 		setHasOptionsMenu(false);
 		
@@ -121,7 +121,7 @@ public class BuddiesFragment extends StudyBuddyFragment {
 		buddyListView = (ListView) view.findViewById(R.id.buddy_list);
 		buddyListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				displayProfile(buddyIDs.get(position));
+				displayUserProfile(buddyIDs.get(position));
 			}
 		});
 		

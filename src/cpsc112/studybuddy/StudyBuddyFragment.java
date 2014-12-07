@@ -48,12 +48,23 @@ public abstract class StudyBuddyFragment extends Fragment {
 	}
 	
 	//passes on User object to profile fragment
-	protected void displayProfile(String id){
+	protected void displayUserProfile(String id){
 		StudyBuddy.ROOT_REF.child("users").child(id).addListenerForSingleValueEvent(new ValueEventListener(){
 			public void onDataChange(DataSnapshot snapshot){
 				Bundle args = new Bundle();
 				args.putParcelable(StudyBuddy.USER, StudyBuddy.getUser(snapshot));
-				replaceFrameWith(((MainActivity)getActivity()).profileFragment, args, true);
+				replaceFrameWith(((MainActivity)getActivity()).userProfileFragment, args, true);
+			}
+			public void onCancelled(FirebaseError firebaseError){}
+		});
+	}
+	
+	protected void displayGroupProfile(String id){
+		StudyBuddy.ROOT_REF.child("groups").child(id).addListenerForSingleValueEvent(new ValueEventListener(){
+			public void onDataChange(DataSnapshot snapshot){
+				Bundle args = new Bundle();
+				args.putParcelable(StudyBuddy.GROUP, StudyBuddy.getGroup(snapshot));
+				replaceFrameWith(((MainActivity)getActivity()).groupProfileFragment, args, true);
 			}
 			public void onCancelled(FirebaseError firebaseError){}
 		});
@@ -65,15 +76,7 @@ public abstract class StudyBuddyFragment extends Fragment {
 	
 	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
-		User user = args.getParcelable(StudyBuddy.USER);
-		if (user == null || !user.getID().equals(getCurrentUserID()) || !fragment.isAdded()){
-			fragment.updateArguments(args);	
-			if (addToBackStack){
-				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).addToBackStack(null).commit();
-			} else {
-				getActivity().getFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();	
-			}
-		}	
+		((MainActivity) getActivity()).replaceFrameWith(fragment, args, addToBackStack);
 	}
 	
 	//returns current user as User object

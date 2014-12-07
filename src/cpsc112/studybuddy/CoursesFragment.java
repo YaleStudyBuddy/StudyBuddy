@@ -109,7 +109,7 @@ public class CoursesFragment extends StudyBuddyFragment {
 		
 		AlertDialog.Builder inputDialog = new AlertDialog.Builder(getActivity());
 		inputDialog.setTitle("Add Course");
-		inputDialog.setMessage("Enter Course Number:");
+		inputDialog.setMessage("Enter course number:");
 		final EditText inputText = new EditText(getActivity());
 		inputText.setFocusable(true);
 		inputDialog.setView(inputText);

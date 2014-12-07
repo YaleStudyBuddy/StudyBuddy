@@ -8,11 +8,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class User implements Parcelable {
-//	private String name, id;
 	private ArrayList<String> courses;
-	private HashMap<String, Object> userInfo, buddies, buddyRequests;
+	private HashMap<String, Object> userInfo, buddies, buddyRequests, groups, groupRequests;
 	
-	public User(String id, String name, ArrayList<String> courses, HashMap<String, Object> buddies, HashMap<String, Object> buddyRequests){
+	public User(String id, String name, ArrayList<String> courses, HashMap<String, Object> buddies, 
+			HashMap<String, Object> buddyRequests, HashMap<String, Object> groups, HashMap<String, Object> groupRequests){
 		this.userInfo = new HashMap<String, Object>();
 		this.userInfo.put("id", id);
 		this.userInfo.put("name", name);
@@ -33,6 +33,18 @@ public class User implements Parcelable {
 			this.buddyRequests = buddyRequests;	
 		} else {
 			this.buddyRequests = new HashMap<String, Object>();
+		}
+		
+		if (groups != null){
+			this.groups = groups;
+		} else {
+			this.groups = new HashMap<String, Object>();
+		}
+		
+		if (groupRequests != null){
+			this.groupRequests = groupRequests;	
+		} else {
+			this.groupRequests = new HashMap<String, Object>();
 		}
 		
 	}
@@ -61,6 +73,18 @@ public class User implements Parcelable {
 		} else {
 			this.buddyRequests = new HashMap<String, Object>();
 		}
+		
+		if ((HashMap<String, Object>) user.getSerializable("groups") != null){
+			this.groups = (HashMap<String, Object>) user.getSerializable("groups");
+		} else {
+			this.groups = new HashMap<String, Object>();
+		}
+		
+		if ((HashMap<String, Object>) user.getSerializable("group requests") != null){
+			this.groupRequests = (HashMap<String, Object>) user.getSerializable("group requests");	
+		} else {
+			this.groupRequests = new HashMap<String, Object>();
+		}
 	}
 
 	@Override
@@ -75,6 +99,8 @@ public class User implements Parcelable {
 		user.putStringArrayList("courses", courses);
 		user.putSerializable("buddies", buddies);
 		user.putSerializable("buddy requests", buddyRequests);
+		user.putSerializable("groups", groups);
+		user.putSerializable("group requests", groupRequests);
 		dest.writeBundle(user);
 	}
 
@@ -124,5 +150,13 @@ public class User implements Parcelable {
 	
 	protected HashMap<String, Object> getBuddyRequests(){
 		return buddyRequests;
+	}
+	
+	protected HashMap<String, Object> getGroups(){
+		return groups;
+	}
+	
+	protected HashMap<String, Object> getGroupRequests(){
+		return groupRequests;
 	}
 }

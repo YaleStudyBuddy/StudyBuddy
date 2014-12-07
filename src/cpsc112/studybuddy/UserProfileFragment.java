@@ -17,7 +17,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class ProfileFragment extends StudyBuddyFragment {
+public class UserProfileFragment extends StudyBuddyFragment {
 	
 	@Override
 	public void onStart(){
@@ -36,7 +36,7 @@ public class ProfileFragment extends StudyBuddyFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
-		View view = inflater.inflate(R.layout.fragment_profile, container, false);
+		View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 		user = arguments.getParcelable(StudyBuddy.USER);
 		
 		if (user.getID().equals(getCurrentUserID())){
@@ -64,9 +64,9 @@ public class ProfileFragment extends StudyBuddyFragment {
 			inflater.inflate(R.menu.my_profile, menu);	
 		} else {
 			if (getCurrentUser().getBuddies().containsKey(user.getID())){
-				inflater.inflate(R.menu.profile_remove, menu);
-			} else {
-				inflater.inflate(R.menu.profile_add, menu);
+				inflater.inflate(R.menu.user_profile_remove, menu);
+			} else if (!getCurrentUser().getBuddyRequests().containsKey(user.getID()) || !user.getBuddyRequests().containsKey(getCurrentUserID())){
+				inflater.inflate(R.menu.user_profile_add, menu);
 			}
 		}
 	}

@@ -8,44 +8,44 @@
     android:paddingTop="@dimen/activity_vertical_margin"  >
 
     <TextView
-        android:id="@+id/buddy_requests_text"
+        android:id="@+id/group_invites_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dip"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="@string/buddy_requests"
+        android:text="@string/group_invites"
         android:textAppearance="?android:attr/textAppearanceLarge" 
         android:background="#33B5E5"
         android:textColor="#fff" />
 
     <ListView
-        android:id="@+id/buddy_requests_list"
+        android:id="@+id/group_invites_list"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/buddy_requests_text" >
+        android:layout_below="@id/group_invites_text" >
 
     </ListView>
     
     <TextView
-        android:id="@+id/buddy_text"
+        android:id="@+id/group_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dip"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/buddy_requests_list"
-        android:text="@string/accepted_buddies"
+        android:layout_below="@id/group_invites_list"
+        android:text="@string/groups"
         android:textAppearance="?android:attr/textAppearanceLarge" 
         android:background="#33B5E5"
         android:textColor="#fff" />
     
     <ListView
-        android:id="@+id/buddy_list"
+        android:id="@+id/group_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/buddy_text"
-        android:layout_below="@id/buddy_text" >
+        android:layout_alignLeft="@id/group_text"
+        android:layout_below="@id/group_text" >
     </ListView>
 
 </RelativeLayout>

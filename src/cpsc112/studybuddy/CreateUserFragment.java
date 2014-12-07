@@ -94,7 +94,7 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 		public void onAuthenticated(AuthData authData) {
 			//save user data to firebase
 			String id = authData.getUid();
-			User newUser = new User(id, name, null, null, null);
+			User newUser = new User(id, name, null, null, null, null, null);
 			
 			Map<String, Object> newUserMap = new HashMap<String, Object>();
 			newUserMap.put("id", newUser.getID());
