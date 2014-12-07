@@ -123,7 +123,6 @@ public class MainActivity extends Activity {
 	//replaces activity content frame with fragment
 	protected void replaceFrameWith(StudyBuddyFragment fragment, Bundle args, boolean addToBackStack){
 		User user = args.getParcelable(StudyBuddy.USER);
-		
 		if (user == null || !user.getID().equals(currentUser.getID()) || !fragment.isAdded()){
 			fragment.updateArguments(args);	
 			if (addToBackStack){

@@ -96,7 +96,7 @@ public abstract class StudyBuddyFragment extends Fragment {
 	
 	//updates fragment arguments
 	protected void updateArguments(Bundle args){
-		arguments = args;
+		arguments.putAll(args);
 	}
 	
 	//updates ArrayAdapter

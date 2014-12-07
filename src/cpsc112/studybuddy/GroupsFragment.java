@@ -27,7 +27,7 @@ public class GroupsFragment extends StudyBuddyFragment {
 	private ArrayList<String> groupRequestsIDs, groupRequestsNames,groupIDs, groupNames;
 	private static ListView groupRequestsListView, groupListView;
 	
-	//Firebase listener for buddy requests
+	//Firebase listener for group requests
 	private ChildEventListener groupRequestsListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
@@ -52,7 +52,7 @@ public class GroupsFragment extends StudyBuddyFragment {
 		public void onCancelled(FirebaseError firebaseError){}
 	};
 	
-	//Firebase listener for buddies
+	//Firebase listener for groups
 	private ChildEventListener groupsListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
@@ -113,7 +113,7 @@ public class GroupsFragment extends StudyBuddyFragment {
 				
 				Map<String, Object> newMember = new HashMap<String, Object>();
 				newMember.put(user.getID(), user.getName());
-				StudyBuddy.GROUPS_REF.child(groupRequestsIDs.get(position)).child("members").updateChildren(newGroup);
+				StudyBuddy.GROUPS_REF.child(groupRequestsIDs.get(position)).child("members").updateChildren(newMember);
 			}
 		});
 
@@ -139,6 +139,7 @@ public class GroupsFragment extends StudyBuddyFragment {
 		switch (item.getItemId()){
 			case R.id.new_group_button:
 				addGroup();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}

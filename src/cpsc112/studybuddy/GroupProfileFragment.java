@@ -26,7 +26,6 @@ import com.firebase.client.FirebaseError;
 
 public class GroupProfileFragment extends StudyBuddyFragment {
 	private Group group;
-	private String groupID; //temp fix
 	private ArrayList<String> groupMemberIDs, groupMemberNames, groupChat;
 	private ListView groupMemberListView, groupChatListView;
 	private Button groupChatButton;
@@ -97,7 +96,7 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_group_profile, container, false);
 		group = arguments.getParcelable(StudyBuddy.GROUP);
-		groupID = group.getID();
+//		final String groupID = group.getID();
 		
 		getActivity().setTitle(group.getName());
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -122,9 +121,12 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 				Map<String, Object> chatEntry = new HashMap<String, Object>();
 				chatEntry.put("id", getCurrentUserID());
 				chatEntry.put("message", groupChatField.getText().toString());
-				StudyBuddy.GROUPS_REF.child(groupID).child("chat").push().setValue(chatEntry);
+				StudyBuddy.GROUPS_REF.child(group.getID()).child("chat").push().setValue(chatEntry);
+				System.out.println(group.getID());
 			}
 		});
+		
+		//viewpager to switch between views? yes
 		
 		return view;
 	}
@@ -162,8 +164,8 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		
 		confirmationDialog.setPositiveButton("Leave", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				//not handled by buddy listener - need to change locally
-				group.getMembers().remove(getCurrentUserID());
+//				group.getMembers().remove(getCurrentUserID());
+				StudyBuddy.GROUPS_REF.child(group.getID()).child("members").child(getCurrentUserID()).removeValue();
 				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("groups").child(group.getID()).removeValue();
 				back();
 			}
@@ -176,5 +178,11 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		});
 		
 		confirmationDialog.show();
+	}
+	
+	protected void addMember(String id){		
+		HashMap<String, Object> memberRequest = new HashMap<String, Object>();
+		memberRequest.put(group.getID(), group.getName());
+		StudyBuddy.USERS_REF.child(id).child("group requests").updateChildren(memberRequest);
 	}
 }
