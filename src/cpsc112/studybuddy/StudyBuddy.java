@@ -13,12 +13,18 @@ public class StudyBuddy {
 	protected final static Firebase COURSES_REF = ROOT_REF.child("courses");
 	protected final static Firebase GROUPS_REF = ROOT_REF.child("groups");
 	
+	//fragment titles
+	protected final static String MY_PROFILE = new String("My Profile");
+	protected final static String MY_COURSES = new String("My Courses");
+	protected final static String MY_BUDDIES = new String("My Buddies");
+	protected final static String MY_GROUPS = new String("My Groups");
+	
 	//argument keys
 	protected final static String USER = "cpsc112.studybuddy.USER";
 	protected final static String COURSE = "cpsc112.studybuddy.COURSE";
 	protected final static String GROUP = "cpsc112.studybuddy.GROUP";
 	protected final static String MENU_INDEX = "cpsc112.studybuddy.MENU_INDEX";
-	protected final static String[] NAV_MENU = {"My Profile", "My Courses", "My Buddies", "My Groups"};
+	protected final static String[] NAV_MENU = {MY_PROFILE, MY_COURSES, MY_BUDDIES, MY_GROUPS};
 	
 	@SuppressWarnings("unchecked")
 	protected static User getUser(DataSnapshot snapshot){

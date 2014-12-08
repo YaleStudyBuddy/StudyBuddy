@@ -41,7 +41,7 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		
 		if (user.getID().equals(getCurrentUserID())){
 			user = getCurrentUser();
-			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+			getActivity().setTitle(StudyBuddy.MY_PROFILE);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActivity().getActionBar().setHomeButtonEnabled(false);
 			setHasOptionsMenu(true);

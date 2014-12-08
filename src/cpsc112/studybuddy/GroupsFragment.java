@@ -90,14 +90,12 @@ public class GroupsFragment extends StudyBuddyFragment {
 		View view = inflater.inflate(R.layout.fragment_my_groups, container, false); //create fragment_groups
 //		user = arguments.getParcelable(StudyBuddy.USER);
 		setHasOptionsMenu(true);
-		
-		int menuIndex = arguments.getInt(StudyBuddy.MENU_INDEX);
-		
+
 //		if (user.getID() == getCurrentUserID()){
 		user = getCurrentUser();
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().getActionBar().setHomeButtonEnabled(false);
-		getActivity().setTitle(StudyBuddy.NAV_MENU[menuIndex]);
+		getActivity().setTitle(StudyBuddy.MY_GROUPS);
 //		} else {
 //			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //			getActivity().setTitle(user.getName() + "'s Groups");

@@ -61,7 +61,7 @@ public class CoursesFragment extends StudyBuddyFragment {
 			setHasOptionsMenu(true);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActivity().getActionBar().setHomeButtonEnabled(false);
-			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+			getActivity().setTitle(StudyBuddy.MY_COURSES);
 //		} else {
 //			setHasOptionsMenu(false);
 //			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);

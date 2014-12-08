@@ -91,7 +91,7 @@ public class BuddiesFragment extends StudyBuddyFragment {
 			user = getCurrentUser();
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActivity().getActionBar().setHomeButtonEnabled(false);
-			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+			getActivity().setTitle(StudyBuddy.MY_BUDDIES);
 //		} else {
 //			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //			getActivity().setTitle(user.getName() + "'s Buddies");
