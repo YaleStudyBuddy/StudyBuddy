@@ -125,22 +125,22 @@ public class CoursesFragment extends StudyBuddyFragment {
 				
 				//checks on user input go here
 				newCourse = newCourse.toUpperCase();
-				newCourse.replaceAll("\\W", "");
+				newCourse = newCourse.replaceAll("\\W", "");
 				if (newCourse.length()!= 7)
 				{
 					showErrorDialog("Please enter a valid 7-character course number. (Ex. CPSC112, CHEM220, etc.)");
+				} else { 				
+					getCurrentUser().addCourse(newCourse);
+					updateAdapter(courseListView, getCurrentUser().getCourses());
+					
+					Map<String, Object> roster = new HashMap<String, Object>();
+					roster.put(user.getID(), user.getName());
+					StudyBuddy.COURSES_REF.child(newCourse).updateChildren(roster);
+					
+					Map<String, Object> courseMap = new HashMap<String, Object>();
+					courseMap.put(Integer.toString(getCurrentUser().getCourses().size() - 1), newCourse);
+					StudyBuddy.USERS_REF.child(user.getID()).child("courses").updateChildren(courseMap);
 				}
- 				
-				getCurrentUser().addCourse(newCourse);
-				updateAdapter(courseListView, getCurrentUser().getCourses());
-				
-				Map<String, Object> roster = new HashMap<String, Object>();
-				roster.put(user.getID(), user.getName());
-				StudyBuddy.COURSES_REF.child(newCourse).updateChildren(roster);
-				
-				Map<String, Object> courseMap = new HashMap<String, Object>();
-				courseMap.put(Integer.toString(getCurrentUser().getCourses().size() - 1), newCourse);
-				StudyBuddy.USERS_REF.child(user.getID()).child("courses").updateChildren(courseMap);
 			}
 		});
 		

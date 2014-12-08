@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,9 +33,9 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 	@Override
 	public void onStart(){
 		super.onStart();
-		StudyBuddy.GROUPS_REF.child(group.getID()).child("group info").addChildEventListener(groupProfileInfoListener);
-		StudyBuddy.GROUPS_REF.child(group.getID()).child("members").addChildEventListener(groupProfileMemberListener);
-		StudyBuddy.GROUPS_REF.child(group.getID()).child("chat").addChildEventListener(groupProfileChatListener);
+		StudyBuddy.GROUPS_REF.child(groupID).child("group info").addChildEventListener(groupProfileInfoListener);
+		StudyBuddy.GROUPS_REF.child(groupID).child("members").addChildEventListener(groupProfileMemberListener);
+		StudyBuddy.GROUPS_REF.child(groupID).child("chat").addChildEventListener(groupProfileChatListener);
 		System.out.println("group profile listeners added");
 	}
 	
@@ -59,7 +58,7 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
 			group.getMembers().put(snapshot.getKey(), snapshot.getValue());
-			if (!groupMemberIDs.contains(snapshot.getKey()) && !snapshot.getKey().equals(getCurrentUserID())){
+			if (!groupMemberIDs.contains(snapshot.getKey()) && !snapshot.getKey().equals(user.getID())){
 				groupMemberIDs.add(snapshot.getKey());
 				groupMemberNames.add(snapshot.getValue().toString());
 				updateAdapter(groupMemberListView, groupMemberNames);
@@ -67,10 +66,12 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		}
 		public void onChildRemoved(DataSnapshot snapshot){
 			group.getMembers().remove(snapshot.getKey());
-			int index = groupMemberIDs.indexOf(snapshot.getKey());
-			groupMemberIDs.remove(index);
-			groupMemberNames.remove(index);
-			updateAdapter(groupMemberListView, groupMemberNames);
+			if (!snapshot.getKey().equals(user.getID())){
+				int index = groupMemberIDs.indexOf(snapshot.getKey());
+				groupMemberIDs.remove(index);
+				groupMemberNames.remove(index);
+				updateAdapter(groupMemberListView, groupMemberNames);
+			}
 		}
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
 		public void onCancelled(FirebaseError firebaseError){}
@@ -96,12 +97,15 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_group_profile, container, false);
 		group = arguments.getParcelable(StudyBuddy.GROUP);
+		user = arguments.getParcelable(StudyBuddy.USER);
 		
 		groupID = group.getID();
 		groupName = group.getName();
 		
 		System.out.println(groupName);
 		System.out.println(groupID);
+		System.out.println(getCurrentUserName());
+		System.out.println(user.getID());
 		
 		getActivity().setTitle(groupName);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,11 +128,10 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		groupChatButton.setOnClickListener(new OnClickListener(){
 			public void onClick(View view){
 				Map<String, Object> chatEntry = new HashMap<String, Object>();
-				chatEntry.put("id", getCurrentUserID());
+				chatEntry.put("id", user.getID());
 				chatEntry.put("message", groupChatField.getText().toString());
+				groupChatField.setText("");
 				StudyBuddy.GROUPS_REF.child(groupID).child("chat").push().setValue(chatEntry);
-				System.out.println(group.getID());
-				System.out.println(group.getName());
 			}
 		});
 		
@@ -159,9 +162,9 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 	@Override
 	public void onStop(){
 		super.onStop();
-		StudyBuddy.GROUPS_REF.child(group.getID()).child("group info").removeEventListener(groupProfileInfoListener);
-		StudyBuddy.GROUPS_REF.child(group.getID()).child("members").removeEventListener(groupProfileMemberListener);
-		StudyBuddy.GROUPS_REF.child(group.getID()).child("chat").removeEventListener(groupProfileChatListener);
+		StudyBuddy.GROUPS_REF.child(groupID).child("group info").removeEventListener(groupProfileInfoListener);
+		StudyBuddy.GROUPS_REF.child(groupID).child("members").removeEventListener(groupProfileMemberListener);
+		StudyBuddy.GROUPS_REF.child(groupID).child("chat").removeEventListener(groupProfileChatListener);
 		System.out.println("group profile listeners removed");
 	}
 	
@@ -173,8 +176,9 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		
 		confirmationDialog.setPositiveButton("Leave", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				StudyBuddy.GROUPS_REF.child(group.getID()).child("members").child(getCurrentUserID()).removeValue();
-				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("groups").child(group.getID()).removeValue();
+				System.out.println(user.getID());
+				StudyBuddy.GROUPS_REF.child(groupID).child("members").child(user.getID()).removeValue();
+				StudyBuddy.USERS_REF.child(user.getID()).child("groups").child(groupID).removeValue();
 				back();
 			}
 		});
