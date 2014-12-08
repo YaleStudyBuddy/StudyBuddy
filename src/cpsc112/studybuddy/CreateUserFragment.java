@@ -3,6 +3,7 @@ package cpsc112.studybuddy;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -74,10 +75,19 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 					}
 					public void onError(FirebaseError firebaseError){
 						createAccountDialog.hide();
-						ProgressDialog errorDialog = new ProgressDialog(getActivity());
-						errorDialog.setTitle("Error creating user");
-						errorDialog.setMessage(firebaseError.toString());
-						errorDialog.show();
+						 switch (firebaseError.getCode()) {
+				            case FirebaseError.EMAIL_TAKEN:
+				                // handle a redundant sign-up
+				            	showErrorDialog ("The new user account cannot be created because the specified email address is already in use.");
+				                break;
+				            case FirebaseError.INVALID_EMAIL:
+				                // handle an invalid email 
+				            	showErrorDialog ("The specified email is not a valid email.");
+				                break;
+				            default:
+				                // handle other errors
+				                break;
+				        }
 					}
 				});
 				break;
@@ -86,6 +96,15 @@ public class CreateUserFragment extends Fragment implements OnClickListener{
 				break;
 		}
 	}
+	
+	private void showErrorDialog(String message) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 	
 	private class AuthResultHandler implements Firebase.AuthResultHandler {
 

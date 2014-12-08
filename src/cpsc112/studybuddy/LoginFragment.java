@@ -98,16 +98,29 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		
 		public void onAuthenticationError(FirebaseError firebaseError) {
 			mAuthProgressDialog.hide();
-			showErrorDialog(firebaseError.toString());
-		}	
-		
-	    private void showErrorDialog(String message) {
-	        new AlertDialog.Builder(getActivity())
-	                .setTitle("Error")
-	                .setMessage(message)
-	                .setPositiveButton(android.R.string.ok, null)
-	                .setIcon(android.R.drawable.ic_dialog_alert)
-	                .show();
+			 switch (firebaseError.getCode()) {
+	            case FirebaseError.USER_DOES_NOT_EXIST:
+	                // handle a non existing user
+	            	showErrorDialog ("Account does not exist.");
+	                break;
+	            case FirebaseError.INVALID_PASSWORD:
+	                // handle an invalid password
+	            	showErrorDialog ("Password is incorrect.");
+	                break;
+	            default:
+	                // handle other errors
+	                break;
+	        }
 	    }
-	}
+	};	
+	
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 }
+

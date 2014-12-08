@@ -121,7 +121,13 @@ public class CoursesFragment extends StudyBuddyFragment {
 				String newCourse = inputText.getText().toString();
 				
 				//checks on user input go here
-				
+				newCourse = newCourse.toUpperCase();
+				newCourse.replaceAll("\\W", "");
+				if (newCourse.length()!= 7)
+				{
+					showErrorDialog("Please enter a valid 7-character course number. (Ex. CPSC112, CHEM220, etc.)");
+				}
+ 				
 				getCurrentUser().addCourse(newCourse);
 				updateAdapter(courseListView, getCurrentUser().getCourses());
 				
@@ -172,4 +178,12 @@ public class CoursesFragment extends StudyBuddyFragment {
 		
 		confirmationDialog.show();
 	}
+private void showErrorDialog(String message) {
+       new AlertDialog.Builder(getActivity())
+               .setTitle("Error")
+               .setMessage(message)
+               .setPositiveButton(android.R.string.ok, null)
+               .setIcon(android.R.drawable.ic_dialog_alert)
+               .show();
+    }
 }
