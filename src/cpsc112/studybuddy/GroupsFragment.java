@@ -91,11 +91,13 @@ public class GroupsFragment extends StudyBuddyFragment {
 //		user = arguments.getParcelable(StudyBuddy.USER);
 		setHasOptionsMenu(true);
 		
+		int menuIndex = arguments.getInt(StudyBuddy.MENU_INDEX);
+		
 //		if (user.getID() == getCurrentUserID()){
 		user = getCurrentUser();
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 		getActivity().getActionBar().setHomeButtonEnabled(false);
-		getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+		getActivity().setTitle(StudyBuddy.NAV_MENU[menuIndex]);
 //		} else {
 //			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //			getActivity().setTitle(user.getName() + "'s Groups");

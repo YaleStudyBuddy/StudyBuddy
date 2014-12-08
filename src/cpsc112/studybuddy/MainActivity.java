@@ -45,7 +45,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		Firebase.setAndroidContext(this);
 		
-		currentUser = getIntent().getExtras().getParcelable(StudyBuddy.USER);
+		currentUser = getIntent().getParcelableExtra(StudyBuddy.USER);
+		System.out.println(currentUser.getName());
+		System.out.println(currentUser.getID());
 		
 		//initializes navigation drawer, code adapted from http://www.tutecentral.com/android-custom-navigation-drawer
 		dLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

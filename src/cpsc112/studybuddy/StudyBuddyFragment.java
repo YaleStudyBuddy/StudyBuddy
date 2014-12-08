@@ -64,6 +64,7 @@ public abstract class StudyBuddyFragment extends Fragment {
 			public void onDataChange(DataSnapshot snapshot){
 				Bundle args = new Bundle();
 				args.putParcelable(StudyBuddy.GROUP, StudyBuddy.getGroup(snapshot));
+				args.putParcelable(StudyBuddy.USER, getCurrentUser());
 				replaceFrameWith(((MainActivity)getActivity()).groupProfileFragment, args, true);
 			}
 			public void onCancelled(FirebaseError firebaseError){}
