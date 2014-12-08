@@ -112,6 +112,7 @@ public class CoursesFragment extends StudyBuddyFragment {
 		inputDialog.setMessage("Enter course number:");
 		final EditText inputText = new EditText(getActivity());
 		inputText.setFocusable(true);
+		inputText.requestFocus();
 		inputDialog.setView(inputText);
 		
 		

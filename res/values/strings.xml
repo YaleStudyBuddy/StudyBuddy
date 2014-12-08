@@ -31,5 +31,6 @@
     <string name="group_chat">Group Chat</string>
     <string name="group_chat_hint">Enter message here</string>
     <string name="group_chat_button">Send</string>
+    <string name="add_member">Add Member</string>
 
 </resources>

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.firebase.client.FirebaseError;
 
 public class GroupProfileFragment extends StudyBuddyFragment {
 	private Group group;
+	private String groupID, groupName;
 	private ArrayList<String> groupMemberIDs, groupMemberNames, groupChat;
 	private ListView groupMemberListView, groupChatListView;
 	private Button groupChatButton;
@@ -94,8 +96,10 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_group_profile, container, false);
 		group = arguments.getParcelable(StudyBuddy.GROUP);
-		final String groupName = group.getName();
-		final String groupID = group.getID();
+		
+		groupID = group.getID();
+		groupName = group.getName();
+		
 		System.out.println(groupName);
 		System.out.println(groupID);
 		
@@ -144,6 +148,9 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 			case R.id.leave_group_button:
 				leaveGroup();
 				return true;
+			case R.id.add_member_button:
+				inviteMember();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -181,9 +188,59 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		confirmationDialog.show();
 	}
 	
-	protected void addMember(String id){		
-		HashMap<String, Object> memberRequest = new HashMap<String, Object>();
-		memberRequest.put(group.getID(), group.getName());
-		StudyBuddy.USERS_REF.child(id).child("group requests").updateChildren(memberRequest);
+	protected void inviteMember(){		
+		AlertDialog.Builder inputDialog = new AlertDialog.Builder(getActivity());
+		inputDialog.setTitle("Invite Member");
+		inputDialog.setMessage("Enter buddy name:");
+		final EditText inputText = new EditText(getActivity());
+		inputText.setFocusable(true);
+		inputText.requestFocus();
+		inputDialog.setView(inputText);
+		
+		inputDialog.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+
+				String inviteName = inputText.getText().toString();
+				int index;
+				
+				ArrayList<String> buddyIDs = new ArrayList<String>();				
+				ArrayList<String> buddyNames = new ArrayList<String>();
+				
+				for (Map.Entry<String, Object> buddy : getCurrentUser().getBuddies().entrySet()){
+					buddyIDs.add(buddy.getKey());
+					buddyNames.add(buddy.getValue().toString());
+				}
+				
+				//check input name exists/is buddy
+				if (buddyNames.contains(inviteName)){
+					index = buddyNames.indexOf(inviteName);
+					HashMap<String, Object> groupInvite = new HashMap<String, Object>();
+					groupInvite.put(groupID, groupName);
+					System.out.println(groupID);
+					System.out.println(groupName);
+					StudyBuddy.USERS_REF.child(buddyIDs.get(index)).child("group invites").updateChildren(groupInvite);
+				} else {
+					System.out.println("not friends");
+					
+					dialog.cancel();
+					AlertDialog.Builder errorDialog = new AlertDialog.Builder(getActivity());
+					errorDialog.setTitle("Error");
+					errorDialog.setMessage("User does not exist:");
+					errorDialog.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+				}
+			}
+		});
+		
+		inputDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		
+		inputDialog.show();
 	}
 }

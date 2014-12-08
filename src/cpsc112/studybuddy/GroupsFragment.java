@@ -24,28 +24,28 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 public class GroupsFragment extends StudyBuddyFragment {
-	private ArrayList<String> groupRequestsIDs, groupRequestsNames,groupIDs, groupNames;
-	private static ListView groupRequestsListView, groupListView;
+	private ArrayList<String> groupInvitesIDs, groupInvitesNames,groupIDs, groupNames;
+	private static ListView groupInvitesListView, groupListView;
 	
 	//Firebase listener for group requests
-	private ChildEventListener groupRequestsListener = new ChildEventListener(){
+	private ChildEventListener groupInvitesListener = new ChildEventListener(){
 		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
 		
 		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-			user.getGroupRequests().put(snapshot.getKey(), snapshot.getValue());
-			if (!groupRequestsIDs.contains(snapshot.getKey())){
-				groupRequestsIDs.add(snapshot.getKey());
-				groupRequestsNames.add(snapshot.getValue().toString());
+			user.getGroupInvites().put(snapshot.getKey(), snapshot.getValue());
+			if (!groupInvitesIDs.contains(snapshot.getKey())){
+				groupInvitesIDs.add(snapshot.getKey());
+				groupInvitesNames.add(snapshot.getValue().toString());
 			}
-			updateAdapter(groupRequestsListView, groupRequestsNames);
+			updateAdapter(groupInvitesListView, groupInvitesNames);
 		}
 		
 		public void onChildRemoved(DataSnapshot snapshot){
-			user.getGroupRequests().remove(snapshot.getKey());
-			int index = groupRequestsIDs.indexOf(snapshot.getKey());
-			groupRequestsIDs.remove(index);
-			groupRequestsNames.remove(index);
-			updateAdapter(groupRequestsListView, groupRequestsNames);
+			user.getGroupInvites().remove(snapshot.getKey());
+			int index = groupInvitesIDs.indexOf(snapshot.getKey());
+			groupInvitesIDs.remove(index);
+			groupInvitesNames.remove(index);
+			updateAdapter(groupInvitesListView, groupInvitesNames);
 		}
 		
 		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
@@ -80,8 +80,8 @@ public class GroupsFragment extends StudyBuddyFragment {
 	@Override
 	public void onStart(){
 		super.onStart();
-		//retrieve buddy requests and buddies
-		StudyBuddy.USERS_REF.child(user.getID()).child("group requests").addChildEventListener(groupRequestsListener);
+		//retrieve group invites and groups
+		StudyBuddy.USERS_REF.child(user.getID()).child("group invites").addChildEventListener(groupInvitesListener);
 		StudyBuddy.USERS_REF.child(user.getID()).child("groups").addChildEventListener(groupsListener);
 		System.out.println("group listeners added");
 	}
@@ -101,19 +101,19 @@ public class GroupsFragment extends StudyBuddyFragment {
 //			getActivity().setTitle(user.getName() + "'s Groups");
 //		}
 
-		groupRequestsIDs = new ArrayList<String>();
-		groupRequestsNames = new ArrayList<String>();
-		groupRequestsListView = (ListView) view.findViewById(R.id.group_invites_list);
-		groupRequestsListView.setOnItemClickListener(new OnItemClickListener(){
+		groupInvitesIDs = new ArrayList<String>();
+		groupInvitesNames = new ArrayList<String>();
+		groupInvitesListView = (ListView) view.findViewById(R.id.group_invites_list);
+		groupInvitesListView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Map<String, Object> newGroup = new HashMap<String, Object>();
-				newGroup.put(groupRequestsIDs.get(position), groupRequestsNames.get(position));
+				newGroup.put(groupInvitesIDs.get(position), groupInvitesNames.get(position));
 				StudyBuddy.USERS_REF.child(user.getID()).child("groups").updateChildren(newGroup);
-				StudyBuddy.USERS_REF.child(user.getID()).child("group requests").child(groupRequestsIDs.get(position)).removeValue();
+				StudyBuddy.USERS_REF.child(user.getID()).child("group invites").child(groupInvitesIDs.get(position)).removeValue();
 				
 				Map<String, Object> newMember = new HashMap<String, Object>();
 				newMember.put(user.getID(), user.getName());
-				StudyBuddy.GROUPS_REF.child(groupRequestsIDs.get(position)).child("members").updateChildren(newMember);
+				StudyBuddy.GROUPS_REF.child(groupInvitesIDs.get(position)).child("members").updateChildren(newMember);
 			}
 		});
 
@@ -148,7 +148,7 @@ public class GroupsFragment extends StudyBuddyFragment {
 	@Override
 	public void onStop(){
 		super.onStop();
-		StudyBuddy.USERS_REF.child(user.getID()).child("group requests").removeEventListener(groupRequestsListener);
+		StudyBuddy.USERS_REF.child(user.getID()).child("group invites").removeEventListener(groupInvitesListener);
 		StudyBuddy.USERS_REF.child(user.getID()).child("groups").removeEventListener(groupsListener);
 		System.out.println("group listeners removed");
 	}
