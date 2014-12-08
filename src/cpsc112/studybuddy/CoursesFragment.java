@@ -53,19 +53,19 @@ public class CoursesFragment extends StudyBuddyFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args) {
 		View view = inflater.inflate(R.layout.fragment_courses, container, false);
-		user = arguments.getParcelable(StudyBuddy.USER);
+//		user = arguments.getParcelable(StudyBuddy.USER);
 		
-		if (user.getID() == getCurrentUserID()){
+//		if (user.getID() == getCurrentUserID()){
 			user = getCurrentUser();
 			setHasOptionsMenu(true);
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActivity().getActionBar().setHomeButtonEnabled(false);
 			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
-		} else {
-			setHasOptionsMenu(false);
-			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActivity().setTitle(user.getName() + "'s Courses");
-		}
+//		} else {
+//			setHasOptionsMenu(false);
+//			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+//			getActivity().setTitle(user.getName() + "'s Courses");
+//		}
 		
 		courseListView = (ListView) view.findViewById(R.id.course_list);
 		courseListView.setOnItemClickListener(new OnItemClickListener(){

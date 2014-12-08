@@ -14,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -96,20 +94,23 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_group_profile, container, false);
 		group = arguments.getParcelable(StudyBuddy.GROUP);
-//		final String groupID = group.getID();
+		final String groupName = group.getName();
+		final String groupID = group.getID();
+		System.out.println(groupName);
+		System.out.println(groupID);
 		
-		getActivity().setTitle(group.getName());
+		getActivity().setTitle(groupName);
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		setHasOptionsMenu(true);
 		
 		groupMemberIDs = new ArrayList<String>();
 		groupMemberNames = new ArrayList<String>();
 		groupMemberListView = (ListView) view.findViewById(R.id.group_members_list);
-		groupMemberListView.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				displayUserProfile(groupMemberIDs.get(position));
-			}
-		});
+//		groupMemberListView.setOnItemClickListener(new OnItemClickListener(){
+//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				displayUserProfile(groupMemberIDs.get(position));
+//			}
+//		});
 		
 		groupChat = new ArrayList<String>();
 		groupChatListView = (ListView) view.findViewById(R.id.group_chat_list);
@@ -121,12 +122,13 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 				Map<String, Object> chatEntry = new HashMap<String, Object>();
 				chatEntry.put("id", getCurrentUserID());
 				chatEntry.put("message", groupChatField.getText().toString());
-				StudyBuddy.GROUPS_REF.child(group.getID()).child("chat").push().setValue(chatEntry);
+				StudyBuddy.GROUPS_REF.child(groupID).child("chat").push().setValue(chatEntry);
 				System.out.println(group.getID());
+				System.out.println(group.getName());
 			}
 		});
 		
-		//viewpager to switch between views? yes
+		//viewpager to switch between views?
 		
 		return view;
 	}
@@ -164,7 +166,6 @@ public class GroupProfileFragment extends StudyBuddyFragment {
 		
 		confirmationDialog.setPositiveButton("Leave", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-//				group.getMembers().remove(getCurrentUserID());
 				StudyBuddy.GROUPS_REF.child(group.getID()).child("members").child(getCurrentUserID()).removeValue();
 				StudyBuddy.USERS_REF.child(getCurrentUserID()).child("groups").child(group.getID()).removeValue();
 				back();

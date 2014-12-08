@@ -24,6 +24,7 @@ public class MainActivity extends Activity {
 	
 	protected CoursesFragment coursesFragment = new CoursesFragment();
 	protected RosterFragment rosterFragment = new RosterFragment();
+//	protected UserProfileFragment myProfileFragment = new UserProfileFragment();
 	protected UserProfileFragment userProfileFragment = new UserProfileFragment();
 	protected GroupProfileFragment groupProfileFragment = new GroupProfileFragment();
 	protected BuddiesFragment buddiesFragment = new BuddiesFragment();

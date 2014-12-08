@@ -84,18 +84,18 @@ public class BuddiesFragment extends StudyBuddyFragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_my_buddies, container, false);
-		user = arguments.getParcelable(StudyBuddy.USER);
+//		user = arguments.getParcelable(StudyBuddy.USER);
 		setHasOptionsMenu(false);
 		
-		if (user.getID() == getCurrentUserID()){
+//		if (user.getID() == getCurrentUserID()){
 			user = getCurrentUser();
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActivity().getActionBar().setHomeButtonEnabled(false);
 			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
-		} else {
-			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActivity().setTitle(user.getName() + "'s Buddies");
-		}
+//		} else {
+//			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+//			getActivity().setTitle(user.getName() + "'s Buddies");
+//		}
 
 		buddyRequestsIDs = new ArrayList<String>();
 		buddyRequestsNames = new ArrayList<String>();

@@ -18,7 +18,6 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 
 public class RosterFragment extends StudyBuddyFragment {
-	
 	private ArrayList<String> rosterNames, rosterIDs;
 	private ListView rosterListView;
 	private String course;

@@ -61,8 +61,8 @@ public class GroupsFragment extends StudyBuddyFragment {
 			if (!groupIDs.contains(snapshot.getKey())){
 				groupIDs.add(snapshot.getKey());
 				groupNames.add(snapshot.getValue().toString());
+				updateAdapter(groupListView, groupNames);
 			}
-			updateAdapter(groupListView, groupNames);
 		}
 		
 		public void onChildRemoved(DataSnapshot snapshot){
@@ -88,18 +88,18 @@ public class GroupsFragment extends StudyBuddyFragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
 		View view = inflater.inflate(R.layout.fragment_my_groups, container, false); //create fragment_groups
-		user = arguments.getParcelable(StudyBuddy.USER);
+//		user = arguments.getParcelable(StudyBuddy.USER);
 		setHasOptionsMenu(true);
 		
-		if (user.getID() == getCurrentUserID()){
-			user = getCurrentUser();
-			getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-			getActivity().getActionBar().setHomeButtonEnabled(false);
-			getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
-		} else {
-			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-			getActivity().setTitle(user.getName() + "'s Groups");
-		}
+//		if (user.getID() == getCurrentUserID()){
+		user = getCurrentUser();
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+		getActivity().getActionBar().setHomeButtonEnabled(false);
+		getActivity().setTitle(StudyBuddy.NAV_MENU[arguments.getInt(StudyBuddy.MENU_INDEX)]);
+//		} else {
+//			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+//			getActivity().setTitle(user.getName() + "'s Groups");
+//		}
 
 		groupRequestsIDs = new ArrayList<String>();
 		groupRequestsNames = new ArrayList<String>();

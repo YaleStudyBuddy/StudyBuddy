@@ -23,6 +23,7 @@
         android:id="@+id/group_members_list"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:clickable="false"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/group_members_text" >
 
@@ -69,7 +70,7 @@
         android:layout_alignLeft="@id/group_chat_text"
         android:layout_below="@id/group_chat_text"
         android:layout_above="@id/group_chat_field"
-        android:focusable="false"
+        android:clickable="false"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" >
 

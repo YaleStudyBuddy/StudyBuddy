@@ -65,12 +65,12 @@ public class Group implements Parcelable {
 	public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
 		@Override
 		public Group createFromParcel(Parcel source) {
-		return new Group(source);  //using parcelable constructor
+			return new Group(source);  //using parcelable constructor
 		}
 		 
 		@Override
 		public Group[] newArray(int size) {
-		return new Group[size];
+			return new Group[size];
 		}
 	};
 	
