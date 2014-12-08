@@ -1,72 +1,84 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_content_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#33B5E5"
     android:gravity="clip_horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cpsc112.studybuddy.LoginActivity" >
+    tools:context="cpsc112.studybuddy.AuthActivity" >
 
     <TextView
-        android:id="@+id/appNameView"
+        android:id="@+id/app_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/emailText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:hint="@string/email_hint"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/passwordText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/emailText"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:hint="@string/password_hint"
-        android:inputType="textPassword" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/passwordText"
+        android:layout_below="@id/password_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:onClick="loginUser"
-        android:text="@string/login_button" />
+        android:background="#add8e6"
+        android:text="@string/login_button"
+        android:textColor="#000000" />
 
     <TextView
-        android:id="@+id/loginText"
+        android:id="@+id/create_account_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/emailText"
-        android:layout_alignLeft="@+id/passwordText"
-        android:layout_marginBottom="14dp"
-        android:text="@string/login_text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/createAccountText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/loginButton"
+        android:layout_below="@id/login_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
         android:clickable="true"
-        android:onClick="createAccount"
-        android:text="@string/create_account_text" />
+        android:text="@string/create_account_text"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:hint="@string/password_hint"
+        android:inputType="textPassword" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/email_text"
+        android:layout_alignLeft="@+id/email_text"
+        android:layout_marginBottom="43dp"
+        android:text="@string/login_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/password_text"
+        android:layout_alignRight="@+id/password_text"
+        android:layout_centerVertical="true"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:hint="@string/email_hint"
+        android:inputType="textEmailAddress" />
 
 </RelativeLayout>
