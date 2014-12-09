@@ -40,7 +40,6 @@ public class LoginFragment extends Fragment implements OnClickListener{
 		
 		view.findViewById(R.id.login_button).setOnClickListener(this);
 		view.findViewById(R.id.create_account_text).setOnClickListener(this);
-		view.findViewById(R.id.app_name_text).setOnClickListener(this);
 		
 		return view;
 	}
@@ -71,10 +70,6 @@ public class LoginFragment extends Fragment implements OnClickListener{
 			case R.id.create_account_text:
 				getActivity().getFragmentManager().beginTransaction().replace(R.id.auth_content_frame, ((AuthActivity) getActivity()).createUser).addToBackStack(null).commit();
 				break;
-				
-			case R.id.app_name_text:
-				mAuthProgressDialog.show();
-				StudyBuddy.ROOT_REF.authWithPassword("aysung@live.com", "hawkfire300", new AuthResultHandler("password"));
 		}
 	}
 	

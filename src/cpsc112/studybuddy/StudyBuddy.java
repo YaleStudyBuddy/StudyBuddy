@@ -28,14 +28,15 @@ public class StudyBuddy {
 	
 	@SuppressWarnings("unchecked")
 	protected static User getUser(DataSnapshot snapshot){
-		String id = snapshot.child("user info").child("id").getValue().toString();
-		String name = snapshot.child("user info").child("name").getValue().toString();
+//		String id = snapshot.child("user info").child("id").getValue().toString();
+//		String name = snapshot.child("user info").child("name").getValue().toString();
+		HashMap<String, Object> userInfo = (HashMap<String, Object>) snapshot.child("user info").getValue();
 		ArrayList<String> courses = (ArrayList<String>) snapshot.child("courses").getValue();
 		HashMap<String, Object> buddies = (HashMap<String, Object>) snapshot.child("buddies").getValue();
 		HashMap<String, Object> buddyRequests = (HashMap<String, Object>) snapshot.child("buddy requests").getValue();
 		HashMap<String, Object> groups = (HashMap<String, Object>) snapshot.child("groups").getValue();
 		HashMap<String, Object> groupRequests = (HashMap<String, Object>) snapshot.child("group requests").getValue();
-		return new User(id, name, courses, buddies, buddyRequests, groups, groupRequests);
+		return new User(userInfo, courses, buddies, buddyRequests, groups, groupRequests);
 	}
 	
 	@SuppressWarnings("unchecked")

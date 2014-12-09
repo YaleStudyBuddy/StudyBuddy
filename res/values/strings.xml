@@ -18,6 +18,11 @@
     <string name="add_course_button">Add</string>
     <string name="logout_button">Log out</string>
     <string name="remove_course_button">Remove Course</string>
+    <string name="profile_info_label">Profile Info: </string>
+    <string name="profile_major_label">Major: </string>
+    <string name="profile_class_year_label">Class year: </string>
+    <string name="profile_courses_label">Courses: </string>
+    <string name="profile_groups_label">Groups: </string>
     <string name="edit_profile">Edit Profile</string>
     <string name="add_buddy">Add Buddy</string>
     <string name="remove_buddy">Remove Buddy</string>

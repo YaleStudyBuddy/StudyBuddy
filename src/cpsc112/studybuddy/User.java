@@ -11,11 +11,17 @@ public class User implements Parcelable {
 	private ArrayList<String> courses;
 	private HashMap<String, Object> userInfo, buddies, buddyRequests, groups, groupInvites;
 	
-	public User(String id, String name, ArrayList<String> courses, HashMap<String, Object> buddies, 
+	public User(HashMap<String, Object> userInfo, ArrayList<String> courses, HashMap<String, Object> buddies, 
 			HashMap<String, Object> buddyRequests, HashMap<String, Object> groups, HashMap<String, Object> groupInvites){
-		this.userInfo = new HashMap<String, Object>();
-		this.userInfo.put("id", id);
-		this.userInfo.put("name", name);
+		if (userInfo != null){
+			this.userInfo = userInfo;
+		} else {
+			this.userInfo = new HashMap<String, Object>();
+		}
+		
+//		this.userInfo = new HashMap<String, Object>();
+//		this.userInfo.put("id", id);
+//		this.userInfo.put("name", name);
 		
 		if (courses != null){
 			this.courses = courses;	
