@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 	
 	protected CoursesFragment coursesFragment = new CoursesFragment();
 	protected RosterFragment rosterFragment = new RosterFragment();
-//	protected UserProfileFragment myProfileFragment = new UserProfileFragment();
+	protected UserProfileFragment myProfileFragment = new UserProfileFragment();
 	protected UserProfileFragment userProfileFragment = new UserProfileFragment();
 	protected GroupProfileFragment groupProfileFragment = new GroupProfileFragment();
 	protected BuddiesFragment buddiesFragment = new BuddiesFragment();
@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 					case 0:
 						args.putParcelable(StudyBuddy.USER, currentUser);
 						args.putInt(StudyBuddy.MENU_INDEX, index);
-						replaceFrameWith(userProfileFragment, args, false);
+						replaceFrameWith(myProfileFragment, args, false);
 						break;
 					case 1:
 						args.putParcelable(StudyBuddy.USER, currentUser);
@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
 		Bundle args = new Bundle();
 		args.putParcelable(StudyBuddy.USER, currentUser);
 		args.putInt(StudyBuddy.MENU_INDEX, 0);
-		replaceFrameWith(userProfileFragment, args, false);
+		replaceFrameWith(myProfileFragment, args, false);
 		
 	}
 	

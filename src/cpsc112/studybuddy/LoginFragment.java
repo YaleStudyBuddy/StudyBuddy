@@ -104,6 +104,7 @@ public class LoginFragment extends Fragment implements OnClickListener{
 	                break;
 	            default:
 	                // handle other errors
+	            	showErrorDialog ("Unknown error, please try again");
 	                break;
 	        }
 	    }

@@ -1,5 +1,6 @@
 package cpsc112.studybuddy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,24 +13,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 
 public class UserProfileFragment extends StudyBuddyFragment {
-	private ListView profileCourseListView, profileGroupsListView;
-	
-	@Override
-	public void onStart(){
-		super.onStart();
-		StudyBuddy.USERS_REF.child(user.getID()).child("user info").addChildEventListener(profileListener);
-		System.out.println("profile listener added");
-	}
+	private ListView profileCoursesListView, profileGroupsListView;
+	private ArrayList<String> profileGroupsIDs, profileGroupsNames;
+	private EditProfileFragment editProfileFragment = new EditProfileFragment();
 	
 	//Firebase listener for profile
 	private ChildEventListener profileListener = new ChildEventListener(){
@@ -43,49 +37,59 @@ public class UserProfileFragment extends StudyBuddyFragment {
 	};
 	
 	//Firebase listener for courses
-//	private ChildEventListener courseListener = new ChildEventListener(){
-//		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
-//		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-//			if (!user.getCourses().contains(snapshot.getValue().toString())){
-//				user.addCourse(snapshot.getValue().toString());
-//				updateAdapter(courseListView, user.getCourses());
-//			}
-//		}
-//		public void onChildRemoved(DataSnapshot snapshot){
-//			int index = user.getCourses().indexOf(snapshot.getValue().toString());
-//			if (index > -1){
-//				user.removeCourse(index);
-//				updateAdapter(courseListView, user.getCourses());
-//			}
-//		}
-//		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
-//		public void onCancelled(FirebaseError firebaseError){}
-//	};
+	private ChildEventListener profileCoursesListener = new ChildEventListener(){
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
+		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
+			if (!user.getCourses().contains(snapshot.getValue().toString())){
+				user.addCourse(snapshot.getValue().toString());
+				updateAdapter(profileCoursesListView, user.getCourses());
+			}
+		}
+		public void onChildRemoved(DataSnapshot snapshot){
+			int index = user.getCourses().indexOf(snapshot.getValue().toString());
+			if (index > -1){
+				user.removeCourse(index);
+				updateAdapter(profileCoursesListView, user.getCourses());
+			}
+		}
+		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
+		public void onCancelled(FirebaseError firebaseError){}
+	};
 	
 	//Firebase listener for groups
-//	private ChildEventListener groupsListener = new ChildEventListener(){
-//		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
-//		
-//		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
-//			user.getGroups().put(snapshot.getKey(), snapshot.getValue());
-//			if (!groupIDs.contains(snapshot.getKey())){
-//				groupIDs.add(snapshot.getKey());
-//				groupNames.add(snapshot.getValue().toString());
-//				updateAdapter(groupListView, groupNames);
-//			}
-//		}
-//		
-//		public void onChildRemoved(DataSnapshot snapshot){
-//			user.getGroups().remove(snapshot.getKey());
-//			int index = groupIDs.indexOf(snapshot.getKey());
-//			groupIDs.remove(index);
-//			groupNames.remove(index);
-//			updateAdapter(groupListView, groupNames);
-//		}
-//		
-//		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
-//		public void onCancelled(FirebaseError firebaseError){}
-//	};
+	private ChildEventListener profileGroupsListener = new ChildEventListener(){
+		public void onChildChanged(DataSnapshot snapshot, String previousChildKey){}
+		
+		public void onChildAdded(DataSnapshot snapshot, String previousChildKey){
+			user.getGroups().put(snapshot.getKey(), snapshot.getValue());
+			if (!profileGroupsIDs.contains(snapshot.getKey())){
+				profileGroupsIDs.add(snapshot.getKey());
+				profileGroupsNames.add(snapshot.getValue().toString());
+				updateAdapter(profileGroupsListView, profileGroupsNames);
+			}
+		}
+		
+		public void onChildRemoved(DataSnapshot snapshot){
+			user.getGroups().remove(snapshot.getKey());
+			int index = profileGroupsIDs.indexOf(snapshot.getKey());
+			profileGroupsIDs.remove(index);
+			profileGroupsNames.remove(index);
+			updateAdapter(profileGroupsListView, profileGroupsNames);
+		}
+		
+		public void onChildMoved(DataSnapshot snapshot, String previousChildKey){}
+		public void onCancelled(FirebaseError firebaseError){}
+	};
+	
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+		StudyBuddy.USERS_REF.child(user.getID()).child("user info").addChildEventListener(profileListener);
+		StudyBuddy.USERS_REF.child(user.getID()).child("courses").addChildEventListener(profileCoursesListener);
+		StudyBuddy.USERS_REF.child(user.getID()).child("groups").addChildEventListener(profileGroupsListener);
+		System.out.println("profile listeners added");
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle args){
@@ -110,27 +114,23 @@ public class UserProfileFragment extends StudyBuddyFragment {
 		
 		//populate UI with profile info
 		TextView majorTextView = (TextView) view.findViewById(R.id.profile_major_label);
-		if (user.getUserInfo().get("major").toString() != null){
-			majorTextView.append(user.getUserInfo().get("major").toString());
+		if (user.getUserInfo().containsKey("major") && user.getUserInfo().get("major").toString() != null){
+			majorTextView.setText("Major: " + user.getUserInfo().get("major").toString());
 		}
 		
 		TextView classYearTextView = (TextView) view.findViewById(R.id.profile_class_year_label);
-		if (user.getUserInfo().get("class year").toString() != null){
-			classYearTextView.append(user.getUserInfo().get("class year").toString());
+		if (user.getUserInfo().containsKey("class year") && user.getUserInfo().get("class year").toString() != null){
+			classYearTextView.setText("Class Year: " + user.getUserInfo().get("class year").toString());
 		}
 		
-		profileCourseListView = (ListView) view.findViewById(R.id.profile_course_list);
-		profileCourseListView.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Bundle args = new Bundle();
-				args.putString(StudyBuddy.COURSE, getCurrentUser().getCourses().get(position));
-				replaceFrameWith(((MainActivity)getActivity()).rosterFragment, args, true);
-			}
-		});
+		profileCoursesListView = (ListView) view.findViewById(R.id.profile_course_list);
+		updateAdapter(profileCoursesListView, user.getCourses());
 		
-		updateAdapter(profileCourseListView, getCurrentUser().getCourses());
+		profileGroupsNames = new ArrayList<String>();
+		profileGroupsIDs = new ArrayList<String>();
 		
-		
+		profileGroupsListView = (ListView) view.findViewById(R.id.profile_groups_list);
+		updateAdapter(profileGroupsListView, profileGroupsNames);
 		
 		return view;
 	}
@@ -158,7 +158,9 @@ public class UserProfileFragment extends StudyBuddyFragment {
 				removeBuddy();
 				return true;
 			case R.id.edit_profile_button:
-			
+				Bundle args = new Bundle();
+				args.putParcelable(StudyBuddy.USER, user);
+				replaceFrameWith(editProfileFragment, args, true);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -169,6 +171,8 @@ public class UserProfileFragment extends StudyBuddyFragment {
 	public void onStop(){
 		super.onStop();
 		StudyBuddy.USERS_REF.child(user.getID()).child("user info").removeEventListener(profileListener);
+		StudyBuddy.USERS_REF.child(user.getID()).child("courses").removeEventListener(profileCoursesListener);
+		StudyBuddy.USERS_REF.child(user.getID()).child("groups").removeEventListener(profileGroupsListener);
 		System.out.println("profile listener removed");
 	}
 	

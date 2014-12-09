@@ -24,6 +24,9 @@
     <string name="profile_courses_label">Courses: </string>
     <string name="profile_groups_label">Groups: </string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="save_profile">Save</string>
+    <string name="profile_class_year_hint">"class of 20xx</string>
+    <string name="profile_major_hint">major</string>
     <string name="add_buddy">Add Buddy</string>
     <string name="remove_buddy">Remove Buddy</string>
     <string name="buddy_requests">Buddy Requests</string>
